@@ -5,15 +5,19 @@ using UnityEngine;
 public class movement : MonoBehaviour
 {
     private Rigidbody rb;
-    public int speed;
     public GameObject reference;
+    public GameObject camara;
+    static Animator anim;
 
-    bool onFloor = false;
+    public int speed;
+
+    public bool onFloor = false;
 
     // Use this for initialization
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        anim = GetComponent<Animator>();
     }
 
     private void FixedUpdate()
@@ -26,12 +30,66 @@ public class movement : MonoBehaviour
         rb.AddForce(moveVertical * reference.transform.forward * speed);
         rb.AddForce(moveHorizontal * reference.transform.right * speed);
 
-        transform.localRotation = reference.transform.localRotation;
+        transform.rotation = reference.transform.rotation;
 
-        if (Input.GetKey(KeyCode.Space) && onFloor)
+        if (Input.GetKeyDown(KeyCode.Space) && onFloor)
         {
-            rb.AddForce(new Vector3(0, 430, 0));
+            anim.SetTrigger("Is_Jumping");
+            rb.AddForce(new Vector3(0, 300, 0));
             onFloor = false;
+        }
+
+        if (moveVertical > 0 && moveHorizontal > 0)
+        {
+            transform.Rotate(0, 45, 0);
+            anim.SetBool("Is_Walking", true);
+            anim.SetBool("Is_Idle", false);
+        }
+        else if (moveVertical > 0 && moveHorizontal < 0)
+        {
+            transform.Rotate(0, -45, 0);
+            anim.SetBool("Is_Walking", true);
+            anim.SetBool("Is_Idle", false);
+        }
+        else if (moveVertical < 0 && moveHorizontal > 0)
+        {
+            transform.Rotate(0, 135, 0);
+            anim.SetBool("Is_Walking", true);
+            anim.SetBool("Is_Idle", false);
+        }
+        else if (moveVertical < 0 && moveHorizontal < 0)
+        {
+            transform.Rotate(0, -135, 0);
+            anim.SetBool("Is_Walking", true);
+            anim.SetBool("Is_Idle", false);
+        }
+        else if (moveVertical > 0)
+        {
+            anim.SetBool("Is_Walking", true);
+            anim.SetBool("Is_Idle", false);
+        }
+        else if (moveVertical < 0)
+        {
+            transform.Rotate(0, 180, 0);
+            anim.SetBool("Is_Walking", true);
+            anim.SetBool("Is_Idle", false);
+        }
+        else if (moveHorizontal > 0)
+        {
+            transform.Rotate(0, 90, 0);
+            anim.SetBool("Is_Walking", true);
+            anim.SetBool("Is_Idle", false);
+        }
+        else if (moveHorizontal < 0)
+        {
+            transform.Rotate(0, -90, 0);
+            anim.SetBool("Is_Walking", true);
+            anim.SetBool("Is_Idle", false);
+        }
+        if (moveVertical == 0 && moveHorizontal == 0)
+        {
+            anim.SetBool("Is_Walking", false);
+            anim.SetBool("Is_Idle", true);
         }
     }
 
