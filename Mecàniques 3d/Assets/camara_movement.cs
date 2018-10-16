@@ -6,12 +6,12 @@ public class camara_movement : MonoBehaviour {
 
     public GameObject player;
     public GameObject reference;
-    private Vector3 distance;
+    public Vector3 distance;
 
-	// Use this for initialization
-	void Start () {
+    // Use this for initialization
+    void Start () {
         distance = transform.position - player.transform.position;
-	}
+    }
 	
 	// Update is called once per frame
 	void LateUpdate () {
