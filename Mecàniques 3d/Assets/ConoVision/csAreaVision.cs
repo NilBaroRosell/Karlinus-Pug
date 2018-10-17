@@ -12,7 +12,25 @@ public class csAreaVision : MonoBehaviour {
 	Quaternion oldRotation;
 	Vector3 oldScale;
 
-	Mesh Cono(){
+    private Rigidbody rb;
+    static Animator anim;
+
+    public int speed;
+    private Vector3 example = new Vector3(1.0f, 0.0f, 0.0f);
+
+    //Patrol points and variables
+    public Vector3 pointA;
+    public Vector3 pointB;
+    private Vector3 destinationPoint;
+    private bool GoToA;
+    private Vector3 vecEnemy1;
+    private Vector3 rbDirection;
+    private double timeTurnRef;
+    private Vector3 playerDist;
+    private bool patrolMode;
+    private bool discovered;
+    private double discoveredRef;
+    Mesh Cono(){
 		
 		Mesh _cono = new Mesh();
 		List<Vector3> vertices = new List<Vector3>();
@@ -27,16 +45,14 @@ public class csAreaVision : MonoBehaviour {
 		uv.Add(Vector2.one*0.5f);
 		
 		int w,s;
-		
-		for(w=68;w<angulo;w++){
+		for(w=40;w<angulo;w++){
 			
 			for(s=0;s<rango;s++){
-				
-				temp.x = Mathf.Cos(Mathf.Deg2Rad*w+Mathf.Deg2Rad*(s/rango))*rango;
+                temp.x = Mathf.Cos(Mathf.Deg2Rad*w+Mathf.Deg2Rad*(s/rango))*rango;
 				temp.z = Mathf.Sin(Mathf.Deg2Rad*w+Mathf.Deg2Rad*(s/rango))*rango;
 
 				if(oldPosition!=temp){
-
+                   
 					oldPosition=temp;
 					vertices.Add(new Vector3(temp.x,temp.y,temp.z));
 					normals.Add(Vector3.up);
@@ -72,68 +88,133 @@ public class csAreaVision : MonoBehaviour {
 	Vector2[] initialUV;
 
 	// Use this for initialization
-	void Start () {
-
-		meshFilter = this.gameObject.GetComponent<MeshFilter>();
-		meshFilter.mesh = Cono();
-		initialPosition = meshFilter.mesh.vertices;
+	void Start () { 
+        meshFilter = transform.GetChild(2).GetChild(2).GetChild(0).GetChild(0).GetChild(1).GetChild(0).GetComponent<MeshFilter>();
+        meshFilter.mesh = Cono();
+        initialPosition = meshFilter.mesh.vertices;
 		initialUV = meshFilter.mesh.uv;
-	
-	}
+        rb = GetComponent<Rigidbody>();
+        anim = GetComponent<Animator>();
+        GoToA = true;
+        anim.SetBool("Is_Walking", true);
+        timeTurnRef = 0;
+        destinationPoint = pointA;
+        playerDist = new Vector3(GameObject.Find("Jugador").transform.position.x - rb.transform.position.x, 0.0f, GameObject.Find("Jugador").transform.position.z - rb.transform.position.z);
+        patrolMode = true;
+        discovered = false;
+        discoveredRef = Time.realtimeSinceStartup;
+
+    }
 
 	Mesh areaMesh(Mesh mesh){
+        
+            Mesh _mesh = new Mesh();
+            Vector3[] vertices = new Vector3[mesh.vertices.Length];
+            Vector2[] uv = new Vector2[mesh.uv.Length];
 
-		Mesh _mesh = new Mesh();
+            Vector3 center = transform.localToWorldMatrix.MultiplyPoint3x4(initialPosition[0]);
+            uv[0] = initialUV[0];
+            Vector3 worldPoint;
 
-		Vector3[] vertices = new Vector3[mesh.vertices.Length];
-		Vector2[] uv       = new Vector2[mesh.uv.Length];
+            RaycastHit hit = new RaycastHit();
 
-		Vector3 center   = transform.localToWorldMatrix.MultiplyPoint3x4(initialPosition[0]);
-		uv[0] = initialUV[0];
-		Vector3 worldPoint;
+            for (int i = 1; i < vertices.Length; i++)
+            {
 
-		RaycastHit hit = new RaycastHit();
+                worldPoint = transform.localToWorldMatrix.MultiplyPoint3x4(initialPosition[i]);
 
-		for(int i=1;i<vertices.Length;i++){
+                if (Physics.Linecast(center, worldPoint, out hit))
+                {
+                //if(.gameObject.tag == "Jugador")
+                if (hit.transform.position == GameObject.Find("Jugador").transform.position)
+                {
+                    discovered = true;
+                    discoveredRef = Time.realtimeSinceStartup;
+                }
+                if (hit.transform.position != GameObject.Find("Enemigo").transform.position)
+                    {
+                        vertices[i] = transform.worldToLocalMatrix.MultiplyPoint3x4(hit.point);
+                        uv[i] = new Vector2((rango + vertices[i].x) / (rango * 2), (rango + vertices[i].z) / (rango * 2));
+                    }
 
-			worldPoint = transform.localToWorldMatrix.MultiplyPoint3x4(initialPosition[i]);
+                }
+                else
+                {
 
-			if(Physics.Linecast(center,worldPoint, out hit)){
+                    vertices[i] = initialPosition[i];
+                    uv[i] = initialUV[i];
 
-				vertices[i] = transform.worldToLocalMatrix.MultiplyPoint3x4(hit.point);
-				uv[i] = new Vector2((rango+vertices[i].x)/(rango*2),(rango+vertices[i].z)/(rango*2));
+                }
 
-			} else {
+            }
 
-				vertices[i] = initialPosition[i];
-				uv[i]       = initialUV[i];
+            _mesh.vertices = vertices;
+            _mesh.uv = uv;
+            _mesh.normals = mesh.normals;
+            _mesh.triangles = mesh.triangles;
 
-			}
+            return _mesh;
 
-		}
-
-		_mesh.vertices  = vertices;
-		_mesh.uv        = uv;
-		_mesh.normals   = mesh.normals;
-		_mesh.triangles = mesh.triangles;
-
-		return _mesh;
+        
 
 	}
 	
 	// Update is called once per frame
 	void FixedUpdate () {
-
-		if(oldPosition!=transform.position || oldRotation!=transform.rotation || oldScale != transform.localScale){
+        playerDist = new Vector3(GameObject.Find("Jugador").transform.position.x - rb.transform.position.x, 0.0f, GameObject.Find("Jugador").transform.position.z - rb.transform.position.z);
+        if (oldPosition!=transform.position || oldRotation!=transform.rotation || oldScale != transform.localScale){
 
 			oldPosition = transform.position;
 			oldRotation = transform.rotation;
 			oldScale    = transform.localScale;
-
-			meshFilter.mesh = areaMesh(meshFilter.mesh);
+            if ((playerDist.magnitude <= 40 && discovered == false) || (discovered && playerDist.magnitude > 20))
+            {
+                meshFilter.mesh = areaMesh(meshFilter.mesh);
+            }
 
 		}
-	
-	}
+        if (discovered)
+        {
+            if (playerDist.magnitude < 40 && playerDist.magnitude > 20)
+            {
+                patrolMode = false;
+                speed = 10;
+                destinationPoint = GameObject.Find("Jugador").transform.position;
+            }
+            else if (playerDist.magnitude <= 20)
+            {
+                patrolMode = false;
+                speed = 20;
+                destinationPoint = GameObject.Find("Jugador").transform.position;
+            }
+            if (discoveredRef + 10.0f <= Time.realtimeSinceStartup)
+                discovered = false;
+        }
+        else if(patrolMode == false && discovered == false)
+        {
+            patrolMode = true;
+            speed = 10;
+            destinationPoint = pointA;
+        }
+        if (rb.velocity.magnitude > speed) rb.velocity = rb.velocity.normalized * speed;
+        rb.transform.LookAt(destinationPoint);
+        vecEnemy1 = new Vector3(destinationPoint.x - rb.transform.position.x, 0.0f, destinationPoint.z - rb.transform.position.z);
+        if (vecEnemy1.magnitude < 1 && GoToA)
+        {
+            //anim.SetBool("Is_Walking", false);                                                 
+            //GoToA = false;                  
+            //anim.SetBool("Is_Walking", true);
+            destinationPoint = pointB;
+            GoToA = false;
+        }
+        else if (vecEnemy1.magnitude < 1 && GoToA == false)
+        {
+            destinationPoint = pointA;
+            GoToA = true;
+        }
+        vecEnemy1.Normalize();
+        rb.AddForce(vecEnemy1 * speed);
+
+    }
 
 }
