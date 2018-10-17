@@ -14,11 +14,13 @@ public class enemyMovement : MonoBehaviour
     //Patrol points and variables
     public Vector3 pointA;
     public Vector3 pointB;
+    private Vector3 destinationPoint;
     private bool GoToA;
     private Vector3 vecEnemy1;
-    private float vecAngle;
     private Vector3 rbDirection;
     private double timeTurnRef;
+    private Vector3 playerDist;
+    private bool patrolMode;
     
 
     // Use this for initialization
@@ -27,42 +29,54 @@ public class enemyMovement : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         anim = GetComponent<Animator>();
         GoToA = true;
-        vecAngle = 0.0f;
         anim.SetBool("Is_Walking", true);
         timeTurnRef = 0;
+        destinationPoint = pointA;
+        playerDist = new Vector3(GameObject.Find("Jugador").transform.position.x - rb.transform.position.x, 0.0f, GameObject.Find("Jugador").transform.position.z - rb.transform.position.z);
+        patrolMode = true;
+
     }
 
     private void FixedUpdate()
     {
+        
+        playerDist = new Vector3(GameObject.Find("Jugador").transform.position.x - rb.transform.position.x, 0.0f, GameObject.Find("Jugador").transform.position.z - rb.transform.position.z);
+        if (playerDist.magnitude < 40 && playerDist.magnitude > 20)
+        {
+            patrolMode = false;
+            speed = 10;
+            destinationPoint = GameObject.Find("Jugador").transform.position;
+        }
+        else if (playerDist.magnitude <= 20)
+        {
+            patrolMode = false;
+            speed = 20;
+            destinationPoint = GameObject.Find("Jugador").transform.position;
+        }
+        else if (patrolMode == false)
+        {
+            speed = 10;
+            destinationPoint = pointA;
+            patrolMode = true;
+        }
         if (rb.velocity.magnitude > speed) rb.velocity = rb.velocity.normalized * speed;
-        if (GoToA)
-        {
-            rb.transform.LookAt(pointA);
-            vecEnemy1 = new Vector3(pointA.x - rb.transform.position.x, 0.0f, pointA.z - rb.transform.position.z);
-            if (vecEnemy1.magnitude < 1)
+            rb.transform.LookAt(destinationPoint);
+            vecEnemy1 = new Vector3(destinationPoint.x - rb.transform.position.x, 0.0f, destinationPoint.z - rb.transform.position.z);
+            if (vecEnemy1.magnitude < 1 && GoToA)
             {
-                    //anim.SetBool("Is_Walking", false);                                                 
-                    GoToA = false;                  
-                    //anim.SetBool("Is_Walking", true);
-                
-                   
+                //anim.SetBool("Is_Walking", false);                                                 
+                //GoToA = false;                  
+                //anim.SetBool("Is_Walking", true);
+                destinationPoint = pointB;
+                    GoToA = false;
+                Debug.Log("a por bee");
             }
-            
-            
-                vecEnemy1.Normalize();
-                rb.AddForce(vecEnemy1 * speed);
-            
-            
-        }
-        else
-        {
-            rb.transform.LookAt(pointB);
-            vecEnemy1 = new Vector3(pointB.x - rb.transform.position.x, 0.0f, pointB.z - rb.transform.position.z);
-            if (vecEnemy1.magnitude < 1)
+            else if(vecEnemy1.magnitude < 1 && GoToA == false)
+            {
+                destinationPoint = pointA;
                 GoToA = true;
-            vecEnemy1.Normalize();
-            rb.AddForce(vecEnemy1 * speed);
-        }
-        Debug.Log(vecAngle);
+            }
+                vecEnemy1.Normalize();
+                rb.AddForce(vecEnemy1 * speed);        
     }
 }
