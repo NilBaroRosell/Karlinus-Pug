@@ -38,7 +38,7 @@ public class movement : MonoBehaviour
         if (hitting)
         {
             finishHit = Time.frameCount;
-            if ((finishHit - startHit) > 275)
+            if ((finishHit - startHit) > 300)
             {
                 hitting = false;
             }
@@ -129,6 +129,36 @@ public class movement : MonoBehaviour
 
             if (moveVertical == 0 && moveHorizontal == 0)
             {
+                switch (direction)
+                {
+                    case "F":
+                        transform.Rotate(0, 0, 0);
+                        break;
+                    case "B":
+                        transform.Rotate(0, 180, 0);
+                        break;
+                    case "L":
+                        transform.Rotate(0, -90, 0);
+                        break;
+                    case "R":
+                        transform.Rotate(0, 90, 0);
+                        break;
+                    case "FL":
+                        transform.Rotate(0, -45, 0);
+                        break;
+                    case "FR":
+                        transform.Rotate(0, 45, 0);
+                        break;
+                    case "BL":
+                        transform.Rotate(0, -135, 0);
+                        break;
+                    case "BR":
+                        transform.Rotate(0, 135, 0);
+                        break;
+                    default:
+                        break;
+                }
+
                 anim.SetBool("Is_Walking", false);
                 anim.SetBool("Is_Idle", true);
             }
@@ -144,12 +174,6 @@ public class movement : MonoBehaviour
                 anim.SetTrigger("Is_Hitting");
                 hitting = true;
                 startHit = Time.frameCount;
-            }
-
-            if (Input.GetKeyDown(KeyCode.F))
-            {
-                rb.AddForce(moveVertical * reference.transform.forward * dashSpeed);
-                rb.AddForce(moveHorizontal * reference.transform.right * dashSpeed);
             }
         }
     }
