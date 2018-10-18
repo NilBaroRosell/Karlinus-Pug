@@ -7,8 +7,10 @@ public class csAreaVision : MonoBehaviour {
 	public int rango  = 5;
 
 	MeshFilter meshFilter;
-
-	Vector3 oldPosition;
+    enum enemyState { PATROLLING, SEARCHING, FIGHTING};
+    enemyState actualState = enemyState.PATROLLING;
+    enemyState lastState = enemyState.PATROLLING;
+    Vector3 oldPosition;
 	Quaternion oldRotation;
 	Vector3 oldScale;
 
@@ -30,6 +32,10 @@ public class csAreaVision : MonoBehaviour {
     private bool patrolMode;
     private bool discovered;
     private double discoveredRef;
+    private double searchingRef;
+    Vector3 lastSeen;
+    Renderer alertRend;
+
     Mesh Cono(){
 		
 		Mesh _cono = new Mesh();
@@ -103,7 +109,11 @@ public class csAreaVision : MonoBehaviour {
         patrolMode = true;
         discovered = false;
         discoveredRef = Time.realtimeSinceStartup;
-
+        searchingRef = Time.realtimeSinceStartup;
+        lastSeen = GameObject.Find("Jugador").transform.position;
+        alertRend = transform.GetChild(3).GetComponent<Renderer>();
+       // alertRend.material.shader = Shader.Find("_Color");
+        alertRend.material.SetColor("_Color", Color.green);
     }
 
 	Mesh areaMesh(Mesh mesh){
@@ -129,7 +139,7 @@ public class csAreaVision : MonoBehaviour {
                 if (hit.transform.position == GameObject.Find("Jugador").transform.position)
                 {
                     discovered = true;
-                    discoveredRef = Time.realtimeSinceStartup;
+                    lastSeen = GameObject.Find("Jugador").transform.position;
                 }
                 if (hit.transform.position != GameObject.Find("Enemigo").transform.position)
                     {
@@ -160,61 +170,77 @@ public class csAreaVision : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void FixedUpdate () {
-        playerDist = new Vector3(GameObject.Find("Jugador").transform.position.x - rb.transform.position.x, 0.0f, GameObject.Find("Jugador").transform.position.z - rb.transform.position.z);
-        if (oldPosition!=transform.position || oldRotation!=transform.rotation || oldScale != transform.localScale){
-
-			oldPosition = transform.position;
-			oldRotation = transform.rotation;
-			oldScale    = transform.localScale;
-            if ((playerDist.magnitude <= 40 && discovered == false) || (discovered && playerDist.magnitude > 20))
-            {
-                meshFilter.mesh = areaMesh(meshFilter.mesh);
-            }
-
-		}
-        if (discovered)
-        {
-            if (playerDist.magnitude < 40 && playerDist.magnitude > 20)
-            {
-                patrolMode = false;
-                speed = 10;
-                destinationPoint = GameObject.Find("Jugador").transform.position;
-            }
-            else if (playerDist.magnitude <= 20)
-            {
-                patrolMode = false;
-                speed = 20;
-                destinationPoint = GameObject.Find("Jugador").transform.position;
-            }
-            if (discoveredRef + 10.0f <= Time.realtimeSinceStartup)
-                discovered = false;
-        }
-        else if(patrolMode == false && discovered == false)
-        {
-            patrolMode = true;
-            speed = 10;
-            destinationPoint = pointA;
-        }
+	void FixedUpdate () { 
+    playerDist = new Vector3(GameObject.Find("Jugador").transform.position.x - rb.transform.position.x, 0.0f, GameObject.Find("Jugador").transform.position.z - rb.transform.position.z);
         if (rb.velocity.magnitude > speed) rb.velocity = rb.velocity.normalized * speed;
         rb.transform.LookAt(destinationPoint);
         vecEnemy1 = new Vector3(destinationPoint.x - rb.transform.position.x, 0.0f, destinationPoint.z - rb.transform.position.z);
-        if (vecEnemy1.magnitude < 1 && GoToA)
+        if (oldPosition != transform.position || oldRotation != transform.rotation || oldScale != transform.localScale)
         {
-            //anim.SetBool("Is_Walking", false);                                                 
-            //GoToA = false;                  
-            //anim.SetBool("Is_Walking", true);
-            destinationPoint = pointB;
-            GoToA = false;
+
+            oldPosition = transform.position;
+            oldRotation = transform.rotation;
+            oldScale = transform.localScale;
+            if (playerDist.magnitude <= 40 && (actualState == enemyState.PATROLLING || actualState == enemyState.SEARCHING))
+            {
+                meshFilter.mesh = areaMesh(meshFilter.mesh);
+            }
         }
-        else if (vecEnemy1.magnitude < 1 && GoToA == false)
+        switch (actualState)
         {
-            destinationPoint = pointA;
-            GoToA = true;
+            case enemyState.PATROLLING:
+                alertRend.material.SetColor("_Color", Color.green);
+                if (vecEnemy1.magnitude < 1 && GoToA)
+                {
+                    destinationPoint = pointB;
+                    GoToA = false;
+                }
+                else if (vecEnemy1.magnitude < 1 && GoToA == false)
+                {
+                    destinationPoint = pointA;
+                    GoToA = true;
+                }
+                if (playerDist.magnitude <= 40 && discovered)
+                {
+                    actualState = enemyState.SEARCHING;
+                    searchingRef = Time.realtimeSinceStartup;
+                    lastState = enemyState.PATROLLING;                  
+                }
+                break;
+            case enemyState.SEARCHING:
+                alertRend.material.SetColor("_Color", Color.yellow);
+                destinationPoint = lastSeen;
+                if ((playerDist.magnitude <= 20 || searchingRef + 10 < Time.realtimeSinceStartup) && lastState == enemyState.PATROLLING && discovered)
+                {
+                    actualState = enemyState.FIGHTING;
+                    lastState = enemyState.SEARCHING;
+                    speed = 20;
+                }
+                else if (((discoveredRef + 10.0f <= Time.realtimeSinceStartup && lastState == enemyState.FIGHTING) || lastState == enemyState.PATROLLING) && discovered == false)
+                {
+                    actualState = enemyState.PATROLLING;
+                    lastState = enemyState.SEARCHING;
+                }
+                break;
+            case enemyState.FIGHTING:
+                alertRend.material.SetColor("_Color", Color.red);
+                destinationPoint = GameObject.Find("Jugador").transform.position;
+                discoveredRef = Time.realtimeSinceStartup;
+                if (playerDist.magnitude > 40)
+                {
+                    actualState = enemyState.SEARCHING;
+                    lastState = enemyState.FIGHTING;
+                    speed = 10;
+                    lastSeen = GameObject.Find("Jugador").transform.position;
+                }
+                    break;
+            default:
+                break;
         }
+        discovered = false;        
         vecEnemy1.Normalize();
         rb.AddForce(vecEnemy1 * speed);
-
+        Debug.Log(actualState);
     }
-
+    
 }
