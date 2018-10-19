@@ -38,7 +38,7 @@ public class movement : MonoBehaviour
         if (hitting)
         {
             finishHit = Time.frameCount;
-            if ((finishHit - startHit) > 300)
+            if ((finishHit - startHit) > 72)
             {
                 hitting = false;
             }
@@ -46,86 +46,90 @@ public class movement : MonoBehaviour
 
         else
         {
-            if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.S)) wsPressed = true;
-            if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D)) adPressed = true;
-            if (Input.GetKeyUp(KeyCode.W) || Input.GetKeyUp(KeyCode.S)) wsPressed = false;
-            if (Input.GetKeyUp(KeyCode.A) || Input.GetKeyUp(KeyCode.D)) adPressed = false;
+            if(onFloor)
+            {
+                if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.S)) wsPressed = true;
+                if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D)) adPressed = true;
+                if (Input.GetKeyUp(KeyCode.W) || Input.GetKeyUp(KeyCode.S)) wsPressed = false;
+                if (Input.GetKeyUp(KeyCode.A) || Input.GetKeyUp(KeyCode.D)) adPressed = false;
 
-            if (!wsPressed) moveVertical = 0;
-            else moveVertical = Input.GetAxis("Vertical");
+                if (!wsPressed) moveVertical = 0;
+                else moveVertical = Input.GetAxis("Vertical");
 
-            if (!adPressed) moveHorizontal = 0;
-            else moveHorizontal = Input.GetAxis("Horizontal");
+                if (!adPressed) moveHorizontal = 0;
+                else moveHorizontal = Input.GetAxis("Horizontal");
 
-            if (rb.velocity.magnitude > speed) rb.velocity = rb.velocity.normalized * speed;
+                if (rb.velocity.magnitude > speed) rb.velocity = rb.velocity.normalized * speed;
 
-            rb.AddForce(moveVertical * reference.transform.forward * speed);
-            rb.AddForce(moveHorizontal * reference.transform.right * speed);
+                rb.AddForce(moveVertical * reference.transform.forward * speed);
+                rb.AddForce(moveHorizontal * reference.transform.right * speed);
 
-            transform.rotation = reference.transform.rotation;
+                transform.rotation = reference.transform.rotation;
 
-            if (Input.GetKeyDown(KeyCode.Space) && onFloor)
-            {
-                anim.SetTrigger("Is_Jumping");
-                rb.AddForce(new Vector3(0, 275, 0));
-                onFloor = false;
-            }
+                if (Input.GetKeyDown(KeyCode.Space))
+                {
+                    anim.SetTrigger("Is_Jumping");
+                    rb.AddForce(new Vector3(0, 275, 0));
+                    onFloor = false;
+                }
 
-            if (moveVertical > 0 && moveHorizontal > 0)
-            {
-                transform.Rotate(0, 45, 0);
-                anim.SetBool("Is_Walking", true);
-                anim.SetBool("Is_Idle", false);
-                direction = "FR";
+                if (moveVertical > 0 && moveHorizontal > 0)
+                {
+                    transform.Rotate(0, 45, 0);
+                    anim.SetBool("Is_Walking", true);
+                    anim.SetBool("Is_Idle", false);
+                    direction = "FR";
+                }
+                else if (moveVertical > 0 && moveHorizontal < 0)
+                {
+                    transform.Rotate(0, -45, 0);
+                    anim.SetBool("Is_Walking", true);
+                    anim.SetBool("Is_Idle", false);
+                    direction = "FL";
+                }
+                else if (moveVertical < 0 && moveHorizontal > 0)
+                {
+                    transform.Rotate(0, 135, 0);
+                    anim.SetBool("Is_Walking", true);
+                    anim.SetBool("Is_Idle", false);
+                    direction = "BR";
+                }
+                else if (moveVertical < 0 && moveHorizontal < 0)
+                {
+                    transform.Rotate(0, -135, 0);
+                    anim.SetBool("Is_Walking", true);
+                    anim.SetBool("Is_Idle", false);
+                    direction = "BL";
+                }
+                else if (moveVertical > 0)
+                {
+                    anim.SetBool("Is_Walking", true);
+                    anim.SetBool("Is_Idle", false);
+                    direction = "F";
+                }
+                else if (moveVertical < 0)
+                {
+                    transform.Rotate(0, 180, 0);
+                    anim.SetBool("Is_Walking", true);
+                    anim.SetBool("Is_Idle", false);
+                    direction = "B";
+                }
+                else if (moveHorizontal > 0)
+                {
+                    transform.Rotate(0, 90, 0);
+                    anim.SetBool("Is_Walking", true);
+                    anim.SetBool("Is_Idle", false);
+                    direction = "R";
+                }
+                else if (moveHorizontal < 0)
+                {
+                    transform.Rotate(0, -90, 0);
+                    anim.SetBool("Is_Walking", true);
+                    anim.SetBool("Is_Idle", false);
+                    direction = "L";
+                }
             }
-            else if (moveVertical > 0 && moveHorizontal < 0)
-            {
-                transform.Rotate(0, -45, 0);
-                anim.SetBool("Is_Walking", true);
-                anim.SetBool("Is_Idle", false);
-                direction = "FL";
-            }
-            else if (moveVertical < 0 && moveHorizontal > 0)
-            {
-                transform.Rotate(0, 135, 0);
-                anim.SetBool("Is_Walking", true);
-                anim.SetBool("Is_Idle", false);
-                direction = "BR";
-            }
-            else if (moveVertical < 0 && moveHorizontal < 0)
-            {
-                transform.Rotate(0, -135, 0);
-                anim.SetBool("Is_Walking", true);
-                anim.SetBool("Is_Idle", false);
-                direction = "BL";
-            }
-            else if (moveVertical > 0)
-            {
-                anim.SetBool("Is_Walking", true);
-                anim.SetBool("Is_Idle", false);
-                direction = "F";
-            }
-            else if (moveVertical < 0)
-            {
-                transform.Rotate(0, 180, 0);
-                anim.SetBool("Is_Walking", true);
-                anim.SetBool("Is_Idle", false);
-                direction = "B";
-            }
-            else if (moveHorizontal > 0)
-            {
-                transform.Rotate(0, 90, 0);
-                anim.SetBool("Is_Walking", true);
-                anim.SetBool("Is_Idle", false);
-                direction = "R";
-            }
-            else if (moveHorizontal < 0)
-            {
-                transform.Rotate(0, -90, 0);
-                anim.SetBool("Is_Walking", true);
-                anim.SetBool("Is_Idle", false);
-                direction = "L";
-            }
+            
 
             if (moveVertical == 0 && moveHorizontal == 0)
             {
