@@ -223,6 +223,7 @@ public class csAreaVision : MonoBehaviour {
                 }
                 break;
             case enemyState.FIGHTING:
+                
                 alertRend.material.SetColor("_Color", Color.red);
                 destinationPoint = GameObject.Find("Jugador").transform.position;
                 discoveredRef = Time.realtimeSinceStartup;

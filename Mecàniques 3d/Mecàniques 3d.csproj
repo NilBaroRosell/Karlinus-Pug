@@ -80,6 +80,7 @@
   <ItemGroup>
     <Compile Include="Assets\ConoVision\csAreaVision.cs" />
     <Compile Include="Assets\ConoVision\csPlayer.cs" />
+    <Compile Include="Assets\button_pressed.cs" />
     <Compile Include="Assets\camara_movement.cs" />
     <Compile Include="Assets\movement.cs" />
   </ItemGroup>
