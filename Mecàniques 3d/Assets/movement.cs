@@ -52,10 +52,47 @@ public class movement : MonoBehaviour
                 {
                     if (onFloor)
                     {
-                        if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.S)) wsPressed = true;
-                        if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D)) adPressed = true;
-                        if (Input.GetKeyUp(KeyCode.W) || Input.GetKeyUp(KeyCode.S)) wsPressed = false;
-                        if (Input.GetKeyUp(KeyCode.A) || Input.GetKeyUp(KeyCode.D)) adPressed = false;
+                        if (Input.GetKey(KeyCode.LeftShift))
+                        {
+                            anim.SetBool("Is_Running", true);
+                            speed = 30;
+                        }
+                        else if (Input.GetKeyUp(KeyCode.LeftShift)) anim.SetBool("Is_Running", false);
+                        else if (Input.GetKey(KeyCode.LeftControl))
+                        {
+                            anim.SetBool("Is_Crouching", true);
+                            speed = 10;
+                        }
+                        else if (Input.GetKeyUp(KeyCode.LeftControl)) anim.SetBool("Is_Crouching", false);
+                        else
+                        {
+                            speed = 20;
+                        }
+
+                        if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.S))
+                        {
+                            wsPressed = true;
+                            anim.SetBool("Is_Walking", true);
+                            anim.SetBool("Is_Idle", false);
+                        }
+                        if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D))
+                        {
+                            anim.SetBool("Is_Walking", true);
+                            anim.SetBool("Is_Idle", false);
+                            adPressed = true;
+                        }
+                        if (Input.GetKeyUp(KeyCode.W) || Input.GetKeyUp(KeyCode.S))
+                        {
+                            anim.SetBool("Is_Walking", false);
+                            anim.SetBool("Is_Idle", true);
+                            wsPressed = false;
+                        }
+                        if (Input.GetKeyUp(KeyCode.A) || Input.GetKeyUp(KeyCode.D))
+                        {
+                            anim.SetBool("Is_Walking", false);
+                            anim.SetBool("Is_Idle", true);
+                            adPressed = false;
+                        }
 
                         if (!wsPressed) moveVertical = 0;
                         else moveVertical = Input.GetAxis("Vertical");
@@ -80,56 +117,40 @@ public class movement : MonoBehaviour
                         if (moveVertical > 0 && moveHorizontal > 0)
                         {
                             transform.Rotate(0, 45, 0);
-                            anim.SetBool("Is_Walking", true);
-                            anim.SetBool("Is_Idle", false);
                             direction = "FR";
                         }
                         else if (moveVertical > 0 && moveHorizontal < 0)
                         {
                             transform.Rotate(0, -45, 0);
-                            anim.SetBool("Is_Walking", true);
-                            anim.SetBool("Is_Idle", false);
                             direction = "FL";
                         }
                         else if (moveVertical < 0 && moveHorizontal > 0)
                         {
                             transform.Rotate(0, 135, 0);
-                            anim.SetBool("Is_Walking", true);
-                            anim.SetBool("Is_Idle", false);
                             direction = "BR";
                         }
                         else if (moveVertical < 0 && moveHorizontal < 0)
                         {
                             transform.Rotate(0, -135, 0);
-                            anim.SetBool("Is_Walking", true);
-                            anim.SetBool("Is_Idle", false);
                             direction = "BL";
                         }
                         else if (moveVertical > 0)
                         {
-                            anim.SetBool("Is_Walking", true);
-                            anim.SetBool("Is_Idle", false);
                             direction = "F";
                         }
                         else if (moveVertical < 0)
                         {
                             transform.Rotate(0, 180, 0);
-                            anim.SetBool("Is_Walking", true);
-                            anim.SetBool("Is_Idle", false);
                             direction = "B";
                         }
                         else if (moveHorizontal > 0)
                         {
                             transform.Rotate(0, 90, 0);
-                            anim.SetBool("Is_Walking", true);
-                            anim.SetBool("Is_Idle", false);
                             direction = "R";
                         }
                         else if (moveHorizontal < 0)
                         {
                             transform.Rotate(0, -90, 0);
-                            anim.SetBool("Is_Walking", true);
-                            anim.SetBool("Is_Idle", false);
                             direction = "L";
                         }
                     }
@@ -196,6 +217,7 @@ public class movement : MonoBehaviour
                     }
                     break;
                 }
+            
             case playerState.HITTING:
                 {
                     finishHit = Time.frameCount;
