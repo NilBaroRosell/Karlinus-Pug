@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine.AI;
 
 public class csAreaVision : MonoBehaviour {
 
@@ -18,7 +19,6 @@ public class csAreaVision : MonoBehaviour {
     static Animator anim;
 
     public int speed;
-    private Vector3 example = new Vector3(1.0f, 0.0f, 0.0f);
 
     //Patrol points and variables
     public Vector3 pointA;
@@ -27,14 +27,16 @@ public class csAreaVision : MonoBehaviour {
     private bool GoToA;
     private Vector3 vecEnemy1;
     private Vector3 rbDirection;
-    private double timeTurnRef;
     private Vector3 playerDist;
-    private bool patrolMode;
     private bool discovered;
     private double discoveredRef;
     private double searchingRef;
     Vector3 lastSeen;
     Renderer alertRend;
+
+    //Nav Mesh
+    NavMeshAgent enemyAgent;
+
 
     Mesh Cono(){
 		
@@ -103,10 +105,8 @@ public class csAreaVision : MonoBehaviour {
         anim = GetComponent<Animator>();
         GoToA = true;
         anim.SetBool("Is_Walking", true);
-        timeTurnRef = 0;
         destinationPoint = pointA;
         playerDist = new Vector3(GameObject.Find("Jugador").transform.position.x - rb.transform.position.x, 0.0f, GameObject.Find("Jugador").transform.position.z - rb.transform.position.z);
-        patrolMode = true;
         discovered = false;
         discoveredRef = Time.realtimeSinceStartup;
         searchingRef = Time.realtimeSinceStartup;
@@ -114,6 +114,12 @@ public class csAreaVision : MonoBehaviour {
         alertRend = transform.GetChild(3).GetComponent<Renderer>();
        // alertRend.material.shader = Shader.Find("_Color");
         alertRend.material.SetColor("_Color", Color.green);
+        enemyAgent = this.GetComponent<NavMeshAgent>();
+        if (enemyAgent == null)
+        {
+            Debug.LogError("Nav Mesh error");
+        }
+        else enemyAgent.SetDestination(destinationPoint);
     }
 
 	Mesh areaMesh(Mesh mesh){
@@ -172,7 +178,9 @@ public class csAreaVision : MonoBehaviour {
 	// Update is called once per frame
 	void FixedUpdate () { 
     playerDist = new Vector3(GameObject.Find("Jugador").transform.position.x - rb.transform.position.x, 0.0f, GameObject.Find("Jugador").transform.position.z - rb.transform.position.z);
-        if (rb.velocity.magnitude > speed) rb.velocity = rb.velocity.normalized * speed;
+        enemyAgent.SetDestination(destinationPoint);
+        enemyAgent.speed = speed / 15;
+       // if (rb.velocity.magnitude > speed) rb.velocity = rb.velocity.normalized * speed;
         rb.transform.LookAt(destinationPoint);
         vecEnemy1 = new Vector3(destinationPoint.x - rb.transform.position.x, 0.0f, destinationPoint.z - rb.transform.position.z);
         if (oldPosition != transform.position || oldRotation != transform.rotation || oldScale != transform.localScale)
