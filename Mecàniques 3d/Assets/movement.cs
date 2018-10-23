@@ -205,6 +205,10 @@ public class movement : MonoBehaviour
                     if (Input.GetKeyDown(KeyCode.Mouse0))
                     {
                         anim.SetTrigger("Is_Hitting");
+                        anim.SetBool("Is_Running", false);
+                        anim.SetBool("Is_Crouching", false);
+                        anim.SetBool("Is_Walking", false);
+                        anim.SetBool("Is_Idle", false);
                         state = playerState.HITTING;
                         startHit = Time.frameCount;
                     }
@@ -212,6 +216,10 @@ public class movement : MonoBehaviour
                     if (touchingEnemy)
                     {
                         anim.SetTrigger("Is_Dying");
+                        anim.SetBool("Is_Running", false);
+                        anim.SetBool("Is_Crouching", false);
+                        anim.SetBool("Is_Walking", false);
+                        anim.SetBool("Is_Idle", false);
                         state = playerState.DYING;
                         startDie = Time.frameCount;
                     }
