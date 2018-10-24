@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.AI;
+using System.Collections;
 
 public class csAreaVision : MonoBehaviour {
 
@@ -17,6 +18,7 @@ public class csAreaVision : MonoBehaviour {
 
     private Rigidbody rb;
     static Animator anim;
+    static Animator playerAnim;
 
     public int speed;
 
@@ -33,6 +35,8 @@ public class csAreaVision : MonoBehaviour {
     private double searchingRef;
     Vector3 lastSeen;
     Renderer alertRend;
+    private bool hittingEnemy = false;
+    private bool sneaky = false;
 
     //Nav Mesh
     NavMeshAgent enemyAgent;
@@ -120,6 +124,7 @@ public class csAreaVision : MonoBehaviour {
             Debug.LogError("Nav Mesh error");
         }
         else enemyAgent.SetDestination(destinationPoint);
+        playerAnim = GameObject.Find("Jugador").GetComponent<Animator>();
     }
 
 	Mesh areaMesh(Mesh mesh){
@@ -145,6 +150,7 @@ public class csAreaVision : MonoBehaviour {
                 if (hit.transform.position == GameObject.Find("Jugador").transform.position)
                 {
                     discovered = true;
+                    searchingRef = Time.realtimeSinceStartup;
                     lastSeen = GameObject.Find("Jugador").transform.position;
                 }
                 if (hit.transform.position != GameObject.Find("Enemigo").transform.position)
@@ -179,7 +185,7 @@ public class csAreaVision : MonoBehaviour {
 	void FixedUpdate () { 
     playerDist = new Vector3(GameObject.Find("Jugador").transform.position.x - rb.transform.position.x, 0.0f, GameObject.Find("Jugador").transform.position.z - rb.transform.position.z);
         enemyAgent.SetDestination(destinationPoint);
-        enemyAgent.speed = speed / 15;
+        enemyAgent.speed = speed / 10;
        // if (rb.velocity.magnitude > speed) rb.velocity = rb.velocity.normalized * speed;
         rb.transform.LookAt(destinationPoint);
         vecEnemy1 = new Vector3(destinationPoint.x - rb.transform.position.x, 0.0f, destinationPoint.z - rb.transform.position.z);
@@ -208,30 +214,47 @@ public class csAreaVision : MonoBehaviour {
                     destinationPoint = pointA;
                     GoToA = true;
                 }
+                if (playerDist.magnitude <= 10 && sneaky == false)
+                {
+                    sneaky = true;
+                    playerAnim.SetBool("Is_Detected", true);
+                    playerAnim.SetTrigger("Is_Withdrawing");
+                    
+                }
+                else if(playerDist.magnitude > 10 && sneaky == true)
+                {
+                    sneaky = false;
+                    playerAnim.SetBool("Is_Detected", false);
+                    playerAnim.SetTrigger("Is_Sheathing");
+                }
                 if (playerDist.magnitude <= 40 && discovered)
                 {
                     actualState = enemyState.SEARCHING;
                     searchingRef = Time.realtimeSinceStartup;
-                    lastState = enemyState.PATROLLING;                  
+                    lastState = enemyState.PATROLLING;
+                    if (playerAnim.GetBool("Is_Detected") == false && sneaky == false)
+                    playerAnim.SetTrigger("Is_Withdrawing");
                 }
                 break;
             case enemyState.SEARCHING:
+                playerAnim.SetBool("Is_Detected", true);
                 alertRend.material.SetColor("_Color", Color.yellow);
                 destinationPoint = lastSeen;
                 if ((playerDist.magnitude <= 20 || searchingRef + 10 < Time.realtimeSinceStartup) && lastState == enemyState.PATROLLING && discovered)
                 {
                     actualState = enemyState.FIGHTING;
                     lastState = enemyState.SEARCHING;
-                    speed = 20;
+                    speed = 50;
                 }
-                else if (((discoveredRef + 10.0f <= Time.realtimeSinceStartup && lastState == enemyState.FIGHTING) || lastState == enemyState.PATROLLING) && discovered == false)
+                else if (((discoveredRef + 10.0f <= Time.realtimeSinceStartup && lastState == enemyState.FIGHTING) || (lastState == enemyState.PATROLLING && searchingRef + 2.0f <= Time.realtimeSinceStartup)) &&  discovered == false)
                 {
                     actualState = enemyState.PATROLLING;
                     lastState = enemyState.SEARCHING;
+                    playerAnim.SetTrigger("Is_Sheathing");
                 }
                 break;
             case enemyState.FIGHTING:
-                
+                playerAnim.SetBool("Is_Detected", true);
                 alertRend.material.SetColor("_Color", Color.red);
                 destinationPoint = GameObject.Find("Jugador").transform.position;
                 discoveredRef = Time.realtimeSinceStartup;
@@ -248,8 +271,24 @@ public class csAreaVision : MonoBehaviour {
         }
         discovered = false;        
         vecEnemy1.Normalize();
-        rb.AddForce(vecEnemy1 * speed);
-        Debug.Log(actualState);
+
     }
-    
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.tag == "weapon" && playerAnim.GetBool("Is_Damaging") == true)
+        {
+
+            StartCoroutine(ExecuteAfterTime(1));
+        }
+    }
+    IEnumerator ExecuteAfterTime(float time)
+    {
+        yield return new WaitForSeconds(time);
+
+        playerAnim.SetTrigger("Is_Sheathing");
+        playerAnim.SetBool("Is_Detected", false);
+        transform.gameObject.SetActive(false);
+    }
 }
+
+

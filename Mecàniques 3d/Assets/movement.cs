@@ -32,6 +32,7 @@ public class movement : MonoBehaviour
     public bool activateDash = true;
     public enum playerState { IDLE, HITTING, DYING };
     public playerState state;
+    Collider w_collider;
     
 
     // Use this for initialization
@@ -202,14 +203,15 @@ public class movement : MonoBehaviour
                         activateDash = false;
                     }
 
-                    if (Input.GetKeyDown(KeyCode.Mouse0))
+                    if (Input.GetKeyDown(KeyCode.Mouse0) && anim.GetBool("Is_Detected") == true)
                     {
-                        anim.SetTrigger("Is_Hitting");
                         anim.SetBool("Is_Running", false);
                         anim.SetBool("Is_Crouching", false);
                         anim.SetBool("Is_Walking", false);
                         anim.SetBool("Is_Idle", false);
+                        anim.SetTrigger("Is_Hitting");
                         state = playerState.HITTING;
+                        anim.SetBool("Is_Damaging", true);
                         startHit = Time.frameCount;
                     }
 
@@ -229,7 +231,11 @@ public class movement : MonoBehaviour
             case playerState.HITTING:
                 {
                     finishHit = Time.frameCount;
-                    if ((finishHit - startHit) > 140) state = playerState.IDLE;
+                    if ((finishHit - startHit) > 30)
+                    {
+                        state = playerState.IDLE;
+                        anim.SetBool("Is_Damaging", false);
+                    }
                     break;
                 }
             case playerState.DYING:
@@ -251,6 +257,7 @@ public class movement : MonoBehaviour
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.tag == "floor") onFloor = true;
-        if (collision.gameObject.tag == "enemy") touchingEnemy = true;
+        //if (collision.gameObject.tag == "enemy") touchingEnemy = true;
+        
     }
 }
