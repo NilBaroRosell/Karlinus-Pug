@@ -153,7 +153,7 @@ public class csAreaVision : MonoBehaviour {
                     searchingRef = Time.realtimeSinceStartup;
                     lastSeen = GameObject.Find("Jugador").transform.position;
                 }
-                if (hit.transform.position != GameObject.Find("Enemigo").transform.position)
+                if (hit.transform.position != transform.position)
                     {
                         vertices[i] = transform.worldToLocalMatrix.MultiplyPoint3x4(hit.point);
                         uv[i] = new Vector2((rango + vertices[i].x) / (rango * 2), (rango + vertices[i].z) / (rango * 2));
