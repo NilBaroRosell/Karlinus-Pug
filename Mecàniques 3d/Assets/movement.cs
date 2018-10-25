@@ -53,23 +53,6 @@ public class movement : MonoBehaviour
                 {
                     if (onFloor)
                     {
-                        if (Input.GetKey(KeyCode.LeftShift))
-                        {
-                            anim.SetBool("Is_Running", true);
-                            speed = 30;
-                        }
-                        else if (Input.GetKeyUp(KeyCode.LeftShift)) anim.SetBool("Is_Running", false);
-                        else if (Input.GetKey(KeyCode.LeftControl))
-                        {
-                            anim.SetBool("Is_Crouching", true);
-                            speed = 10;
-                        }
-                        else if (Input.GetKeyUp(KeyCode.LeftControl)) anim.SetBool("Is_Crouching", false);
-                        else
-                        {
-                            speed = 20;
-                        }
-
                         if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.S))
                         {
                             wsPressed = true;
@@ -94,6 +77,30 @@ public class movement : MonoBehaviour
                             anim.SetBool("Is_Idle", true);
                             adPressed = false;
                         }
+
+                        speed = 20;
+
+                        if (Input.GetKey(KeyCode.LeftShift))
+                        {
+                            if (adPressed || wsPressed)
+                            {
+                                anim.SetBool("Is_Running", true);
+                                speed = 30;
+                            }
+                            else anim.SetBool("Is_Running", false);
+                        }
+                        else if (Input.GetKeyUp(KeyCode.LeftShift)) anim.SetBool("Is_Running", false);
+
+                        if (Input.GetKey(KeyCode.LeftControl))
+                        {
+                            if (adPressed || wsPressed)
+                            {
+                                anim.SetBool("Is_Crouching", true);
+                                speed = 10;
+                            }
+                            else anim.SetBool("Is_Crouching", false);
+                        }
+                        else if (Input.GetKeyUp(KeyCode.LeftControl)) anim.SetBool("Is_Crouching", false);
 
                         if (!wsPressed) moveVertical = 0;
                         else moveVertical = Input.GetAxis("Vertical");
