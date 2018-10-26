@@ -26,9 +26,9 @@ public class camara_movement : MonoBehaviour {
         transform.position = player.transform.position + distance;
         transform.LookAt(player.transform.position);
 
-        distance = Quaternion.AngleAxis(Input.GetAxis("Mouse Y") * 2, Vector3.right) * distance;
-        transform.position = player.transform.position + distance;
-        transform.LookAt(player.transform.position);
+        //distance = Quaternion.AngleAxis(Input.GetAxis("Mouse Y") * 2, -Vector3.right) * distance;
+        //transform.position = player.transform.position + distance;
+        //transform.LookAt(player.transform.position);
 
         int layerMask = 0 << 8;
 
@@ -40,16 +40,13 @@ public class camara_movement : MonoBehaviour {
 
         if (Physics.Raycast(transform.position, forward, out hit, Mathf.Infinity, layerMask))
         {
-            if (hit.collider.tag != "Player" && hit.collider.tag != "limit")
+            if (hit.collider.tag != "Player" && hit.collider.tag != "limit" && hit.collider.tag != "weapon")
             {
                 print("ENTRA"); 
                 Transform objectHit = hit.transform;
-                //transform.Translate(forward * hit.distance);
                 transform.position = hit.point;
-                //transform.position += forward * hit.distance;
             }
 
-            print(hit.collider.tag);
             Debug.DrawLine(transform.position, hit.point, Color.green);
         }
 

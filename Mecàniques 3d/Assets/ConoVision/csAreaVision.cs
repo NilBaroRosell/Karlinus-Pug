@@ -186,7 +186,6 @@ public class csAreaVision : MonoBehaviour {
     playerDist = new Vector3(GameObject.Find("Jugador").transform.position.x - rb.transform.position.x, 0.0f, GameObject.Find("Jugador").transform.position.z - rb.transform.position.z);
         enemyAgent.SetDestination(destinationPoint);
         enemyAgent.speed = speed / 10;
-       // if (rb.velocity.magnitude > speed) rb.velocity = rb.velocity.normalized * speed;
         rb.transform.LookAt(destinationPoint);
         vecEnemy1 = new Vector3(destinationPoint.x - rb.transform.position.x, 0.0f, destinationPoint.z - rb.transform.position.z);
         if (oldPosition != transform.position || oldRotation != transform.rotation || oldScale != transform.localScale)
@@ -221,11 +220,19 @@ public class csAreaVision : MonoBehaviour {
                     playerAnim.SetTrigger("Is_Withdrawing");
                     
                 }
-                else if(playerDist.magnitude > 10 && sneaky == true)
+                else if(sneaky)
                 {
-                    sneaky = false;
-                    playerAnim.SetBool("Is_Detected", false);
-                    playerAnim.SetTrigger("Is_Sheathing");
+                    if(playerDist.magnitude < 5 && playerAnim.GetBool("Is_Damaging") == true)
+                    {
+                        //GameObject.Find("Jugador").GetComponent<Rigidbody>().velocity = rb.velocity;
+                        Debug.Log("Sneaky");
+                    }
+                    else if (playerDist.magnitude > 10)
+                    {
+                        sneaky = false;
+                        playerAnim.SetBool("Is_Detected", false);
+                        playerAnim.SetTrigger("Is_Sheathing");
+                    }
                 }
                 if (playerDist.magnitude <= 40 && discovered)
                 {
@@ -233,7 +240,9 @@ public class csAreaVision : MonoBehaviour {
                     searchingRef = Time.realtimeSinceStartup;
                     lastState = enemyState.PATROLLING;
                     if (playerAnim.GetBool("Is_Detected") == false && sneaky == false)
-                    playerAnim.SetTrigger("Is_Withdrawing");
+                    {
+                        playerAnim.SetTrigger("Is_Withdrawing");
+                    }
                 }
                 break;
             case enemyState.SEARCHING:
@@ -251,6 +260,7 @@ public class csAreaVision : MonoBehaviour {
                     actualState = enemyState.PATROLLING;
                     lastState = enemyState.SEARCHING;
                     playerAnim.SetTrigger("Is_Sheathing");
+                    playerAnim.SetBool("Is_Detected", false);
                 }
                 break;
             case enemyState.FIGHTING:

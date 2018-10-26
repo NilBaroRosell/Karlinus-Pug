@@ -9,6 +9,8 @@ public class movement : MonoBehaviour
     public GameObject reference;
     public GameObject camara;
     static Animator anim;
+    GameObject weapon_show;
+    GameObject weapon_hide;
 
     public int speed;
     public int dashSpeed;
@@ -33,6 +35,7 @@ public class movement : MonoBehaviour
     public enum playerState { IDLE, HITTING, DYING };
     public playerState state;
     Collider w_collider;
+    private bool hitting = false;
     
 
     // Use this for initialization
@@ -43,6 +46,10 @@ public class movement : MonoBehaviour
         direction = "F";
         state = playerState.IDLE;
         transform.position = new Vector3(-84.99f, 1.27f, -41.88f);
+        weapon_show = GameObject.Find("weapon_show");
+        weapon_hide = GameObject.Find("weapon_hide");
+        weapon_show.SetActive(false);
+        weapon_hide.SetActive(true);
     }
 
     private void FixedUpdate()
@@ -78,7 +85,7 @@ public class movement : MonoBehaviour
                             adPressed = false;
                         }
 
-                        speed = 20;
+                        speed = 15;
 
                         if (Input.GetKey(KeyCode.LeftShift))
                         {
@@ -96,7 +103,7 @@ public class movement : MonoBehaviour
                             if (adPressed || wsPressed)
                             {
                                 anim.SetBool("Is_Crouching", true);
-                                speed = 10;
+                                //speed = 20;
                             }
                             else anim.SetBool("Is_Crouching", false);
                         }
@@ -110,8 +117,19 @@ public class movement : MonoBehaviour
 
                         if (rb.velocity.magnitude > speed) rb.velocity = rb.velocity.normalized * speed;
 
+                        if (hitting)
+                        {
+                            finishHit = Time.frameCount;
+                            if ((finishHit - startHit) > 30)
+                            {
+                               hitting = false;
+                                anim.SetBool("Is_Damaging", false);
+                            }
+                        }
+
                         rb.AddForce(moveVertical * reference.transform.forward * speed);
-                        rb.AddForce(moveHorizontal * reference.transform.right * speed);
+                            rb.AddForce(moveHorizontal * reference.transform.right * speed);
+  
 
                         transform.rotation = reference.transform.rotation;
 
@@ -209,40 +227,29 @@ public class movement : MonoBehaviour
                         startDash = Time.frameCount;
                         activateDash = false;
                     }
-
-                    if (Input.GetKeyDown(KeyCode.Mouse0) && anim.GetBool("Is_Detected") == true)
+                    //Weapon
+                    if (anim.GetBool("Is_Detected") == true && Input.GetKeyDown(KeyCode.Mouse0))
                     {
-                        anim.SetBool("Is_Running", false);
-                        anim.SetBool("Is_Crouching", false);
-                        anim.SetBool("Is_Walking", false);
-                        anim.SetBool("Is_Idle", false);
-                        anim.SetTrigger("Is_Hitting");
-                        state = playerState.HITTING;
-                        anim.SetBool("Is_Damaging", true);
-                        startHit = Time.frameCount;
+                            anim.SetBool("Is_Running", false);
+                            anim.SetBool("Is_Crouching", false);
+                            anim.SetBool("Is_Walking", false);
+                            anim.SetBool("Is_Idle", false);
+                            anim.SetTrigger("Is_Hitting");
+                            hitting = true;
+                            anim.SetBool("Is_Damaging", true);
+                            startHit = Time.frameCount;
                     }
 
-                    if (touchingEnemy)
-                    {
-                        anim.SetTrigger("Is_Dying");
-                        anim.SetBool("Is_Running", false);
-                        anim.SetBool("Is_Crouching", false);
-                        anim.SetBool("Is_Walking", false);
-                        anim.SetBool("Is_Idle", false);
-                        state = playerState.DYING;
-                        startDie = Time.frameCount;
-                    }
-                    break;
-                }
-            
-            case playerState.HITTING:
-                {
-                    finishHit = Time.frameCount;
-                    if ((finishHit - startHit) > 30)
-                    {
-                        state = playerState.IDLE;
-                        anim.SetBool("Is_Damaging", false);
-                    }
+                    //if (touchingEnemy)
+                    //{
+                    //    anim.SetTrigger("Is_Dying");
+                    //    anim.SetBool("Is_Running", false);
+                    //    anim.SetBool("Is_Crouching", false);
+                    //    anim.SetBool("Is_Walking", false);
+                    //    anim.SetBool("Is_Idle", false);
+                    //    state = playerState.DYING;
+                    //    startDie = Time.frameCount;
+                    //}
                     break;
                 }
             case playerState.DYING:
@@ -266,5 +273,18 @@ public class movement : MonoBehaviour
         if (collision.gameObject.tag == "floor") onFloor = true;
         //if (collision.gameObject.tag == "enemy") touchingEnemy = true;
         
+    }
+    public void Take_sword(int message)
+    {
+        if (message == 1)
+        {
+            weapon_show.SetActive(true);
+            weapon_hide.SetActive(false);
+        }
+        else
+        {
+            weapon_show.SetActive(false);
+            weapon_hide.SetActive(true);
+        }
     }
 }
