@@ -45,7 +45,7 @@ public class movement : MonoBehaviour
         anim = GetComponent<Animator>();
         direction = "F";
         state = playerState.IDLE;
-        transform.position = new Vector3(-84.99f, 1.27f, -41.88f);
+        //transform.position = new Vector3(-84.99f, 1.27f, -41.88f);
         weapon_show = GameObject.Find("weapon_show");
         weapon_hide = GameObject.Find("weapon_hide");
         weapon_show.SetActive(false);
