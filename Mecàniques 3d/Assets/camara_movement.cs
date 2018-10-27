@@ -7,16 +7,10 @@ public class camara_movement : MonoBehaviour {
     public GameObject player;
     public GameObject reference;
     public Vector3 distance;
-    public GameObject head;
 
     // Use this for initialization
     void Start () {
         distance = transform.position - player.transform.position;
-    }
-
-    void Update()
-    {
-        
     }
 
     // Update is called once per frame
@@ -26,9 +20,9 @@ public class camara_movement : MonoBehaviour {
         transform.position = player.transform.position + distance;
         transform.LookAt(player.transform.position);
 
-        //distance = Quaternion.AngleAxis(Input.GetAxis("Mouse Y") * 2, -Vector3.right) * distance;
-        //transform.position = player.transform.position + distance;
-        //transform.LookAt(player.transform.position);
+        /*distance = Quaternion.AngleAxis(Input.GetAxis("Mouse Y") * 2, -Vector3.right) * distance;
+        transform.position = player.transform.position + distance;
+        transform.LookAt(player.transform.position);*/
 
         int layerMask = 0 << 8;
 
@@ -46,10 +40,8 @@ public class camara_movement : MonoBehaviour {
                 Transform objectHit = hit.transform;
                 transform.position = hit.point;
             }
-
-            Debug.DrawLine(transform.position, hit.point, Color.green);
         }
-
+        
         transform.Rotate(-15, 0, 0);
 
         Vector3 copyRotation = new Vector3(0, transform.eulerAngles.y, 0);
