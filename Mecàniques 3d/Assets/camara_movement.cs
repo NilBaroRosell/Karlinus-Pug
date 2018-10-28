@@ -36,7 +36,6 @@ public class camara_movement : MonoBehaviour {
         {
             if (hit.collider.tag != "Player" && hit.collider.tag != "limit" && hit.collider.tag != "weapon")
             {
-                print("ENTRA"); 
                 Transform objectHit = hit.transform;
                 transform.position = hit.point;
             }
