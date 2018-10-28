@@ -9,6 +9,7 @@ public class movement : MonoBehaviour
     public GameObject reference;
     public GameObject camara;
     static Animator anim;
+    //static Animator enemyAnim;
     GameObject weapon_show;
     GameObject weapon_hide;
 
@@ -45,7 +46,7 @@ public class movement : MonoBehaviour
         anim = GetComponent<Animator>();
         direction = "F";
         state = playerState.IDLE;
-        //transform.position = new Vector3(-84.99f, 1.27f, -41.88f);
+        transform.position = new Vector3(-84.99f, 1.27f, -41.88f);
         weapon_show = GameObject.Find("weapon_show");
         weapon_hide = GameObject.Find("weapon_hide");
         weapon_show.SetActive(false);
@@ -234,22 +235,22 @@ public class movement : MonoBehaviour
                             anim.SetBool("Is_Crouching", false);
                             anim.SetBool("Is_Walking", false);
                             anim.SetBool("Is_Idle", false);
-                            anim.SetTrigger("Is_Hitting");
+                        anim.SetTrigger("Is_Hitting");
                             hitting = true;
                             anim.SetBool("Is_Damaging", true);
                             startHit = Time.frameCount;
                     }
 
-                    //if (touchingEnemy)
-                    //{
-                    //    anim.SetTrigger("Is_Dying");
-                    //    anim.SetBool("Is_Running", false);
-                    //    anim.SetBool("Is_Crouching", false);
-                    //    anim.SetBool("Is_Walking", false);
-                    //    anim.SetBool("Is_Idle", false);
-                    //    state = playerState.DYING;
-                    //    startDie = Time.frameCount;
-                    //}
+                    if (touchingEnemy)
+                    {
+                        anim.SetTrigger("Is_Dying");
+                        anim.SetBool("Is_Running", false);
+                        anim.SetBool("Is_Crouching", false);
+                        anim.SetBool("Is_Walking", false);
+                        anim.SetBool("Is_Idle", false);
+                        state = playerState.DYING;
+                        startDie = Time.frameCount;
+                    }
                     break;
                 }
             case playerState.DYING:
@@ -271,9 +272,10 @@ public class movement : MonoBehaviour
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.tag == "floor") onFloor = true;
-        //if (collision.gameObject.tag == "enemy") touchingEnemy = true;
+        if (collision.gameObject.tag == "enemy_weapon") touchingEnemy = true;
         
     }
+
     public void Take_sword(int message)
     {
         if (message == 1)

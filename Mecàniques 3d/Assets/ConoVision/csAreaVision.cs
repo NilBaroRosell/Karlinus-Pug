@@ -199,6 +199,30 @@ public class csAreaVision : MonoBehaviour {
                 meshFilter.mesh = areaMesh(meshFilter.mesh);
             }
         }
+        switch(speed)
+        {
+            case 0:
+                anim.SetBool("Is_Running", false);
+                anim.SetBool("Is_Walking", false);                
+                anim.SetBool("Is_Fighting", true);
+                break;
+            case 10:
+                anim.SetBool("Is_Running", false);
+                anim.SetBool("Is_Walking", true);
+                anim.SetBool("Is_Fighting", false);
+                break;
+            case 50:
+                anim.SetBool("Is_Running", true);
+                anim.SetBool("Is_Walking", false);                
+                anim.SetBool("Is_Fighting", false);
+                break;
+            default:
+                anim.SetBool("Is_Running", false);
+                anim.SetBool("Is_Walking", false);
+                anim.SetBool("Is_Fighting", false);
+                break;
+        }
+        Debug.Log(speed);
         switch (actualState)
         {
             case enemyState.PATROLLING:
@@ -232,6 +256,7 @@ public class csAreaVision : MonoBehaviour {
                         sneaky = false;
                         playerAnim.SetBool("Is_Detected", false);
                         playerAnim.SetTrigger("Is_Sheathing");
+                        playerAnim.ResetTrigger("Is_Hitting");
                     }
                 }
                 if (playerDist.magnitude <= 40 && discovered)
@@ -261,6 +286,7 @@ public class csAreaVision : MonoBehaviour {
                     lastState = enemyState.SEARCHING;
                     playerAnim.SetTrigger("Is_Sheathing");
                     playerAnim.SetBool("Is_Detected", false);
+                    playerAnim.ResetTrigger("Is_Hitting");
                 }
                 break;
             case enemyState.FIGHTING:
@@ -268,7 +294,9 @@ public class csAreaVision : MonoBehaviour {
                 alertRend.material.SetColor("_Color", Color.red);
                 destinationPoint = GameObject.Find("Jugador").transform.position;
                 discoveredRef = Time.realtimeSinceStartup;
-                if (playerDist.magnitude > 40)
+                if(playerDist.magnitude < 1) speed = 0;
+                else if (playerDist.magnitude >= 1) speed = 50;
+                else if (playerDist.magnitude > 40)
                 {
                     actualState = enemyState.SEARCHING;
                     lastState = enemyState.FIGHTING;
@@ -297,6 +325,7 @@ public class csAreaVision : MonoBehaviour {
 
         playerAnim.SetTrigger("Is_Sheathing");
         playerAnim.SetBool("Is_Detected", false);
+        playerAnim.ResetTrigger("Is_Hitting");
         transform.gameObject.SetActive(false);
     }
 }
