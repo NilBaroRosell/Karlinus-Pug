@@ -43,10 +43,11 @@ public class movement : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        Physics.gravity = new Vector3(0, -50, 0);
         anim = GetComponent<Animator>();
         direction = "F";
         state = playerState.IDLE;
-        transform.position = new Vector3(-84.99f, 1.27f, -41.88f);
+        //transform.position = new Vector3(-84.99f, 1.27f, -41.88f);
         weapon_show = GameObject.Find("weapon_show");
         weapon_hide = GameObject.Find("weapon_hide");
         weapon_show.SetActive(false);
@@ -86,14 +87,14 @@ public class movement : MonoBehaviour
                             adPressed = false;
                         }
 
-                        speed = 15;
+                        speed = 40;
 
                         if (Input.GetKey(KeyCode.LeftShift))
                         {
                             if (adPressed || wsPressed)
                             {
                                 anim.SetBool("Is_Running", true);
-                                speed = 30;
+                                speed = 55;
                             }
                             else anim.SetBool("Is_Running", false);
                         }
@@ -104,7 +105,7 @@ public class movement : MonoBehaviour
                             if (adPressed || wsPressed)
                             {
                                 anim.SetBool("Is_Crouching", true);
-                                //speed = 20;
+                                speed = 35;
                             }
                             else anim.SetBool("Is_Crouching", false);
                         }
@@ -129,7 +130,7 @@ public class movement : MonoBehaviour
                         }
 
                         rb.AddForce(moveVertical * reference.transform.forward * speed);
-                            rb.AddForce(moveHorizontal * reference.transform.right * speed);
+                        rb.AddForce(moveHorizontal * reference.transform.right * speed);
   
 
                         transform.rotation = reference.transform.rotation;
@@ -137,7 +138,7 @@ public class movement : MonoBehaviour
                         if (Input.GetKeyDown(KeyCode.Space))
                         {
                             anim.SetTrigger("Is_Jumping");
-                            rb.AddForce(new Vector3(0, 275, 0));
+                            rb.AddForce(new Vector3(0, 1000, 0));
                             onFloor = false;
                         }
 
