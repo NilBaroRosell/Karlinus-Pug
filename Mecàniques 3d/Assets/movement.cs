@@ -17,7 +17,6 @@ public class movement : MonoBehaviour
     public int dashSpeed;
 
     public bool onFloor = false;
-    public bool touchingEnemy = false;
     public bool adPressed = false;
     public bool wsPressed = false;
 
@@ -47,7 +46,7 @@ public class movement : MonoBehaviour
         anim = GetComponent<Animator>();
         direction = "F";
         state = playerState.IDLE;
-        //transform.position = new Vector3(-84.99f, 1.27f, -41.88f);
+        transform.position = new Vector3(-84.99f, 1.27f, -41.88f);
         weapon_show = GameObject.Find("weapon_show");
         weapon_hide = GameObject.Find("weapon_hide");
         weapon_show.SetActive(false);
@@ -242,13 +241,8 @@ public class movement : MonoBehaviour
                             startHit = Time.frameCount;
                     }
 
-                    if (touchingEnemy)
+                    if (anim.GetBool("Is_Dying") == true)
                     {
-                        anim.SetTrigger("Is_Dying");
-                        anim.SetBool("Is_Running", false);
-                        anim.SetBool("Is_Crouching", false);
-                        anim.SetBool("Is_Walking", false);
-                        anim.SetBool("Is_Idle", false);
                         state = playerState.DYING;
                         startDie = Time.frameCount;
                     }
@@ -273,8 +267,7 @@ public class movement : MonoBehaviour
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.tag == "floor") onFloor = true;
-        if (collision.gameObject.tag == "enemy_weapon") touchingEnemy = true;
-        
+
     }
 
     public void Take_sword(int message)

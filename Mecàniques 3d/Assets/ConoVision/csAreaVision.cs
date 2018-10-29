@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine.AI;
 using System.Collections;
+using System;
 
 public class csAreaVision : MonoBehaviour {
 
@@ -33,6 +34,9 @@ public class csAreaVision : MonoBehaviour {
     private bool discovered;
     private double discoveredRef;
     private double searchingRef;
+    private double atackRef;
+    private bool atackRefTaken;
+    private bool atacking;
     Vector3 lastSeen;
     Renderer alertRend;
     private bool hittingEnemy = false;
@@ -100,7 +104,7 @@ public class csAreaVision : MonoBehaviour {
 	Vector2[] initialUV;
 
 	// Use this for initialization
-	void Start () { 
+	void Awake () { 
         meshFilter = transform.GetChild(2).GetChild(2).GetChild(0).GetChild(0).GetChild(1).GetChild(0).GetComponent<MeshFilter>();
         meshFilter.mesh = Cono();
         initialPosition = meshFilter.mesh.vertices;
@@ -109,11 +113,14 @@ public class csAreaVision : MonoBehaviour {
         anim = GetComponent<Animator>();
         GoToA = true;
         anim.SetBool("Is_Walking", true);
+        atackRefTaken = false;
+        atacking = false;
         destinationPoint = pointA;
         playerDist = new Vector3(GameObject.Find("Jugador").transform.position.x - rb.transform.position.x, 0.0f, GameObject.Find("Jugador").transform.position.z - rb.transform.position.z);
         discovered = false;
         discoveredRef = Time.realtimeSinceStartup;
         searchingRef = Time.realtimeSinceStartup;
+        atackRef = Time.realtimeSinceStartup;
         lastSeen = GameObject.Find("Jugador").transform.position;
         alertRend = transform.GetChild(3).GetComponent<Renderer>();
        // alertRend.material.shader = Shader.Find("_Color");
@@ -127,7 +134,45 @@ public class csAreaVision : MonoBehaviour {
         playerAnim = GameObject.Find("Jugador").GetComponent<Animator>();
     }
 
-	Mesh areaMesh(Mesh mesh){
+    void Start()
+    {
+        anim = GetComponent<Animator>();
+        switch (speed)
+        {
+            case 0:
+                anim.SetBool("Is_Running", false);
+                anim.SetBool("Is_Walking", false);
+                if (Time.realtimeSinceStartup > atackRef + 1.5f)
+                {
+                    anim.SetBool("Is_Fighting", true);
+                    atacking = true;
+                }
+                break;
+            case 10:
+                anim.SetBool("Is_Running", false);
+                anim.SetBool("Is_Walking", true);
+                anim.SetBool("Is_Fighting", false);
+                atackRefTaken = true;
+                atacking = false;
+                break;
+            case 50:
+                anim.SetBool("Is_Running", true);
+                anim.SetBool("Is_Walking", false);
+                anim.SetBool("Is_Fighting", false);
+                atackRefTaken = true;
+                atacking = false;
+                break;
+            default:
+                anim.SetBool("Is_Running", false);
+                anim.SetBool("Is_Walking", false);
+                anim.SetBool("Is_Fighting", false);
+                atackRefTaken = true;
+                atacking = false;
+                break;
+        }
+    }
+
+    Mesh areaMesh(Mesh mesh){
         
             Mesh _mesh = new Mesh();
             Vector3[] vertices = new Vector3[mesh.vertices.Length];
@@ -199,30 +244,6 @@ public class csAreaVision : MonoBehaviour {
                 meshFilter.mesh = areaMesh(meshFilter.mesh);
             }
         }
-        switch(speed)
-        {
-            case 0:
-                anim.SetBool("Is_Running", false);
-                anim.SetBool("Is_Walking", false);                
-                anim.SetBool("Is_Fighting", true);
-                break;
-            case 10:
-                anim.SetBool("Is_Running", false);
-                anim.SetBool("Is_Walking", true);
-                anim.SetBool("Is_Fighting", false);
-                break;
-            case 50:
-                anim.SetBool("Is_Running", true);
-                anim.SetBool("Is_Walking", false);                
-                anim.SetBool("Is_Fighting", false);
-                break;
-            default:
-                anim.SetBool("Is_Running", false);
-                anim.SetBool("Is_Walking", false);
-                anim.SetBool("Is_Fighting", false);
-                break;
-        }
-        Debug.Log(speed);
         switch (actualState)
         {
             case enemyState.PATROLLING:
@@ -244,20 +265,12 @@ public class csAreaVision : MonoBehaviour {
                     playerAnim.SetTrigger("Is_Withdrawing");
                     
                 }
-                else if(sneaky)
+                else if(sneaky && playerDist.magnitude > 10)
                 {
-                    if(playerDist.magnitude < 5 && playerAnim.GetBool("Is_Damaging") == true)
-                    {
-                        //GameObject.Find("Jugador").GetComponent<Rigidbody>().velocity = rb.velocity;
-                        Debug.Log("Sneaky");
-                    }
-                    else if (playerDist.magnitude > 10)
-                    {
                         sneaky = false;
                         playerAnim.SetBool("Is_Detected", false);
                         playerAnim.SetTrigger("Is_Sheathing");
                         playerAnim.ResetTrigger("Is_Hitting");
-                    }
                 }
                 if (playerDist.magnitude <= 40 && discovered)
                 {
@@ -294,7 +307,15 @@ public class csAreaVision : MonoBehaviour {
                 alertRend.material.SetColor("_Color", Color.red);
                 destinationPoint = GameObject.Find("Jugador").transform.position;
                 discoveredRef = Time.realtimeSinceStartup;
-                if(playerDist.magnitude < 1) speed = 0;
+                if (playerDist.magnitude < 1.75f)
+                {
+                    speed = 0;
+                    if (atackRefTaken == false)
+                    {
+                        atackRef = Time.realtimeSinceStartup;
+                        atackRefTaken = true;
+                    }
+                }
                 else if (playerDist.magnitude >= 1) speed = 50;
                 else if (playerDist.magnitude > 40)
                 {
@@ -307,12 +328,23 @@ public class csAreaVision : MonoBehaviour {
             default:
                 break;
         }
+
+        Start();
         discovered = false;        
         vecEnemy1.Normalize();
 
     }
+
     private void OnCollisionEnter(Collision collision)
     {
+        if (collision.gameObject.tag == "Player" && atacking)
+        {
+            playerAnim.SetBool("Is_Dying", true);
+            playerAnim.SetBool("Is_Running", false);
+            playerAnim.SetBool("Is_Crouching", false);
+            playerAnim.SetBool("Is_Walking", false);
+            playerAnim.SetBool("Is_Idle", false);
+        }
         if (collision.gameObject.tag == "weapon" && playerAnim.GetBool("Is_Damaging") == true)
         {
 
