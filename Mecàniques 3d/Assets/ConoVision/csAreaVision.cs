@@ -343,7 +343,7 @@ public class csAreaVision : MonoBehaviour {
         Start();
         discovered = false;        
         vecEnemy1.Normalize();
-
+        if (dead) speed = 0;
     }
 
     private void OnCollisionEnter(Collision collision)
