@@ -41,6 +41,7 @@ public class csAreaVision : MonoBehaviour {
     Renderer alertRend;
     private bool hittingEnemy = false;
     private bool sneaky = false;
+    private bool dead = false;
 
     //Nav Mesh
     NavMeshAgent enemyAgent;
@@ -140,33 +141,43 @@ public class csAreaVision : MonoBehaviour {
         switch (speed)
         {
             case 0:
-                anim.SetBool("Is_Running", false);
-                anim.SetBool("Is_Walking", false);
-                if (Time.realtimeSinceStartup > atackRef + 1.5f)
+                if (dead)
                 {
-                    anim.SetBool("Is_Fighting", true);
-                    atacking = true;
+                    anim.SetBool("Is_Running", false);
+                    anim.SetBool("Is_Walking", false);
+                    anim.SetBool("Is_Fighting", false);
+                    anim.SetTrigger("Is_Dying");
+                }
+                else
+                {
+                    anim.SetBool("Is_Running", false);
+                    anim.SetBool("Is_Walking", false);
+                    if (Time.realtimeSinceStartup > atackRef + 1)
+                    {
+                        anim.SetBool("Is_Fighting", true);
+                        atacking = true;
+                    }
                 }
                 break;
             case 10:
                 anim.SetBool("Is_Running", false);
                 anim.SetBool("Is_Walking", true);
                 anim.SetBool("Is_Fighting", false);
-                atackRefTaken = true;
+                atackRefTaken = false;
                 atacking = false;
                 break;
             case 50:
                 anim.SetBool("Is_Running", true);
                 anim.SetBool("Is_Walking", false);
                 anim.SetBool("Is_Fighting", false);
-                atackRefTaken = true;
+                atackRefTaken = false;
                 atacking = false;
                 break;
             default:
                 anim.SetBool("Is_Running", false);
                 anim.SetBool("Is_Walking", false);
                 anim.SetBool("Is_Fighting", false);
-                atackRefTaken = true;
+                atackRefTaken = false;
                 atacking = false;
                 break;
         }
@@ -307,7 +318,7 @@ public class csAreaVision : MonoBehaviour {
                 alertRend.material.SetColor("_Color", Color.red);
                 destinationPoint = GameObject.Find("Jugador").transform.position;
                 discoveredRef = Time.realtimeSinceStartup;
-                if (playerDist.magnitude < 1.75f)
+                if (playerDist.magnitude < 1.5f)
                 {
                     speed = 0;
                     if (atackRefTaken == false)
@@ -337,7 +348,7 @@ public class csAreaVision : MonoBehaviour {
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.tag == "Player" && atacking)
+        if (collision.gameObject.tag == "Player" && atacking && dead == false)
         {
             playerAnim.SetBool("Is_Dying", true);
             playerAnim.SetBool("Is_Running", false);
@@ -347,8 +358,10 @@ public class csAreaVision : MonoBehaviour {
         }
         if (collision.gameObject.tag == "weapon" && playerAnim.GetBool("Is_Damaging") == true)
         {
-
-            StartCoroutine(ExecuteAfterTime(1));
+            speed = 0;
+            dead = true;
+            Start();
+            StartCoroutine(ExecuteAfterTime(4));
         }
     }
     IEnumerator ExecuteAfterTime(float time)
