@@ -141,6 +141,18 @@ public class movement : MonoBehaviour
                             onFloor = false;
                         }
 
+                        if (Input.GetKeyDown(KeyCode.Z))
+                        {
+                            transform.position = new Vector3(-58.511f, -9.288946f, 92.9324f);
+                            camara.transform.position = new Vector3(-58.59f, -6.42f, 86.97f);
+                        }
+
+                        if (Input.GetKeyDown(KeyCode.X))
+                        {
+                            transform.position = new Vector3(55.89f, -6.778945f, 37.37239f);
+                            camara.transform.position = new Vector3(55.811f, -3.91f, 31.41f);
+                        }
+
                         if (moveVertical > 0 && moveHorizontal > 0)
                         {
                             transform.Rotate(0, 45, 0);
@@ -220,7 +232,7 @@ public class movement : MonoBehaviour
                     }
 
                     finishDash = Time.frameCount;
-                    if ((finishDash - startDash) > 1000) activateDash = true;
+                    if ((finishDash - startDash) > 80) activateDash = true;
                     if (Input.GetKeyDown(KeyCode.F) && activateDash)
                     {
                         rb.AddForce(moveVertical * reference.transform.forward * dashSpeed);
@@ -235,7 +247,7 @@ public class movement : MonoBehaviour
                             anim.SetBool("Is_Crouching", false);
                             anim.SetBool("Is_Walking", false);
                             anim.SetBool("Is_Idle", false);
-                        anim.SetTrigger("Is_Hitting");
+                            anim.SetTrigger("Is_Hitting");
                             hitting = true;
                             anim.SetBool("Is_Damaging", true);
                             startHit = Time.frameCount;
