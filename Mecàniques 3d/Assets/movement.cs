@@ -134,7 +134,7 @@ public class movement : MonoBehaviour
 
                         transform.rotation = reference.transform.rotation;
 
-                        if (Input.GetKeyDown(KeyCode.Space))
+                        if (Input.GetKeyDown(KeyCode.Space) && !anim.GetBool("Is_Withdrawing") && !anim.GetBool("Is_Hitting") && !anim.GetBool("Is_Sheathing") && onFloor)
                         {
                             anim.SetTrigger("Is_Jumping");
                             rb.AddForce(new Vector3(0, 1000, 0));

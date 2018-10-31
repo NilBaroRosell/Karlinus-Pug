@@ -274,7 +274,6 @@ public class csAreaVision : MonoBehaviour {
                     sneaky = true;
                     playerAnim.SetBool("Is_Detected", true);
                     playerAnim.SetTrigger("Is_Withdrawing");
-                    
                 }
                 else if(sneaky && playerDist.magnitude > 10)
                 {
