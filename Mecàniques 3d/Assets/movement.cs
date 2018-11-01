@@ -138,7 +138,8 @@ public class movement : MonoBehaviour
                         {
                             anim.SetTrigger("Is_Jumping");
                             rb.AddForce(new Vector3(0, 1000, 0));
-                            rb.AddForce(reference.transform.forward * 4 * speed);
+                            rb.AddForce(moveVertical * reference.transform.forward * 6 * speed);
+                            rb.AddForce(moveHorizontal * reference.transform.right * 6 * speed);
                             onFloor = false;
                         }
 

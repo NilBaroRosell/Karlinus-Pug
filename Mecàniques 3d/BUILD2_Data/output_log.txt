@@ -2,43 +2,47 @@ Initialize engine version: 5.6.3f1 (d3101c3b8468)
 GfxDevice: creating device client; threaded=1
 Direct3D:
     Version:  Direct3D 11.0 [level 11.1]
-    Renderer: NVIDIA GeForce GTX 1050 (ID=0x1c8d)
-    Vendor:   NVIDIA
-    VRAM:     3072 MB
-    Driver:   21.21.13.7319
+    Renderer: Intel(R) HD Graphics 630 (ID=0x5912)
+    Vendor:   Intel
+    VRAM:     2111 MB
+    Driver:   23.20.16.4973
 Begin MonoManager ReloadAssembly
-Platform assembly: C:\Users\nbr19\Desktop\Karlinus Pug\Karlinus-Pug\Mecàniques 3d\BUILD2_Data\Managed\UnityEngine.dll (this message is harmless)
-Loading C:\Users\nbr19\Desktop\Karlinus Pug\Karlinus-Pug\Mecàniques 3d\BUILD2_Data\Managed\UnityEngine.dll into Unity Child Domain
-Platform assembly: C:\Users\nbr19\Desktop\Karlinus Pug\Karlinus-Pug\Mecàniques 3d\BUILD2_Data\Managed\Assembly-CSharp.dll (this message is harmless)
-Loading C:\Users\nbr19\Desktop\Karlinus Pug\Karlinus-Pug\Mecàniques 3d\BUILD2_Data\Managed\Assembly-CSharp.dll into Unity Child Domain
-Platform assembly: C:\Users\nbr19\Desktop\Karlinus Pug\Karlinus-Pug\Mecàniques 3d\BUILD2_Data\Managed\UnityEngine.UI.dll (this message is harmless)
-Loading C:\Users\nbr19\Desktop\Karlinus Pug\Karlinus-Pug\Mecàniques 3d\BUILD2_Data\Managed\UnityEngine.UI.dll into Unity Child Domain
-Platform assembly: C:\Users\nbr19\Desktop\Karlinus Pug\Karlinus-Pug\Mecàniques 3d\BUILD2_Data\Managed\UnityEngine.Networking.dll (this message is harmless)
-Loading C:\Users\nbr19\Desktop\Karlinus Pug\Karlinus-Pug\Mecàniques 3d\BUILD2_Data\Managed\UnityEngine.Networking.dll into Unity Child Domain
-Platform assembly: C:\Users\nbr19\Desktop\Karlinus Pug\Karlinus-Pug\Mecàniques 3d\BUILD2_Data\Managed\UnityEngine.Analytics.dll (this message is harmless)
-Loading C:\Users\nbr19\Desktop\Karlinus Pug\Karlinus-Pug\Mecàniques 3d\BUILD2_Data\Managed\UnityEngine.Analytics.dll into Unity Child Domain
-- Completed reload, in  0.030 seconds
-Platform assembly: C:\Users\nbr19\Desktop\Karlinus Pug\Karlinus-Pug\Mecàniques 3d\BUILD2_Data\Managed\System.Core.dll (this message is harmless)
-Platform assembly: C:\Users\nbr19\Desktop\Karlinus Pug\Karlinus-Pug\Mecàniques 3d\BUILD2_Data\Managed\System.dll (this message is harmless)
-desktop: 1920x1080 60Hz; virtual: 1920x1080 at 0,0
+Platform assembly: C:\Users\user\Desktop\Karlinus Pug\Karlinus-Pug\Mecàniques 3d\BUILD2_Data\Managed\UnityEngine.dll (this message is harmless)
+Loading C:\Users\user\Desktop\Karlinus Pug\Karlinus-Pug\Mecàniques 3d\BUILD2_Data\Managed\UnityEngine.dll into Unity Child Domain
+Platform assembly: C:\Users\user\Desktop\Karlinus Pug\Karlinus-Pug\Mecàniques 3d\BUILD2_Data\Managed\Assembly-CSharp.dll (this message is harmless)
+Loading C:\Users\user\Desktop\Karlinus Pug\Karlinus-Pug\Mecàniques 3d\BUILD2_Data\Managed\Assembly-CSharp.dll into Unity Child Domain
+Platform assembly: C:\Users\user\Desktop\Karlinus Pug\Karlinus-Pug\Mecàniques 3d\BUILD2_Data\Managed\UnityEngine.UI.dll (this message is harmless)
+Loading C:\Users\user\Desktop\Karlinus Pug\Karlinus-Pug\Mecàniques 3d\BUILD2_Data\Managed\UnityEngine.UI.dll into Unity Child Domain
+Platform assembly: C:\Users\user\Desktop\Karlinus Pug\Karlinus-Pug\Mecàniques 3d\BUILD2_Data\Managed\UnityEngine.Networking.dll (this message is harmless)
+Loading C:\Users\user\Desktop\Karlinus Pug\Karlinus-Pug\Mecàniques 3d\BUILD2_Data\Managed\UnityEngine.Networking.dll into Unity Child Domain
+Platform assembly: C:\Users\user\Desktop\Karlinus Pug\Karlinus-Pug\Mecàniques 3d\BUILD2_Data\Managed\UnityEngine.Analytics.dll (this message is harmless)
+Loading C:\Users\user\Desktop\Karlinus Pug\Karlinus-Pug\Mecàniques 3d\BUILD2_Data\Managed\UnityEngine.Analytics.dll into Unity Child Domain
+- Completed reload, in  0.022 seconds
+Platform assembly: C:\Users\user\Desktop\Karlinus Pug\Karlinus-Pug\Mecàniques 3d\BUILD2_Data\Managed\System.Core.dll (this message is harmless)
+Platform assembly: C:\Users\user\Desktop\Karlinus Pug\Karlinus-Pug\Mecàniques 3d\BUILD2_Data\Managed\System.dll (this message is harmless)
+desktop: 1920x1080 59Hz; virtual: 1920x1080 at 0,0
 <RI> Initializing input.
 <RI> Input initialized.
 <RI> Initialized touch support.
-UnloadTime: 3.970556 ms
-Setting up 4 worker threads for Enlighten.
-  Thread -> id: 3f28 -> priority: 1 
-  Thread -> id: 2294 -> priority: 1 
-  Thread -> id: 4af4 -> priority: 1 
-  Thread -> id: 1cc -> priority: 1 
+UnloadTime: 6.869928 ms
+Setting up 2 worker threads for Enlighten.
+  Thread -> id: 3b74 -> priority: 1 
+  Thread -> id: 2f44 -> priority: 1 
 Unloading 5 Unused Serialized files (Serialized files now loaded: 0)
-UnloadTime: 7.340861 ms
+UnloadTime: 23.902325 ms
 
-Unloading 6702 unused Assets to reduce memory usage. Loaded Objects now: 269.
-Total: 18.669416 ms (FindLiveObjects: 0.407704 ms CreateObjectMapping: 0.590040 ms MarkObjects: 0.228285 ms  DeleteObjects: 17.442295 ms)
+Unloading 2072 unused Assets to reduce memory usage. Loaded Objects now: 269.
+Total: 5.631694 ms (FindLiveObjects: 0.252093 ms CreateObjectMapping: 0.291755 ms MarkObjects: 0.479548 ms  DeleteObjects: 4.605592 ms)
 
 Unloading 3 Unused Serialized files (Serialized files now loaded: 0)
-UnloadTime: 0.561595 ms
+UnloadTime: 0.463323 ms
 
-Unloading 6 unused Assets to reduce memory usage. Loaded Objects now: 5576.
-Total: 1.056092 ms (FindLiveObjects: 0.282256 ms CreateObjectMapping: 0.072934 ms MarkObjects: 0.672821 ms  DeleteObjects: 0.027350 ms)
+Unloading 1 unused Assets to reduce memory usage. Loaded Objects now: 269.
+Total: 0.587417 ms (FindLiveObjects: 0.127398 ms CreateObjectMapping: 0.035455 ms MarkObjects: 0.412243 ms  DeleteObjects: 0.009915 ms)
+
+Unloading 3 Unused Serialized files (Serialized files now loaded: 0)
+UnloadTime: 0.851229 ms
+
+Unloading 6 unused Assets to reduce memory usage. Loaded Objects now: 5580.
+Total: 1.706965 ms (FindLiveObjects: 0.391210 ms CreateObjectMapping: 0.090741 ms MarkObjects: 1.116243 ms  DeleteObjects: 0.106967 ms)
 
