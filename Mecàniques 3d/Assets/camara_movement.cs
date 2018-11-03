@@ -34,7 +34,7 @@ public class camara_movement : MonoBehaviour {
 
         if (Physics.Raycast(transform.position, forward, out hit, Mathf.Infinity, layerMask))
         {
-            if (hit.collider.tag != "Player" && hit.collider.tag != "limit" && hit.collider.tag != "weapon")
+            if (hit.collider.tag != "Player" && hit.collider.tag != "limit" && hit.collider.tag != "weapon" && hit.collider.tag != "enemy" && hit.collider.tag != "enemy_weapon")
             {
                 Transform objectHit = hit.transform;
                 transform.position = hit.point;
