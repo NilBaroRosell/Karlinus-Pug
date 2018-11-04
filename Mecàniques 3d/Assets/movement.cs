@@ -145,14 +145,14 @@ public class movement : MonoBehaviour
 
                         if (Input.GetKeyDown(KeyCode.Z))
                         {
-                            transform.position = new Vector3(-58.511f, -9.288946f, 92.9324f);
-                            camara.transform.position = new Vector3(-58.59f, -6.42f, 86.97f);
+                            transform.position = new Vector3(-64.511f, -9.288946f, 92.9324f);
+                            camara.transform.position = new Vector3(-64.59f, -6.42f, 86.97f);
                         }
 
                         if (Input.GetKeyDown(KeyCode.X))
                         {
-                            transform.position = new Vector3(55.89f, -6.778945f, 37.37239f);
-                            camara.transform.position = new Vector3(55.811f, -3.91f, 31.41f);
+                            transform.position = new Vector3(50.89f, -6.778945f, 37.37239f);
+                            camara.transform.position = new Vector3(50.811f, -3.91f, 31.41f);
                         }
 
                         if (moveVertical > 0 && moveHorizontal > 0)
