@@ -94,6 +94,7 @@
     <Compile Include="Assets\camara_movement.cs" />
     <Compile Include="Assets\collision.cs" />
     <Compile Include="Assets\cucumber.cs" />
+    <Compile Include="Assets\fountain.cs" />
     <Compile Include="Assets\liquidState.cs" />
     <Compile Include="Assets\movement.cs" />
   </ItemGroup>

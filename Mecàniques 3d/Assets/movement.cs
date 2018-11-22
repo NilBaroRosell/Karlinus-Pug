@@ -133,7 +133,6 @@ public class movement : MonoBehaviour
         if (collision.gameObject.tag == "floor") onFloor = true;
         if (collision.gameObject.tag == "water") onWater = true;
         else onWater = false;
-
     }
 
     public void Take_sword(int message)
@@ -234,7 +233,7 @@ public class movement : MonoBehaviour
 
             transform.rotation = reference.transform.rotation;
 
-            if (Input.GetKeyDown(KeyCode.Space) && !anim.GetBool("Is_Withdrawing") && !anim.GetBool("Is_Hitting") && !anim.GetBool("Is_Sheathing") && onFloor)
+            if (!liquidState && Input.GetKeyDown(KeyCode.Space) && !anim.GetBool("Is_Withdrawing") && !anim.GetBool("Is_Hitting") && !anim.GetBool("Is_Sheathing") && onFloor)
             {
                 anim.SetTrigger("Is_Jumping");
                 rb.AddForce(new Vector3(0, 1000, 0));
