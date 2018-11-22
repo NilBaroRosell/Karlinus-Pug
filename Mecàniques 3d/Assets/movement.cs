@@ -32,11 +32,17 @@ public class movement : MonoBehaviour
     public float startDie;
     public float finishDie;
     public bool activateDash = true;
-    public enum playerState { IDLE, HITTING, DYING };
+    public enum playerState { IDLE, HITTING, DYING, LIQUID };
     public playerState state;
     Collider w_collider;
     private bool hitting = false;
-    
+
+    public static bool liquidState = false;
+    private bool cooldown = false;
+    //public GameObject player;
+    private liquidState checkCooldown;
+    private bool onWater = false;
+
 
     // Use this for initialization
     void Start()
@@ -59,179 +65,7 @@ public class movement : MonoBehaviour
         {
             case playerState.IDLE:
                 {
-                    if (onFloor)
-                    {
-                        if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.S))
-                        {
-                            wsPressed = true;
-                            anim.SetBool("Is_Walking", true);
-                            anim.SetBool("Is_Idle", false);
-                        }
-                        if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D))
-                        {
-                            anim.SetBool("Is_Walking", true);
-                            anim.SetBool("Is_Idle", false);
-                            adPressed = true;
-                        }
-                        if (Input.GetKeyUp(KeyCode.W) || Input.GetKeyUp(KeyCode.S))
-                        {
-                            anim.SetBool("Is_Walking", false);
-                            anim.SetBool("Is_Idle", true);
-                            wsPressed = false;
-                        }
-                        if (Input.GetKeyUp(KeyCode.A) || Input.GetKeyUp(KeyCode.D))
-                        {
-                            anim.SetBool("Is_Walking", false);
-                            anim.SetBool("Is_Idle", true);
-                            adPressed = false;
-                        }
-
-                        speed = 40;
-
-                        if (Input.GetKey(KeyCode.LeftShift))
-                        {
-                            if (adPressed || wsPressed)
-                            {
-                                anim.SetBool("Is_Running", true);
-                                speed = 55;
-                            }
-                            else anim.SetBool("Is_Running", false);
-                        }
-                        else if (Input.GetKeyUp(KeyCode.LeftShift)) anim.SetBool("Is_Running", false);
-
-                        if (Input.GetKey(KeyCode.LeftControl))
-                        {
-                            if (adPressed || wsPressed)
-                            {
-                                anim.SetBool("Is_Crouching", true);
-                                speed = 35;
-                            }
-                            else anim.SetBool("Is_Crouching", false);
-                        }
-                        else if (Input.GetKeyUp(KeyCode.LeftControl)) anim.SetBool("Is_Crouching", false);
-
-                        if (!wsPressed) moveVertical = 0;
-                        else moveVertical = Input.GetAxis("Vertical");
-
-                        if (!adPressed) moveHorizontal = 0;
-                        else moveHorizontal = Input.GetAxis("Horizontal");
-
-                        if (rb.velocity.magnitude > speed) rb.velocity = rb.velocity.normalized * speed;
-
-                        if (hitting)
-                        {
-                            finishHit = Time.frameCount;
-                            if ((finishHit - startHit) > 30)
-                            {
-                               hitting = false;
-                                anim.SetBool("Is_Damaging", false);
-                            }
-                        }
-
-                        rb.AddForce(moveVertical * reference.transform.forward * speed);
-                        rb.AddForce(moveHorizontal * reference.transform.right * speed);
-  
-
-                        transform.rotation = reference.transform.rotation;
-
-                        if (Input.GetKeyDown(KeyCode.Space) && !anim.GetBool("Is_Withdrawing") && !anim.GetBool("Is_Hitting") && !anim.GetBool("Is_Sheathing") && onFloor)
-                        {
-                            anim.SetTrigger("Is_Jumping");
-                            rb.AddForce(new Vector3(0, 1000, 0));
-                            rb.AddForce(moveVertical * reference.transform.forward * 6 * speed);
-                            rb.AddForce(moveHorizontal * reference.transform.right * 6 * speed);
-                            onFloor = false;
-                        }
-
-                        if (Input.GetKeyDown(KeyCode.Z))
-                        {
-                            transform.position = new Vector3(-64.511f, -9.288946f, 92.9324f);
-                            camara.transform.position = new Vector3(-64.59f, -6.42f, 86.97f);
-                        }
-
-                        if (Input.GetKeyDown(KeyCode.X))
-                        {
-                            transform.position = new Vector3(50.89f, -6.778945f, 37.37239f);
-                            camara.transform.position = new Vector3(50.811f, -3.91f, 31.41f);
-                        }
-
-                        if (moveVertical > 0 && moveHorizontal > 0)
-                        {
-                            transform.Rotate(0, 45, 0);
-                            direction = "FR";
-                        }
-                        else if (moveVertical > 0 && moveHorizontal < 0)
-                        {
-                            transform.Rotate(0, -45, 0);
-                            direction = "FL";
-                        }
-                        else if (moveVertical < 0 && moveHorizontal > 0)
-                        {
-                            transform.Rotate(0, 135, 0);
-                            direction = "BR";
-                        }
-                        else if (moveVertical < 0 && moveHorizontal < 0)
-                        {
-                            transform.Rotate(0, -135, 0);
-                            direction = "BL";
-                        }
-                        else if (moveVertical > 0)
-                        {
-                            direction = "F";
-                        }
-                        else if (moveVertical < 0)
-                        {
-                            transform.Rotate(0, 180, 0);
-                            direction = "B";
-                        }
-                        else if (moveHorizontal > 0)
-                        {
-                            transform.Rotate(0, 90, 0);
-                            direction = "R";
-                        }
-                        else if (moveHorizontal < 0)
-                        {
-                            transform.Rotate(0, -90, 0);
-                            direction = "L";
-                        }
-                    }
-
-
-                    if (moveVertical == 0 && moveHorizontal == 0)
-                    {
-                        switch (direction)
-                        {
-                            case "F":
-                                transform.Rotate(0, 0, 0);
-                                break;
-                            case "B":
-                                transform.Rotate(0, 180, 0);
-                                break;
-                            case "L":
-                                transform.Rotate(0, -90, 0);
-                                break;
-                            case "R":
-                                transform.Rotate(0, 90, 0);
-                                break;
-                            case "FL":
-                                transform.Rotate(0, -45, 0);
-                                break;
-                            case "FR":
-                                transform.Rotate(0, 45, 0);
-                                break;
-                            case "BL":
-                                transform.Rotate(0, -135, 0);
-                                break;
-                            case "BR":
-                                transform.Rotate(0, 135, 0);
-                                break;
-                            default:
-                                break;
-                        }
-
-                        anim.SetBool("Is_Walking", false);
-                        anim.SetBool("Is_Idle", true);
-                    }
+                    movePlayer();
 
                     finishDash = Time.frameCount;
                     if ((finishDash - startDash) > 80) activateDash = true;
@@ -242,6 +76,15 @@ public class movement : MonoBehaviour
                         startDash = Time.frameCount;
                         activateDash = false;
                     }
+
+                    checkCooldown = GetComponent<liquidState>();
+                    cooldown = checkCooldown.cooldown;
+                    if (Input.GetKeyDown(KeyCode.Q) && !cooldown)
+                    {
+                        liquidState = true;
+                        state = playerState.LIQUID;
+                    }
+
                     //Weapon
                     if (anim.GetBool("Is_Detected") == true && Input.GetKeyDown(KeyCode.Mouse0))
                     {
@@ -271,6 +114,13 @@ public class movement : MonoBehaviour
                     }
                     break;
                 }
+            case playerState.LIQUID:
+                {
+                    Debug.Log(movement.liquidState);
+                    movePlayer();
+                    if (!liquidState) state = playerState.IDLE;
+                    break;
+                }
             default:
                 {
                     break;
@@ -281,6 +131,8 @@ public class movement : MonoBehaviour
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.tag == "floor") onFloor = true;
+        if (collision.gameObject.tag == "water") onWater = true;
+        else onWater = false;
 
     }
 
@@ -295,6 +147,190 @@ public class movement : MonoBehaviour
         {
             weapon_show.SetActive(false);
             weapon_hide.SetActive(true);
+        }
+    }
+
+    public void movePlayer()
+    {
+        if (onFloor)
+        {
+            if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.S))
+            {
+                wsPressed = true;
+                anim.SetBool("Is_Walking", true);
+                anim.SetBool("Is_Idle", false);
+            }
+            if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D))
+            {
+                anim.SetBool("Is_Walking", true);
+                anim.SetBool("Is_Idle", false);
+                adPressed = true;
+            }
+            if (Input.GetKeyUp(KeyCode.W) || Input.GetKeyUp(KeyCode.S))
+            {
+                anim.SetBool("Is_Walking", false);
+                anim.SetBool("Is_Idle", true);
+                wsPressed = false;
+            }
+            if (Input.GetKeyUp(KeyCode.A) || Input.GetKeyUp(KeyCode.D))
+            {
+                anim.SetBool("Is_Walking", false);
+                anim.SetBool("Is_Idle", true);
+                adPressed = false;
+            }
+
+            speed = 40;
+
+            if (liquidState)
+            {
+                if (onWater) speed = 50;
+            }
+            else
+            {
+                if (Input.GetKey(KeyCode.LeftShift))
+                {
+                    if (adPressed || wsPressed)
+                    {
+                        anim.SetBool("Is_Running", true);
+                        speed = 55;
+                    }
+                    else anim.SetBool("Is_Running", false);
+                }
+                else if (Input.GetKeyUp(KeyCode.LeftShift)) anim.SetBool("Is_Running", false);
+
+                if (Input.GetKey(KeyCode.LeftControl))
+                {
+                    if (adPressed || wsPressed)
+                    {
+                        anim.SetBool("Is_Crouching", true);
+                        speed = 35;
+                    }
+                    else anim.SetBool("Is_Crouching", false);
+                }
+                else if (Input.GetKeyUp(KeyCode.LeftControl)) anim.SetBool("Is_Crouching", false);
+            }
+
+            if (!wsPressed) moveVertical = 0;
+            else moveVertical = Input.GetAxis("Vertical");
+
+            if (!adPressed) moveHorizontal = 0;
+            else moveHorizontal = Input.GetAxis("Horizontal");
+
+            if (rb.velocity.magnitude > speed) rb.velocity = rb.velocity.normalized * speed;
+
+            if (hitting)
+            {
+                finishHit = Time.frameCount;
+                if ((finishHit - startHit) > 30)
+                {
+                    hitting = false;
+                    anim.SetBool("Is_Damaging", false);
+                }
+            }
+
+            rb.AddForce(moveVertical * reference.transform.forward * speed);
+            rb.AddForce(moveHorizontal * reference.transform.right * speed);
+
+
+            transform.rotation = reference.transform.rotation;
+
+            if (Input.GetKeyDown(KeyCode.Space) && !anim.GetBool("Is_Withdrawing") && !anim.GetBool("Is_Hitting") && !anim.GetBool("Is_Sheathing") && onFloor)
+            {
+                anim.SetTrigger("Is_Jumping");
+                rb.AddForce(new Vector3(0, 1000, 0));
+                rb.AddForce(moveVertical * reference.transform.forward * 6 * speed);
+                rb.AddForce(moveHorizontal * reference.transform.right * 6 * speed);
+                onFloor = false;
+            }
+
+            if (Input.GetKeyDown(KeyCode.Z))
+            {
+                transform.position = new Vector3(-64.511f, -9.288946f, 92.9324f);
+                camara.transform.position = new Vector3(-64.59f, -6.42f, 86.97f);
+            }
+
+            if (Input.GetKeyDown(KeyCode.X))
+            {
+                transform.position = new Vector3(50.89f, -6.778945f, 37.37239f);
+                camara.transform.position = new Vector3(50.811f, -3.91f, 31.41f);
+            }
+
+            if (moveVertical > 0 && moveHorizontal > 0)
+            {
+                transform.Rotate(0, 45, 0);
+                direction = "FR";
+            }
+            else if (moveVertical > 0 && moveHorizontal < 0)
+            {
+                transform.Rotate(0, -45, 0);
+                direction = "FL";
+            }
+            else if (moveVertical < 0 && moveHorizontal > 0)
+            {
+                transform.Rotate(0, 135, 0);
+                direction = "BR";
+            }
+            else if (moveVertical < 0 && moveHorizontal < 0)
+            {
+                transform.Rotate(0, -135, 0);
+                direction = "BL";
+            }
+            else if (moveVertical > 0)
+            {
+                direction = "F";
+            }
+            else if (moveVertical < 0)
+            {
+                transform.Rotate(0, 180, 0);
+                direction = "B";
+            }
+            else if (moveHorizontal > 0)
+            {
+                transform.Rotate(0, 90, 0);
+                direction = "R";
+            }
+            else if (moveHorizontal < 0)
+            {
+                transform.Rotate(0, -90, 0);
+                direction = "L";
+            }
+        }
+
+
+        if (moveVertical == 0 && moveHorizontal == 0)
+        {
+            switch (direction)
+            {
+                case "F":
+                    transform.Rotate(0, 0, 0);
+                    break;
+                case "B":
+                    transform.Rotate(0, 180, 0);
+                    break;
+                case "L":
+                    transform.Rotate(0, -90, 0);
+                    break;
+                case "R":
+                    transform.Rotate(0, 90, 0);
+                    break;
+                case "FL":
+                    transform.Rotate(0, -45, 0);
+                    break;
+                case "FR":
+                    transform.Rotate(0, 45, 0);
+                    break;
+                case "BL":
+                    transform.Rotate(0, -135, 0);
+                    break;
+                case "BR":
+                    transform.Rotate(0, 135, 0);
+                    break;
+                default:
+                    break;
+            }
+
+            anim.SetBool("Is_Walking", false);
+            anim.SetBool("Is_Idle", true);
         }
     }
 }
