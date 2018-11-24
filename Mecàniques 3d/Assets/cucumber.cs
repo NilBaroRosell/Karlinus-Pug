@@ -69,7 +69,10 @@ public class cucumber : MonoBehaviour {
                     cucumberRig.AddForce(transform.forward.x * force.x, force.y, transform.forward.z * force.z);
                     firstTime = false;
                 }
-                if (onFloor) state = cucumberState.FLOOR;
+                if (onFloor)
+                {
+                    state = cucumberState.FLOOR;
+                }
                 break;
             }
             case cucumberState.FLOOR:
