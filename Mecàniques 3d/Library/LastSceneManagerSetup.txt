@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/ciudad.unity
+- path: "Assets/mec\xE0aniques.unity"
   isLoaded: 1
   isActive: 1

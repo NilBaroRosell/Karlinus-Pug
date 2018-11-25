@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 public class movement : MonoBehaviour
 {
     private Rigidbody rb;
-    public GameObject reference;
+    public Transform reference;
     public GameObject camara;
     static Animator anim;
     //static Animator enemyAnim;
@@ -39,10 +39,9 @@ public class movement : MonoBehaviour
 
     public static bool liquidState = false;
     private bool cooldown = false;
-    //public GameObject player;
     private liquidState checkCooldown;
     private bool onWater = false;
-
+    public Vector3 rot;
 
     // Use this for initialization
     void Start()
@@ -61,7 +60,7 @@ public class movement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        switch(state)
+        switch (state)
         {
             case playerState.IDLE:
                 {
@@ -88,14 +87,14 @@ public class movement : MonoBehaviour
                     //Weapon
                     if (anim.GetBool("Is_Detected") == true && Input.GetKeyDown(KeyCode.Mouse0))
                     {
-                            anim.SetBool("Is_Running", false);
-                            anim.SetBool("Is_Crouching", false);
-                            anim.SetBool("Is_Walking", false);
-                            anim.SetBool("Is_Idle", false);
-                            anim.SetTrigger("Is_Hitting");
-                            hitting = true;
-                            anim.SetBool("Is_Damaging", true);
-                            startHit = Time.frameCount;
+                        anim.SetBool("Is_Running", false);
+                        anim.SetBool("Is_Crouching", false);
+                        anim.SetBool("Is_Walking", false);
+                        anim.SetBool("Is_Idle", false);
+                        anim.SetTrigger("Is_Hitting");
+                        hitting = true;
+                        anim.SetBool("Is_Damaging", true);
+                        startHit = Time.frameCount;
                     }
 
                     if (anim.GetBool("Is_Dying") == true)
@@ -106,7 +105,7 @@ public class movement : MonoBehaviour
                     break;
                 }
             case playerState.DYING:
-                { 
+                {
                     finishDie = Time.frameCount;
                     if ((finishDie - startDie) > 250)
                     {
@@ -153,29 +152,34 @@ public class movement : MonoBehaviour
     {
         if (onFloor)
         {
+            transform.rotation = camara.transform.rotation;
+            rot = camara.transform.rotation.eulerAngles;
+            transform.Rotate(-rot.x, 0, -rot.z);
+
             if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.S))
             {
                 wsPressed = true;
                 anim.SetBool("Is_Walking", true);
                 anim.SetBool("Is_Idle", false);
             }
+            else
+            {
+                wsPressed = false;
+                anim.SetBool("Is_Walking", false);
+                anim.SetBool("Is_Idle", true);
+            }
+
             if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D))
             {
+                adPressed = true;
                 anim.SetBool("Is_Walking", true);
                 anim.SetBool("Is_Idle", false);
-                adPressed = true;
             }
-            if (Input.GetKeyUp(KeyCode.W) || Input.GetKeyUp(KeyCode.S))
+            else
             {
-                anim.SetBool("Is_Walking", false);
-                anim.SetBool("Is_Idle", true);
-                wsPressed = false;
-            }
-            if (Input.GetKeyUp(KeyCode.A) || Input.GetKeyUp(KeyCode.D))
-            {
-                anim.SetBool("Is_Walking", false);
-                anim.SetBool("Is_Idle", true);
                 adPressed = false;
+                anim.SetBool("Is_Walking", true);
+                anim.SetBool("Is_Idle", true);
             }
 
             speed = 40;
@@ -195,9 +199,9 @@ public class movement : MonoBehaviour
                     }
                     else anim.SetBool("Is_Running", false);
                 }
-                else if (Input.GetKeyUp(KeyCode.LeftShift)) anim.SetBool("Is_Running", false);
+                else anim.SetBool("Is_Running", false);
 
-                if (Input.GetKey(KeyCode.LeftControl))
+                if (Input.GetKey(KeyCode.CapsLock))
                 {
                     if (adPressed || wsPressed)
                     {
@@ -206,7 +210,10 @@ public class movement : MonoBehaviour
                     }
                     else anim.SetBool("Is_Crouching", false);
                 }
-                else if (Input.GetKeyUp(KeyCode.LeftControl)) anim.SetBool("Is_Crouching", false);
+                else anim.SetBool("Is_Crouching", false);
+
+                if (Input.GetKeyUp(KeyCode.LeftShift)) anim.SetBool("Is_Running", false);
+                if (Input.GetKeyUp(KeyCode.CapsLock)) anim.SetBool("Is_Crouching", false);
             }
 
             if (!wsPressed) moveVertical = 0;
@@ -214,8 +221,6 @@ public class movement : MonoBehaviour
 
             if (!adPressed) moveHorizontal = 0;
             else moveHorizontal = Input.GetAxis("Horizontal");
-
-            if (rb.velocity.magnitude > speed) rb.velocity = rb.velocity.normalized * speed;
 
             if (hitting)
             {
@@ -227,32 +232,10 @@ public class movement : MonoBehaviour
                 }
             }
 
-            rb.AddForce(moveVertical * reference.transform.forward * speed);
-            rb.AddForce(moveHorizontal * reference.transform.right * speed);
+            if (rb.velocity.magnitude > speed) rb.velocity = rb.velocity.normalized * speed;
 
-
-            transform.rotation = reference.transform.rotation;
-
-            if (!liquidState && Input.GetKeyDown(KeyCode.Space) && !anim.GetBool("Is_Withdrawing") && !anim.GetBool("Is_Hitting") && !anim.GetBool("Is_Sheathing") && onFloor)
-            {
-                anim.SetTrigger("Is_Jumping");
-                rb.AddForce(new Vector3(0, 1000, 0));
-                rb.AddForce(moveVertical * reference.transform.forward * 6 * speed);
-                rb.AddForce(moveHorizontal * reference.transform.right * 6 * speed);
-                onFloor = false;
-            }
-
-            if (Input.GetKeyDown(KeyCode.Z))
-            {
-                transform.position = new Vector3(-64.511f, -9.288946f, 92.9324f);
-                camara.transform.position = new Vector3(-64.59f, -6.42f, 86.97f);
-            }
-
-            if (Input.GetKeyDown(KeyCode.X))
-            {
-                transform.position = new Vector3(50.89f, -6.778945f, 37.37239f);
-                camara.transform.position = new Vector3(50.811f, -3.91f, 31.41f);
-            }
+            rb.AddForce(moveVertical * transform.forward * speed);
+            rb.AddForce(moveHorizontal * transform.right * speed);
 
             if (moveVertical > 0 && moveHorizontal > 0)
             {
@@ -293,43 +276,63 @@ public class movement : MonoBehaviour
                 transform.Rotate(0, -90, 0);
                 direction = "L";
             }
-        }
+            else direction = "I";
 
-
-        if (moveVertical == 0 && moveHorizontal == 0)
-        {
-            switch (direction)
+            if (!liquidState && Input.GetKeyDown(KeyCode.Space) && !anim.GetBool("Is_Withdrawing") && !anim.GetBool("Is_Hitting") && !anim.GetBool("Is_Sheathing") && onFloor)
             {
-                case "F":
-                    transform.Rotate(0, 0, 0);
-                    break;
-                case "B":
-                    transform.Rotate(0, 180, 0);
-                    break;
-                case "L":
-                    transform.Rotate(0, -90, 0);
-                    break;
-                case "R":
-                    transform.Rotate(0, 90, 0);
-                    break;
-                case "FL":
-                    transform.Rotate(0, -45, 0);
-                    break;
-                case "FR":
-                    transform.Rotate(0, 45, 0);
-                    break;
-                case "BL":
-                    transform.Rotate(0, -135, 0);
-                    break;
-                case "BR":
-                    transform.Rotate(0, 135, 0);
-                    break;
-                default:
-                    break;
+                anim.SetTrigger("Is_Jumping");
+                rb.AddForce(new Vector3(0, 1000, 0));
+                rb.AddForce(moveVertical * reference.transform.forward * 6 * speed);
+                rb.AddForce(moveHorizontal * reference.transform.right * 6 * speed);
+                onFloor = false;
             }
 
-            anim.SetBool("Is_Walking", false);
-            anim.SetBool("Is_Idle", true);
+            if (Input.GetKeyDown(KeyCode.Z))
+            {
+                transform.position = new Vector3(-64.511f, -9.288946f, 92.9324f);
+                camara.transform.position = new Vector3(-64.59f, -6.42f, 86.97f);
+            }
+
+            if (Input.GetKeyDown(KeyCode.X))
+            {
+                transform.position = new Vector3(50.89f, -6.778945f, 37.37239f);
+                camara.transform.position = new Vector3(50.811f, -3.91f, 31.41f);
+            }
+
+            if (moveVertical == 0 && moveHorizontal == 0)
+            {
+                switch (direction)
+                {
+                    case "F":
+                        break;
+                    case "B":
+                        transform.Rotate(0, 180, 0);
+                        break;
+                    case "L":
+                        transform.Rotate(0, -90, 0);
+                        break;
+                    case "R":
+                        transform.Rotate(0, 90, 0);
+                        break;
+                    case "FL":
+                        transform.Rotate(0, -45, 0);
+                        break;
+                    case "FR":
+                        transform.Rotate(0, 45, 0);
+                        break;
+                    case "BL":
+                        transform.Rotate(0, -135, 0);
+                        break;
+                    case "BR":
+                        transform.Rotate(0, 135, 0);
+                        break;
+                    default:
+                        break;
+                }
+
+                anim.SetBool("Is_Walking", false);
+                anim.SetBool("Is_Idle", true);
+            }
         }
     }
 }
