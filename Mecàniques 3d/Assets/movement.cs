@@ -42,6 +42,7 @@ public class movement : MonoBehaviour
     private liquidState checkCooldown;
     private bool onWater = false;
     public Vector3 rot;
+    public float lastYPos;
 
     // Use this for initialization
     void Start()
@@ -152,10 +153,6 @@ public class movement : MonoBehaviour
     {
         if (onFloor)
         {
-            transform.rotation = camara.transform.rotation;
-            rot = camara.transform.rotation.eulerAngles;
-            transform.Rotate(-rot.x, 0, -rot.z);
-
             if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.S))
             {
                 wsPressed = true;
@@ -180,6 +177,13 @@ public class movement : MonoBehaviour
                 adPressed = false;
                 anim.SetBool("Is_Walking", true);
                 anim.SetBool("Is_Idle", true);
+            }
+
+            if (adPressed || wsPressed)
+            {
+                transform.rotation = camara.transform.rotation;
+                rot = camara.transform.rotation.eulerAngles;
+                transform.Rotate(-rot.x, 0, -rot.z);
             }
 
             speed = 40;
@@ -276,7 +280,11 @@ public class movement : MonoBehaviour
                 transform.Rotate(0, -90, 0);
                 direction = "L";
             }
-            else direction = "I";
+            else
+            {
+                transform.Rotate(0, rot.y - lastYPos, 0);
+                direction = "I";
+            }
 
             if (!liquidState && Input.GetKeyDown(KeyCode.Space) && !anim.GetBool("Is_Withdrawing") && !anim.GetBool("Is_Hitting") && !anim.GetBool("Is_Sheathing") && onFloor)
             {
@@ -333,6 +341,9 @@ public class movement : MonoBehaviour
                 anim.SetBool("Is_Walking", false);
                 anim.SetBool("Is_Idle", true);
             }
+
+            rot = transform.rotation.eulerAngles;
+            lastYPos = rot.y;
         }
     }
 }
