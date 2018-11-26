@@ -7,6 +7,7 @@ using System;
 public class csAreaVision : MonoBehaviour {
 
 	public int angulo = 45;
+    public int w_ref = 40;
 	public int rango  = 5;
 
 	MeshFilter meshFilter;
@@ -24,8 +25,10 @@ public class csAreaVision : MonoBehaviour {
     public int speed;
 
     //Patrol points and variables
-    public Vector3 pointA;
-    public Vector3 pointB;
+    public GameObject PointA_Obj;
+    public GameObject PointB_Obj;
+    private Vector3 pointA;
+    private Vector3 pointB;
     private Vector3 destinationPoint;
     private bool GoToA;
     private Vector3 vecEnemy1;
@@ -62,7 +65,7 @@ public class csAreaVision : MonoBehaviour {
 		uv.Add(Vector2.one*0.5f);
 		
 		int w,s;
-		for(w=40;w<angulo;w++){
+		for(w= w_ref; w<angulo;w++){
 			
 			for(s=0;s<rango;s++){
                 temp.x = Mathf.Cos(Mathf.Deg2Rad*w+Mathf.Deg2Rad*(s/rango))*rango;
@@ -116,6 +119,10 @@ public class csAreaVision : MonoBehaviour {
         anim.SetBool("Is_Walking", true);
         atackRefTaken = false;
         atacking = false;
+        pointA = PointA_Obj.transform.position;
+        pointB = PointB_Obj.transform.position;
+        PointA_Obj.SetActive(false);
+        PointB_Obj.SetActive(false);
         destinationPoint = pointA;
         playerDist = new Vector3(GameObject.Find("Jugador").transform.position.x - rb.transform.position.x, 0.0f, GameObject.Find("Jugador").transform.position.z - rb.transform.position.z);
         discovered = false;

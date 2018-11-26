@@ -11,6 +11,8 @@ public class HUD : MonoBehaviour {
     public bool started;
     public GameObject firstdMision;
     public GameObject secondMision;
+    public GameObject Zona1;
+    public GameObject Zona2;
 
 	// Use this for initialization
 	void Start () {
@@ -31,6 +33,8 @@ public class HUD : MonoBehaviour {
         {
             startTime2 = Time.frameCount;
             secondMision.SetActive(true);
+            Zona2.SetActive(true);
+            Zona1.SetActive(false);
             started = true;
         }
 
