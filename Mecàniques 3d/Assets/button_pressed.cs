@@ -12,6 +12,6 @@ public class button_pressed : MonoBehaviour {
 	
 	// Update is called once per frame
 	public void sceneChange() {
-        SceneManager.LoadScene("mecàaniques");
+        SceneManager.LoadScene("sewer");
     }
 }
