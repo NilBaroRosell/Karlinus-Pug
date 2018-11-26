@@ -6,7 +6,6 @@ using UnityEngine.SceneManagement;
 public class movement : MonoBehaviour
 {
     private Rigidbody rb;
-    public Transform reference;
     public GameObject camara;
     static Animator anim;
     //static Animator enemyAnim;
@@ -53,8 +52,7 @@ public class movement : MonoBehaviour
         anim = GetComponent<Animator>();
         direction = "F";
         state = playerState.IDLE;
-        transform.position = new Vector3(PlayerPrefs.GetFloat("KarlinusPosX"), PlayerPrefs.GetFloat("KarlinusPosY"),
-            PlayerPrefs.GetFloat("KarlinusPosZ"));//(-84.99f, 1.27f, -41.88f);
+        transform.position = new Vector3(-84.99f, 1.27f, -41.88f);
         weapon_show = GameObject.Find("weapon_show");
         weapon_hide = GameObject.Find("weapon_hide");
         weapon_show.SetActive(false);
@@ -243,6 +241,15 @@ public class movement : MonoBehaviour
             rb.AddForce(moveVertical * transform.forward * speed);
             rb.AddForce(moveHorizontal * transform.right * speed);
 
+            if (!liquidState && Input.GetKeyDown(KeyCode.Space) && !anim.GetBool("Is_Withdrawing") && !anim.GetBool("Is_Hitting") && !anim.GetBool("Is_Sheathing") && onFloor)
+            {
+                anim.SetTrigger("Is_Jumping");
+                rb.AddForce(new Vector3(0, 1000, 0));
+                rb.AddForce(moveVertical * transform.forward * 6 * speed);
+                rb.AddForce(moveHorizontal * transform.right * 6 * speed);
+                onFloor = false;
+            }
+
             if (moveVertical > 0 && moveHorizontal > 0)
             {
                 transform.Rotate(0, 45, 0);
@@ -288,15 +295,6 @@ public class movement : MonoBehaviour
                 direction = "I";
             }
 
-            if (!liquidState && Input.GetKeyDown(KeyCode.Space) && !anim.GetBool("Is_Withdrawing") && !anim.GetBool("Is_Hitting") && !anim.GetBool("Is_Sheathing") && onFloor)
-            {
-                anim.SetTrigger("Is_Jumping");
-                rb.AddForce(new Vector3(0, 1000, 0));
-                rb.AddForce(moveVertical * transform.forward * 6 * speed);
-                rb.AddForce(moveHorizontal * transform.right * 6 * speed);
-                onFloor = false;
-            }
-
             if (Input.GetKeyDown(KeyCode.Z))
             {
                 transform.position = new Vector3(-64.511f, -9.288946f, 92.9324f);
@@ -307,11 +305,6 @@ public class movement : MonoBehaviour
             {
                 transform.position = new Vector3(50.89f, -6.778945f, 37.37239f);
                 camara.transform.position = new Vector3(50.811f, -3.91f, 31.41f);
-            }
-
-            if (Input.GetKeyDown(KeyCode.Escape))
-            {
-                SceneManager.LoadScene("Menu_1");
             }
 
             if (moveVertical == 0 && moveHorizontal == 0)
