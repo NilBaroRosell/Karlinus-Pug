@@ -127,6 +127,7 @@
     <Compile Include="Assets\HUD.cs" />
     <Compile Include="Assets\liquidState.cs" />
     <Compile Include="Assets\LoadScene.cs" />
+    <Compile Include="Assets\Menuctrl.cs" />
     <Compile Include="Assets\misions.cs" />
     <Compile Include="Assets\movement.cs" />
     <None Include="Assets\Fantasy Skybox FREE\Readme.txt" />

@@ -5,9 +5,10 @@ using UnityEngine;
 public class misions : MonoBehaviour {
 
 
-    public enum Misions { M1, M2, M3, M4, SM_1 = 0, SM_2 = 0, SM_3 = 0, SM_4 = 1, SM_5 = 1, SM_6 = 1, NONE = 10};
+    public enum Misions { M1, M2, M3, M4, SM_1 = 0, SM_2 = 0, SM_3 = 0, SM_4 = 1, SM_5 = 1, SM_6 = 1, NONE = 10 };
     public Misions ActualMision;
     public GameObject Jugador;
+    private static misions Instance;
     [System.Serializable]
     public struct MisionPoint
     {
@@ -23,7 +24,16 @@ public class misions : MonoBehaviour {
 
     private void Awake()
     {
-        DontDestroyOnLoad(transform.gameObject);
+        DontDestroyOnLoad(this);
+
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            DestroyObject(gameObject);
+        }
         MisionPoint PrincipalMision = new MisionPoint();
         PrincipalMision.MisionsCompleted = new bool[4];
         MisionPoint RatHood = new MisionPoint();
@@ -35,7 +45,9 @@ public class misions : MonoBehaviour {
         hideMisionPoints();
     }
     // Use this for initialization
-    void Start () {
+    void Start() {
+        if (GameObject.Find("Jugador") != null)
+            Jugador = GameObject.Find("Jugador");
         switch (ActualMision)
         {
             case Misions.NONE:
@@ -44,12 +56,12 @@ public class misions : MonoBehaviour {
             case Misions.M2:
                 break;
         }
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+    }
+
+    // Update is called once per frame
+    void Update() {
+
+    }
 
     void showMisionPoints()
     {
@@ -126,5 +138,10 @@ public class misions : MonoBehaviour {
         ScaryDog.pointObject.SetActive(false);
         RebelCat.pointObject.SetActive(false);
         PrincipalMision.pointObject.SetActive(false);
+    }
+
+    void OnLevelWasLoaded()
+    {
+        Start();
     }
 }
