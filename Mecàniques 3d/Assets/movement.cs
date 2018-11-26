@@ -14,7 +14,8 @@ public class movement : MonoBehaviour
     GameObject weapon_hide;
 
     public int speed;
-    public int dashSpeed;
+    public float normalDash = 750;
+    public float superDash = 1500;
 
     public bool onFloor = false;
     public bool adPressed = false;
@@ -24,11 +25,11 @@ public class movement : MonoBehaviour
 
     public float moveHorizontal;
     public float moveVertical;
-
     public float startHit = 0;
     public float finishHit = 0;
     public float startDash;
     public float finishDash;
+    
     public float startDie;
     public float finishDie;
     public bool activateDash = true;
@@ -71,8 +72,8 @@ public class movement : MonoBehaviour
                     if ((finishDash - startDash) > 80) activateDash = true;
                     if (Input.GetKeyDown(KeyCode.F) && activateDash)
                     {
-                        rb.AddForce(moveVertical * reference.transform.forward * dashSpeed);
-                        rb.AddForce(moveHorizontal * reference.transform.right * dashSpeed);
+                        rb.AddForce(moveVertical * transform.forward * normalDash);
+                        rb.AddForce(moveHorizontal * transform.right * normalDash);
                         startDash = Time.frameCount;
                         activateDash = false;
                     }
@@ -290,8 +291,8 @@ public class movement : MonoBehaviour
             {
                 anim.SetTrigger("Is_Jumping");
                 rb.AddForce(new Vector3(0, 1000, 0));
-                rb.AddForce(moveVertical * reference.transform.forward * 6 * speed);
-                rb.AddForce(moveHorizontal * reference.transform.right * 6 * speed);
+                rb.AddForce(moveVertical * transform.forward * 6 * speed);
+                rb.AddForce(moveHorizontal * transform.right * 6 * speed);
                 onFloor = false;
             }
 

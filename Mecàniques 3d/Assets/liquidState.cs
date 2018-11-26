@@ -100,44 +100,45 @@ public class liquidState : MonoBehaviour
 
             else
             {
-                if (hidratation > 100) hidratation = 100;
-                else if (hidratation > 66)
-                {
-                    perfectlyHidratated.SetActive(true);
-                    wellHidratated.SetActive(false);
-                    badlyHidratated.SetActive(false);
-                    dead.SetActive(false);
-                }
-                else if (hidratation > 33)
-                {
-                    perfectlyHidratated.SetActive(false);
-                    wellHidratated.SetActive(true);
-                    badlyHidratated.SetActive(false);
-                    dead.SetActive(false);
-                }
-                else if (hidratation > 0)
-                {
-                    perfectlyHidratated.SetActive(false);
-                    wellHidratated.SetActive(false);
-                    badlyHidratated.SetActive(true);
-                    dead.SetActive(false);
-                }
-                else
-                {
-                    perfectlyHidratated.SetActive(false);
-                    wellHidratated.SetActive(false);
-                    badlyHidratated.SetActive(false);
-                    dead.SetActive(true);
-                    //mostrar que ha mort
-                    SceneManager.LoadScene("DEAD");
-                }
-
                 if (inFountain && Input.GetKey(KeyCode.E)) drinking = true;
+
                 if (drinking)
                 {
                     Debug.Log(liquidState.hidratation);
                     drinking = false;
                 }
+            }
+
+            if (hidratation > 100) hidratation = 100;
+            else if (hidratation > 66)
+            {
+                perfectlyHidratated.SetActive(true);
+                wellHidratated.SetActive(false);
+                badlyHidratated.SetActive(false);
+                dead.SetActive(false);
+            }
+            else if (hidratation > 33)
+            {
+                perfectlyHidratated.SetActive(false);
+                wellHidratated.SetActive(true);
+                badlyHidratated.SetActive(false);
+                dead.SetActive(false);
+            }
+            else if (hidratation > 0)
+            {
+                perfectlyHidratated.SetActive(false);
+                wellHidratated.SetActive(false);
+                badlyHidratated.SetActive(true);
+                dead.SetActive(false);
+            }
+            else
+            {
+                perfectlyHidratated.SetActive(false);
+                wellHidratated.SetActive(false);
+                badlyHidratated.SetActive(false);
+                dead.SetActive(true);
+                //mostrar que ha mort
+                SceneManager.LoadScene("DEAD");
             }
         }
     }
