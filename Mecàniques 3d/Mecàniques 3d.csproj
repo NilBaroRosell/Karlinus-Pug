@@ -378,6 +378,7 @@
     <Compile Include="Assets\Menuctrl.cs" />
     <Compile Include="Assets\misions.cs" />
     <Compile Include="Assets\movement.cs" />
+    <Compile Include="Assets\referenceMovement.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Cinemachine\ReleaseNotes.txt" />
