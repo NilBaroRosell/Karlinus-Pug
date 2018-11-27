@@ -11,9 +11,9 @@ public class referenceMovement : MonoBehaviour {
     // Update is called once per frame
     void FixedUpdate () {
         getJumping = player.GetComponent<movement>();
-        jumping = getJumping.onFloor;
+        jumping = getJumping.jumping;
 
-        if (jumping) transform.position = player.transform.position;
+        if (!jumping) transform.position = player.transform.position;
         else transform.position = new Vector3(player.transform.position.x, transform.position.y, player.transform.position.z);
 	}
 }

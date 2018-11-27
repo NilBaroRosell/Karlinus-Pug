@@ -19,6 +19,8 @@ public class cucumber : MonoBehaviour {
     private bool firstTime = false;
     public Vector3 force;
     private bool flying = false;
+    public Vector3 voxelUp;
+    public Vector3 voxelDown;
 
     // Use this for initialization
     void Start () {
@@ -31,6 +33,8 @@ public class cucumber : MonoBehaviour {
     private void Update()
     {
         if (flying) Debug.Log(cucumber.onFloor);
+        voxelUp = new Vector3 (cucumber_thrown.transform.position.x + 0.5f, cucumber_thrown.transform.position.y + 0.25f, cucumber_thrown.transform.position.z + 0.5f);
+        voxelDown = new Vector3(cucumber_thrown.transform.position.x - 0.5f, cucumber_thrown.transform.position.y - 1.25f, cucumber_thrown.transform.position.z - 0.5f);
     }
 
     // Update is called once per frame
@@ -81,6 +85,7 @@ public class cucumber : MonoBehaviour {
                 cucumber_show.SetActive(false);
                 cucumber_thrown.SetActive(true);
                 flying = false;
+                CheckPlayer();
                 if (touchingCucumber)
                 {
                     onFloor = false;
@@ -106,8 +111,8 @@ public class cucumber : MonoBehaviour {
         }
 	}
 
-    private void CheckPlayer()
+    public void CheckPlayer()
     {
-        if () touchingCucumber = true;
+        if ((transform.position.x < voxelUp.x && transform.position.x > voxelDown.x) && (transform.position.y < voxelUp.y && transform.position.y > voxelDown.y) && (transform.position.z < voxelUp.z && transform.position.z > voxelDown.z)) touchingCucumber = true;
     }
 }

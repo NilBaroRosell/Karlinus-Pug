@@ -6,7 +6,6 @@ using UnityEngine.SceneManagement;
 public class movement : MonoBehaviour
 {
     private Rigidbody rb;
-    public Transform reference;
     public GameObject camara;
     static Animator anim;
     //static Animator enemyAnim;
@@ -46,17 +45,19 @@ public class movement : MonoBehaviour
     private bool onWater = false;
     public Vector3 rot;
     public float lastYPos;
+    public Vector3 vel;
 
     // Use this for initialization
     void Start()
     {
+        Cursor.visible = false;
         rb = GetComponent<Rigidbody>();
-        Physics.gravity = new Vector3(0, -50, 0);
+        Physics.gravity = new Vector3(0, -250, 0);
         anim = GetComponent<Animator>();
         direction = "F";
         state = playerState.IDLE;
         transform.position = new Vector3(PlayerPrefs.GetFloat("KarlinusPosX"), PlayerPrefs.GetFloat("KarlinusPosY"),
-            PlayerPrefs.GetFloat("KarlinusPosZ"));//(-84.99f, 1.27f, -41.88f);
+        PlayerPrefs.GetFloat("KarlinusPosZ"));//(-84.99f, 1.27f, -41.88f);
         weapon_show = GameObject.Find("weapon_show");
         weapon_hide = GameObject.Find("weapon_hide");
         weapon_show.SetActive(false);
@@ -69,14 +70,18 @@ public class movement : MonoBehaviour
         {
             case playerState.IDLE:
                 {
+                    vel = rb.velocity;
+
                     movePlayer();
 
                     finishDash = Time.frameCount;
                     if ((finishDash - startDash) > 80) activateDash = true;
                     if (Input.GetKeyDown(KeyCode.F) && activateDash)
                     {
-                        rb.AddForce(moveVertical * transform.forward * normalDash);
-                        rb.AddForce(moveHorizontal * transform.right * normalDash);
+                        vectorDirection = ((moveVertical * transform.forward) + (moveHorizontal * transform.right));
+                        vectorDirection.Normalize();
+                        rb.velocity *= 0;
+                        rb.AddForce(vectorDirection * normalDash);
                         startDash = Time.frameCount;
                         activateDash = false;
                     }
@@ -134,7 +139,11 @@ public class movement : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.tag == "floor") onFloor = true;
+        if (collision.gameObject.tag == "floor")
+        {
+            jumping = false;
+            onFloor = true;
+        }
         if (collision.gameObject.tag == "water") onWater = true;
         else onWater = false;
     }
@@ -190,11 +199,11 @@ public class movement : MonoBehaviour
                 transform.Rotate(-rot.x, 0, -rot.z);
             }
 
-            speed = 3;
+            speed = 9;
 
             if (liquidState)
             {
-                if (onWater) speed = 4;
+                if (onWater) speed = 11;
             }
             else
             {
@@ -203,7 +212,7 @@ public class movement : MonoBehaviour
                     if (adPressed || wsPressed)
                     {
                         anim.SetBool("Is_Running", true);
-                        speed = 5;
+                        speed = 13;
                     }
                     else anim.SetBool("Is_Running", false);
                 }
@@ -212,7 +221,7 @@ public class movement : MonoBehaviour
                 if (Input.GetKey(KeyCode.LeftControl))
                 {
                      anim.SetBool("Is_Crouching", true);
-                     speed = 2;
+                     speed = 6;
                 }
                 else anim.SetBool("Is_Crouching", false);
 
@@ -243,15 +252,16 @@ public class movement : MonoBehaviour
 
             if (!liquidState && Input.GetKeyDown(KeyCode.Space) && !anim.GetBool("Is_Withdrawing") && !anim.GetBool("Is_Hitting") && !anim.GetBool("Is_Sheathing") && onFloor)
             {
+                Physics.gravity = new Vector3(0, -100, 0);
                 anim.SetTrigger("Is_Jumping");
-                speed = 3;
+                speed = 4;
                 vectorDirection *= 2;
                 vectorDirection += new Vector3(0, 6, 0);
                 rb.velocity = vectorDirection * speed;
                 onFloor = false;
                 jumping = true;
             }
-            else jumping = false;
+            else Physics.gravity = new Vector3(0, -250, 0);
 
             if (moveVertical > 0 && moveHorizontal > 0)
             {
