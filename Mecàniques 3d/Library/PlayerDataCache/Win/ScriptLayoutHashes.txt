@@ -1,10 +1,9 @@
 WindowsStandalone
 PlayerPath?
-D:/documents enti/projecte2/Karlinus-Pug/Mecàniques 3d/Mecàniques 3d.exe
+F:/testing_build/Mecàniques 3d.exe
 SceneListBegin?
 Assets/Menu_1.unity
 Assets/sewer.unity
-Assets/city.unity
 Assets/DEAD.unity
 SceneListEnd?
 bf9878f6bdc34cc297c58b3c10340ca9 Assembly-CSharp.dll:Cinemachine.CinemachineStateDrivenCamera

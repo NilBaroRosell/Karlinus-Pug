@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 public class movement : MonoBehaviour
 {
     private Rigidbody rb;
+    public Transform reference;
     public GameObject camara;
     static Animator anim;
     //static Animator enemyAnim;
@@ -52,7 +53,8 @@ public class movement : MonoBehaviour
         anim = GetComponent<Animator>();
         direction = "F";
         state = playerState.IDLE;
-        transform.position = new Vector3(-84.99f, 1.27f, -41.88f);
+        transform.position = new Vector3(PlayerPrefs.GetFloat("KarlinusPosX"), PlayerPrefs.GetFloat("KarlinusPosY"),
+            PlayerPrefs.GetFloat("KarlinusPosZ"));//(-84.99f, 1.27f, -41.88f);
         weapon_show = GameObject.Find("weapon_show");
         weapon_hide = GameObject.Find("weapon_hide");
         weapon_show.SetActive(false);
@@ -205,7 +207,7 @@ public class movement : MonoBehaviour
                 }
                 else anim.SetBool("Is_Running", false);
 
-                if (Input.GetKey(KeyCode.CapsLock))
+                if (Input.GetKey(KeyCode.LeftControl))
                 {
                     if (adPressed || wsPressed)
                     {
@@ -217,7 +219,7 @@ public class movement : MonoBehaviour
                 else anim.SetBool("Is_Crouching", false);
 
                 if (Input.GetKeyUp(KeyCode.LeftShift)) anim.SetBool("Is_Running", false);
-                if (Input.GetKeyUp(KeyCode.CapsLock)) anim.SetBool("Is_Crouching", false);
+                if (Input.GetKeyUp(KeyCode.LeftControl)) anim.SetBool("Is_Crouching", false);
             }
 
             if (!wsPressed) moveVertical = 0;
@@ -305,6 +307,11 @@ public class movement : MonoBehaviour
             {
                 transform.position = new Vector3(50.89f, -6.778945f, 37.37239f);
                 camara.transform.position = new Vector3(50.811f, -3.91f, 31.41f);
+            }
+
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                SceneManager.LoadScene("Menu_1");
             }
 
             if (moveVertical == 0 && moveHorizontal == 0)
