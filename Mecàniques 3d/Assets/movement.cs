@@ -13,15 +13,17 @@ public class movement : MonoBehaviour
     GameObject weapon_show;
     GameObject weapon_hide;
 
-    public int speed;
+    public float speed;
     public float normalDash = 750;
     public float superDash = 1500;
 
     public bool onFloor = false;
+    public bool jumping = false;
     public bool adPressed = false;
     public bool wsPressed = false;
 
     public string direction;
+    public Vector3 vectorDirection;
 
     public float moveHorizontal;
     public float moveVertical;
@@ -188,11 +190,11 @@ public class movement : MonoBehaviour
                 transform.Rotate(-rot.x, 0, -rot.z);
             }
 
-            speed = 40;
+            speed = 3;
 
             if (liquidState)
             {
-                if (onWater) speed = 50;
+                if (onWater) speed = 4;
             }
             else
             {
@@ -201,7 +203,7 @@ public class movement : MonoBehaviour
                     if (adPressed || wsPressed)
                     {
                         anim.SetBool("Is_Running", true);
-                        speed = 55;
+                        speed = 5;
                     }
                     else anim.SetBool("Is_Running", false);
                 }
@@ -209,12 +211,8 @@ public class movement : MonoBehaviour
 
                 if (Input.GetKey(KeyCode.LeftControl))
                 {
-                    if (adPressed || wsPressed)
-                    {
-                        anim.SetBool("Is_Crouching", true);
-                        speed = 35;
-                    }
-                    else anim.SetBool("Is_Crouching", false);
+                     anim.SetBool("Is_Crouching", true);
+                     speed = 2;
                 }
                 else anim.SetBool("Is_Crouching", false);
 
@@ -239,18 +237,21 @@ public class movement : MonoBehaviour
             }
 
             if (rb.velocity.magnitude > speed) rb.velocity = rb.velocity.normalized * speed;
-
-            rb.AddForce(moveVertical * transform.forward * speed);
-            rb.AddForce(moveHorizontal * transform.right * speed);
+            vectorDirection = ((moveVertical * transform.forward) + (moveHorizontal * transform.right));
+            vectorDirection.Normalize();
+            rb.velocity = vectorDirection * speed;
 
             if (!liquidState && Input.GetKeyDown(KeyCode.Space) && !anim.GetBool("Is_Withdrawing") && !anim.GetBool("Is_Hitting") && !anim.GetBool("Is_Sheathing") && onFloor)
             {
                 anim.SetTrigger("Is_Jumping");
-                rb.AddForce(new Vector3(0, 1000, 0));
-                rb.AddForce(moveVertical * transform.forward * 6 * speed);
-                rb.AddForce(moveHorizontal * transform.right * 6 * speed);
+                speed = 3;
+                vectorDirection *= 2;
+                vectorDirection += new Vector3(0, 6, 0);
+                rb.velocity = vectorDirection * speed;
                 onFloor = false;
+                jumping = true;
             }
+            else jumping = false;
 
             if (moveVertical > 0 && moveHorizontal > 0)
             {

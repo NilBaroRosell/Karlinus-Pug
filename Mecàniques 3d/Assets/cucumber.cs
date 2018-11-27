@@ -81,7 +81,7 @@ public class cucumber : MonoBehaviour {
                 cucumber_show.SetActive(false);
                 cucumber_thrown.SetActive(true);
                 flying = false;
-                if (touchingCucumber && Input.GetKeyDown(KeyCode.E))
+                if (touchingCucumber)
                 {
                     onFloor = false;
                     touchingCucumber = false;
@@ -106,8 +106,8 @@ public class cucumber : MonoBehaviour {
         }
 	}
 
-    private void OnCollisionEnter(Collision collision)
+    private void CheckPlayer()
     {
-        if (collision.gameObject.tag == "cucumber") touchingCucumber = true;
+        if () touchingCucumber = true;
     }
 }
