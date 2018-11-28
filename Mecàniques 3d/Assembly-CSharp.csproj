@@ -62,7 +62,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\button_pressed.cs" />
-    <Compile Include="Assets\camara_movement.cs" />
+    <Compile Include="Assets\camaraMovement.cs" />
     <Compile Include="Assets\Cinemachine\Base\Runtime\Behaviours\CinemachineBlendListCamera.cs" />
     <Compile Include="Assets\Cinemachine\Base\Runtime\Behaviours\CinemachineBrain.cs" />
     <Compile Include="Assets\Cinemachine\Base\Runtime\Behaviours\CinemachineClearShot.cs" />
@@ -130,6 +130,7 @@
     <Compile Include="Assets\Menuctrl.cs" />
     <Compile Include="Assets\misions.cs" />
     <Compile Include="Assets\movement.cs" />
+    <Compile Include="Assets\referenceMovement.cs" />
     <None Include="Assets\Fantasy Skybox FREE\Readme.txt" />
     <None Include="Assets\read me.txt" />
     <None Include="Assets\Fantasy Skybox FREE\Fog and Ambient references.txt" />

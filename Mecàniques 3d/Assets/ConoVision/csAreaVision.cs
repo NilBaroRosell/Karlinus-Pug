@@ -11,7 +11,7 @@ public class csAreaVision : MonoBehaviour {
 	public int rango  = 5;
 
 	MeshFilter meshFilter;
-    enum enemyState { PATROLLING, SEARCHING, FIGHTING};
+    enum enemyState { PATROLLING, DETECTING, SEARCHING, FIGHTING};
     enemyState actualState = enemyState.PATROLLING;
     enemyState lastState = enemyState.PATROLLING;
     Vector3 oldPosition;
@@ -35,6 +35,7 @@ public class csAreaVision : MonoBehaviour {
     private Vector3 rbDirection;
     private Vector3 playerDist;
     private bool discovered;
+    private bool searchingState;
     private double discoveredRef;
     private double searchingRef;
     private double atackRef;
@@ -119,6 +120,7 @@ public class csAreaVision : MonoBehaviour {
         anim.SetBool("Is_Walking", true);
         atackRefTaken = false;
         atacking = false;
+        searchingState = true;
         pointA = PointA_Obj.transform.position;
         pointB = PointB_Obj.transform.position;
         PointA_Obj.SetActive(false);
@@ -173,6 +175,7 @@ public class csAreaVision : MonoBehaviour {
                 atackRefTaken = false;
                 atacking = false;
                 break;
+            case 25:
             case 50:
                 anim.SetBool("Is_Running", true);
                 anim.SetBool("Is_Walking", false);
@@ -291,7 +294,7 @@ public class csAreaVision : MonoBehaviour {
                 }
                 if (playerDist.magnitude <= 40 && discovered)
                 {
-                    actualState = enemyState.SEARCHING;
+                    actualState = enemyState.DETECTING;
                     searchingRef = Time.realtimeSinceStartup;
                     lastState = enemyState.PATROLLING;
                     if (playerAnim.GetBool("Is_Detected") == false && sneaky == false)
@@ -302,28 +305,57 @@ public class csAreaVision : MonoBehaviour {
                 break;
             case enemyState.SEARCHING:
                 playerAnim.SetBool("Is_Detected", true);
-                alertRend.material.SetColor("_Color", Color.yellow);
-                destinationPoint = lastSeen;
-                if ((playerDist.magnitude <= 20 || searchingRef + 10 < Time.realtimeSinceStartup) && lastState == enemyState.PATROLLING && discovered)
+                if (discoveredRef + 0.25f < Time.realtimeSinceStartup && searchingState)
                 {
-                    actualState = enemyState.FIGHTING;
-                    lastState = enemyState.SEARCHING;
-                    speed = 50;
+                    alertRend.material.SetColor("_Color", Color.yellow);
+                    discoveredRef = Time.realtimeSinceStartup;
+                    searchingState = false;
                 }
-                else if (((discoveredRef + 10.0f <= Time.realtimeSinceStartup && lastState == enemyState.FIGHTING) || (lastState == enemyState.PATROLLING && searchingRef + 2.0f <= Time.realtimeSinceStartup)) &&  discovered == false)
+                else if (discoveredRef + 1.0f < Time.realtimeSinceStartup && searchingState == false)
+                {
+                    alertRend.material.SetColor("_Color", Color.white);
+                    discoveredRef = Time.realtimeSinceStartup;
+                    searchingState = true;
+                }
+                destinationPoint = lastSeen;
+                if (vecEnemy1.magnitude < 1 &&  discovered == false)
                 {
                     actualState = enemyState.PATROLLING;
                     lastState = enemyState.SEARCHING;
                     playerAnim.SetTrigger("Is_Sheathing");
                     playerAnim.SetBool("Is_Detected", false);
                     playerAnim.ResetTrigger("Is_Hitting");
+                    speed = 10;
+                }
+                else if(playerDist.magnitude <= 40 && discovered)
+                {
+                    actualState = enemyState.DETECTING;
+                    searchingRef = Time.realtimeSinceStartup;
+                    lastState = enemyState.PATROLLING;
+                }
+                break;
+            case enemyState.DETECTING:
+                playerAnim.SetBool("Is_Detected", true);
+                alertRend.material.SetColor("_Color", Color.yellow);
+                destinationPoint = GameObject.Find("Jugador").transform.position;
+                if (((playerDist.magnitude <= 20 || searchingRef + 5.0f < Time.realtimeSinceStartup) && lastState == enemyState.PATROLLING) || lastState == enemyState.SEARCHING && speed == 25)
+                {
+                    actualState = enemyState.FIGHTING;
+                    lastState = enemyState.DETECTING;
+                    speed = 50;
+                }
+                else if(playerDist.magnitude > 40)
+                {
+                    actualState = enemyState.SEARCHING;
+                    lastState = enemyState.DETECTING;
+                    lastSeen = GameObject.Find("Jugador").transform.position;
+                    discoveredRef = Time.realtimeSinceStartup;
                 }
                 break;
             case enemyState.FIGHTING:
                 playerAnim.SetBool("Is_Detected", true);
                 alertRend.material.SetColor("_Color", Color.red);
                 destinationPoint = GameObject.Find("Jugador").transform.position;
-                discoveredRef = Time.realtimeSinceStartup;
                 if (playerDist.magnitude < 1.5f)
                 {
                     speed = 0;
@@ -333,12 +365,12 @@ public class csAreaVision : MonoBehaviour {
                         atackRefTaken = true;
                     }
                 }
-                else if (playerDist.magnitude >= 1) speed = 50;
-                else if (playerDist.magnitude > 40)
+                else if (playerDist.magnitude >= 1.5f) speed = 50;
+                if (playerDist.magnitude > 40.0f)
                 {
                     actualState = enemyState.SEARCHING;
                     lastState = enemyState.FIGHTING;
-                    speed = 10;
+                    speed = 25;
                     lastSeen = GameObject.Find("Jugador").transform.position;
                 }
                     break;
