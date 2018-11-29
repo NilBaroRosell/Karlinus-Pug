@@ -50,7 +50,6 @@ public class movement : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        Cursor.visible = false;
         rb = GetComponent<Rigidbody>();
         Physics.gravity = new Vector3(0, -250, 0);
         anim = GetComponent<Animator>();

@@ -47,7 +47,11 @@ public class misions : MonoBehaviour {
     // Use this for initialization
     void Start() {
         if (GameObject.Find("Jugador") != null)
+        {
             Jugador = GameObject.Find("Jugador");
+            Cursor.visible = false;
+        }
+        else Cursor.visible = true;
         switch (ActualMision)
         {
             case Misions.NONE:

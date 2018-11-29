@@ -1,6 +1,6 @@
 WindowsStandalone
 PlayerPath?
-F:/testing_build/Mecàniques 3d.exe
+C:/Users/thegu/Desktop/build_test/Mecàniques 3d.exe
 SceneListBegin?
 Assets/Menu_1.unity
 Assets/sewer.unity
@@ -8,6 +8,7 @@ Assets/DEAD.unity
 SceneListEnd?
 bf9878f6bdc34cc297c58b3c10340ca9 Assembly-CSharp.dll:Cinemachine.CinemachineStateDrivenCamera
 c422dd62785a6d0afa870fbd111886ce Unity.TextMeshPro.dll:TMPro.TMP_SelectionCaret
+c86a39a81328907016c9e69acb180db5 Assembly-CSharp.dll:.referenceMovement
 7b803eb2910e9b4cd5e521ae07b9f7d6 Unity.TextMeshPro.dll:TMPro.TMP_Dropdown
 486cd95c82d8305219c352c06b776e1f UnityEngine.Timeline.dll:UnityEngine.Timeline.ActivationPlayableAsset
 9e61f3535f3c55760a1cedfbd114f4af UnityEngine.Timeline.dll:UnityEngine.Timeline.ActivationTrack
@@ -58,7 +59,6 @@ e90403eeda069970e0b9de1533de13a6 UnityEngine.UI.dll:UnityEngine.UI.ToggleGroup
 2d58ca16854b99daea8c45e9c0f367b7 UnityEngine.UI.dll:UnityEngine.EventSystems.TouchInputModule
 16da51d1b62ef6d4ee1849350434023b UnityEngine.UI.dll:UnityEngine.UI.VerticalLayoutGroup
 50b0b141074b216c8b53b1bd467f73c9 Unity.TextMeshPro.dll:TMPro.TMP_InputField
-54803795ab9df2d2824cfcd428a71def Assembly-CSharp.dll:.camara_movement
 53cefe5d98cadefbab750835e70b89c0 UnityEngine.UI.dll:UnityEngine.UI.AspectRatioFitter
 486cd95c82d8305219c352c06b776e1f UnityEngine.UI.dll:UnityEngine.EventSystems.BaseInput
 da2091a04d360891450faf16cdf621f1 UnityEngine.UI.dll:UnityEngine.UI.Button
@@ -191,6 +191,7 @@ a1eda34ec952ee245ad36166f04a3e65 Assembly-CSharp.dll:.LoadScene
 70f7dc248db3379548a88e8d4fa049f8 UnityEngine.GoogleAudioSpatializer.dll:UnityEngine.Experimental.Audio.Google.GvrAudioRoom
 28a95668dd28649297d595834fe8417e UnityEngine.GoogleAudioSpatializer.dll:UnityEngine.Experimental.Audio.Google.GvrAudioSoundfieldExtension
 28a95668dd28649297d595834fe8417e UnityEngine.GoogleAudioSpatializer.dll:UnityEngine.Experimental.Audio.Google.GvrAudioSourceExtension
+ee76cc9a02f441c763b99e559ea502e6 Assembly-CSharp.dll:.camaraMovement
 a5df3ae7071abaae1603fae321e34d56 Assembly-CSharp.dll:Cinemachine.CinemachineCollider
 15320b6936160df5b889e031a8802ff7 Assembly-CSharp.dll:Cinemachine.CinemachineBlenderSettings
 d75dc834c5dec688db75a55a1724c90f UnityEngine.HoloLens.dll:UnityEngine.Audio.AudioSpatializerMicrosoft
@@ -200,11 +201,11 @@ e1ea12ca952c81d81a9a21fdf34446ed UnityEngine.HoloLens.dll:UnityEngine.EventSyste
 dfd33ff9ae3ce8d7ca1f22b475ec2387 UnityEngine.HoloLens.dll:UnityEngine.XR.WSA.SpatialMappingRenderer
 aac9c55ae7ba4b95b852a7d9c191acd1 Unity.TextMeshPro.dll:TMPro.TextMeshProUGUI
 0a006f3734181ba8b26758f0866152c0 UnityEngine.SpatialTracking.dll:UnityEngine.SpatialTracking.TrackedPoseDriver
-d756f5205f4f2cd766aeba4468f56632 Assembly-CSharp.dll:.cucumber
+e3f4a9a35e510da3cc7a2df3c2d2a011 Assembly-CSharp.dll:.cucumber
 486cd95c82d8305219c352c06b776e1f Assembly-CSharp.dll:.Menuctrl
 3440e114848660940aab66a2e380929b Assembly-CSharp.dll:Cinemachine.CinemachineSmoothPath
 486cd95c82d8305219c352c06b776e1f Assembly-CSharp.dll:Cinemachine.CinemachineHardLookAt
-d65c1c0c973de1e02379d85d1d626901 Assembly-CSharp.dll:.movement
+012e3b83039ba5512e5b95ac34549982 Assembly-CSharp.dll:.movement
 e04611b8715e6833d2bd7010fc6be10b Unity.TextMeshPro.dll:TMPro.TMP_StyleSheet
 2f9af06a78208a67db480e9bfed4a076 Unity.TextMeshPro.dll:TMPro.TextMeshPro
 9318334b30e9f195f573b2ce00154b95 Unity.TextMeshPro.dll:TMPro.TMP_ColorGradient
