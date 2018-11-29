@@ -25,12 +25,10 @@ public class csAreaVision : MonoBehaviour {
     public int speed;
 
     //Patrol points and variables
-    public GameObject PointA_Obj;
-    public GameObject PointB_Obj;
-    private Vector3 pointA;
-    private Vector3 pointB;
+    public GameObject[] objectPoint;
+    private Vector3[] Points;
+    private int patrollingIndex;
     private Vector3 destinationPoint;
-    private bool GoToA;
     private Vector3 vecEnemy1;
     private Vector3 rbDirection;
     private Vector3 playerDist;
@@ -116,16 +114,18 @@ public class csAreaVision : MonoBehaviour {
 		initialUV = meshFilter.mesh.uv;
         rb = GetComponent<Rigidbody>();
         anim = GetComponent<Animator>();
-        GoToA = true;
         anim.SetBool("Is_Walking", true);
         atackRefTaken = false;
         atacking = false;
         searchingState = true;
-        pointA = PointA_Obj.transform.position;
-        pointB = PointB_Obj.transform.position;
-        PointA_Obj.SetActive(false);
-        PointB_Obj.SetActive(false);
-        destinationPoint = pointA;
+        Points = new Vector3[objectPoint.Length];
+        patrollingIndex = 0;
+        for (int i = 0; i < objectPoint.Length; i++)
+        {
+            Points[i] = objectPoint[i].transform.position;
+            objectPoint[i].SetActive(false);
+        }
+        destinationPoint = Points[patrollingIndex];
         playerDist = new Vector3(GameObject.Find("Jugador").transform.position.x - rb.transform.position.x, 0.0f, GameObject.Find("Jugador").transform.position.z - rb.transform.position.z);
         discovered = false;
         discoveredRef = Time.realtimeSinceStartup;
@@ -269,15 +269,11 @@ public class csAreaVision : MonoBehaviour {
         {
             case enemyState.PATROLLING:
                 alertRend.material.SetColor("_Color", Color.green);
-                if (vecEnemy1.magnitude < 1 && GoToA)
+                if (vecEnemy1.magnitude < 1)
                 {
-                    destinationPoint = pointB;
-                    GoToA = false;
-                }
-                else if (vecEnemy1.magnitude < 1 && GoToA == false)
-                {
-                    destinationPoint = pointA;
-                    GoToA = true;
+                    patrollingIndex++;
+                    if (patrollingIndex >= Points.Length) patrollingIndex = 0;
+                    destinationPoint = Points[patrollingIndex];
                 }
                 if (playerDist.magnitude <= 10 && sneaky == false)
                 {
