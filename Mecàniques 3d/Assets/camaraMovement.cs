@@ -9,7 +9,7 @@ public class camaraMovement : MonoBehaviour {
 
     // Update is called once per frame
     void FixedUpdate () {
-
+        
         int layerMask = 0 << 8;
 
         layerMask = ~layerMask;
