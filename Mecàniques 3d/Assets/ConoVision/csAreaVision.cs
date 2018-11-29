@@ -28,6 +28,8 @@ public class csAreaVision : MonoBehaviour {
     public GameObject[] objectPoint;
     private Vector3[] Points;
     private int patrollingIndex;
+    public GameObject KarlinusEspectre;
+    private Vector3 lastSeenPosition;
     private Vector3 destinationPoint;
     private Vector3 vecEnemy1;
     private Vector3 rbDirection;
@@ -39,7 +41,6 @@ public class csAreaVision : MonoBehaviour {
     private double atackRef;
     private bool atackRefTaken;
     private bool atacking;
-    Vector3 lastSeen;
     Renderer alertRend;
     private bool hittingEnemy = false;
     private bool sneaky = false;
@@ -126,12 +127,13 @@ public class csAreaVision : MonoBehaviour {
             objectPoint[i].SetActive(false);
         }
         destinationPoint = Points[patrollingIndex];
+        KarlinusEspectre.SetActive(false);
         playerDist = new Vector3(GameObject.Find("Jugador").transform.position.x - rb.transform.position.x, 0.0f, GameObject.Find("Jugador").transform.position.z - rb.transform.position.z);
         discovered = false;
         discoveredRef = Time.realtimeSinceStartup;
         searchingRef = Time.realtimeSinceStartup;
         atackRef = Time.realtimeSinceStartup;
-        lastSeen = GameObject.Find("Jugador").transform.position;
+        lastSeenPosition = GameObject.Find("Jugador").transform.position;
         alertRend = transform.GetChild(3).GetComponent<Renderer>();
        // alertRend.material.shader = Shader.Find("_Color");
         alertRend.material.SetColor("_Color", Color.green);
@@ -216,8 +218,7 @@ public class csAreaVision : MonoBehaviour {
                 if (hit.transform.position == GameObject.Find("Jugador").transform.position)
                 {
                     discovered = true;
-                    searchingRef = Time.realtimeSinceStartup;
-                    lastSeen = GameObject.Find("Jugador").transform.position;
+                    lastSeenPosition = GameObject.Find("Jugador").transform.position;
                 }
                 if (hit.transform.position != transform.position)
                     {
@@ -250,6 +251,7 @@ public class csAreaVision : MonoBehaviour {
 	// Update is called once per frame
 	void FixedUpdate () { 
     playerDist = new Vector3(GameObject.Find("Jugador").transform.position.x - rb.transform.position.x, 0.0f, GameObject.Find("Jugador").transform.position.z - rb.transform.position.z);
+        destinationPoint.y = transform.position.y + 0.8f;
         enemyAgent.SetDestination(destinationPoint);
         enemyAgent.speed = speed / 10;
         rb.transform.LookAt(destinationPoint);
@@ -260,15 +262,15 @@ public class csAreaVision : MonoBehaviour {
             oldPosition = transform.position;
             oldRotation = transform.rotation;
             oldScale = transform.localScale;
-            if (playerDist.magnitude <= 40 && (actualState == enemyState.PATROLLING || actualState == enemyState.SEARCHING))
+            if (playerDist.magnitude <= 40)
             {
-                meshFilter.mesh = areaMesh(meshFilter.mesh);
+                if(actualState == enemyState.PATROLLING || actualState == enemyState.SEARCHING) searchingRef = Time.realtimeSinceStartup;
+                if(actualState != enemyState.FIGHTING) meshFilter.mesh = areaMesh(meshFilter.mesh);
             }
         }
         switch (actualState)
         {
             case enemyState.PATROLLING:
-                alertRend.material.SetColor("_Color", Color.green);
                 if (vecEnemy1.magnitude < 1)
                 {
                     patrollingIndex++;
@@ -288,19 +290,23 @@ public class csAreaVision : MonoBehaviour {
                         playerAnim.SetTrigger("Is_Sheathing");
                         playerAnim.ResetTrigger("Is_Hitting");
                 }
-                if (playerDist.magnitude <= 40 && discovered)
+                if (playerDist.magnitude <= 40 && discovered)//Change to DETECTING
                 {
                     actualState = enemyState.DETECTING;
                     searchingRef = Time.realtimeSinceStartup;
                     lastState = enemyState.PATROLLING;
+                    playerAnim.SetBool("Is_Detected", true);
+                    alertRend.material.SetColor("_Color", Color.yellow);
+                    destinationPoint = GameObject.Find("Jugador").transform.position;
                     if (playerAnim.GetBool("Is_Detected") == false && sneaky == false)
                     {
                         playerAnim.SetTrigger("Is_Withdrawing");
                     }
+                    KarlinusEspectre.SetActive(false);
                 }
                 break;
             case enemyState.SEARCHING:
-                playerAnim.SetBool("Is_Detected", true);
+                KarlinusEspectre.transform.position = destinationPoint;
                 if (discoveredRef + 0.25f < Time.realtimeSinceStartup && searchingState)
                 {
                     alertRend.material.SetColor("_Color", Color.yellow);
@@ -313,8 +319,8 @@ public class csAreaVision : MonoBehaviour {
                     discoveredRef = Time.realtimeSinceStartup;
                     searchingState = true;
                 }
-                destinationPoint = lastSeen;
-                if (vecEnemy1.magnitude < 1 &&  discovered == false)
+                destinationPoint = lastSeenPosition;
+                if (vecEnemy1.magnitude < 1 &&  discovered == false)//Change to PATROLLING
                 {
                     actualState = enemyState.PATROLLING;
                     lastState = enemyState.SEARCHING;
@@ -322,35 +328,43 @@ public class csAreaVision : MonoBehaviour {
                     playerAnim.SetBool("Is_Detected", false);
                     playerAnim.ResetTrigger("Is_Hitting");
                     speed = 10;
+                    alertRend.material.SetColor("_Color", Color.green);
+                    KarlinusEspectre.SetActive(false);
                 }
-                else if(playerDist.magnitude <= 40 && discovered)
+                else if(playerDist.magnitude <= 40 && discovered)//Change to DETECTING
                 {
                     actualState = enemyState.DETECTING;
                     searchingRef = Time.realtimeSinceStartup;
                     lastState = enemyState.PATROLLING;
+                    playerAnim.SetBool("Is_Detected", true);
+                    alertRend.material.SetColor("_Color", Color.yellow);
+                    destinationPoint = GameObject.Find("Jugador").transform.position;
+                    KarlinusEspectre.SetActive(false);
                 }
                 break;
             case enemyState.DETECTING:
-                playerAnim.SetBool("Is_Detected", true);
-                alertRend.material.SetColor("_Color", Color.yellow);
                 destinationPoint = GameObject.Find("Jugador").transform.position;
-                if (((playerDist.magnitude <= 20 || searchingRef + 5.0f < Time.realtimeSinceStartup) && lastState == enemyState.PATROLLING) || lastState == enemyState.SEARCHING && speed == 25)
+                if (((playerDist.magnitude <= 20 || searchingRef + 5.0f < Time.realtimeSinceStartup) && 
+                    lastState == enemyState.PATROLLING) || lastState == enemyState.SEARCHING && speed == 25)//Change to FIGHTING
                 {
                     actualState = enemyState.FIGHTING;
                     lastState = enemyState.DETECTING;
                     speed = 50;
+                    playerAnim.SetBool("Is_Detected", true);
+                    alertRend.material.SetColor("_Color", Color.red);
                 }
-                else if(playerDist.magnitude > 40)
+                else if(discovered == false)//Change to SEARCHING
                 {
                     actualState = enemyState.SEARCHING;
                     lastState = enemyState.DETECTING;
-                    lastSeen = GameObject.Find("Jugador").transform.position;
                     discoveredRef = Time.realtimeSinceStartup;
+                    playerAnim.SetBool("Is_Detected", true);
+                    lastSeenPosition = GameObject.Find("Jugador").transform.position;
+                    KarlinusEspectre.SetActive(true);
+                    KarlinusEspectre.transform.position = lastSeenPosition;
                 }
                 break;
             case enemyState.FIGHTING:
-                playerAnim.SetBool("Is_Detected", true);
-                alertRend.material.SetColor("_Color", Color.red);
                 destinationPoint = GameObject.Find("Jugador").transform.position;
                 if (playerDist.magnitude < 1.5f)
                 {
@@ -362,12 +376,15 @@ public class csAreaVision : MonoBehaviour {
                     }
                 }
                 else if (playerDist.magnitude >= 1.5f) speed = 50;
-                if (playerDist.magnitude > 40.0f)
+                if (playerDist.magnitude > 40.0f)//Change to SEARCHING
                 {
                     actualState = enemyState.SEARCHING;
                     lastState = enemyState.FIGHTING;
                     speed = 25;
-                    lastSeen = GameObject.Find("Jugador").transform.position;
+                    playerAnim.SetBool("Is_Detected", true);
+                    lastSeenPosition = GameObject.Find("Jugador").transform.position;
+                    KarlinusEspectre.SetActive(true);
+                    KarlinusEspectre.transform.position = lastSeenPosition;
                 }
                     break;
             default:
