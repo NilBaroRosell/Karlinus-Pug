@@ -61,6 +61,7 @@ public class movement : MonoBehaviour
         weapon_hide = GameObject.Find("weapon_hide");
         weapon_show.SetActive(false);
         weapon_hide.SetActive(true);
+        Physics.IgnoreLayerCollision(9, 8);
     }
 
     private void FixedUpdate()

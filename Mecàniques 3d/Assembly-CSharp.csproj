@@ -125,6 +125,7 @@
     <Compile Include="Assets\GE Common Assets\GE Toggle Full Screen\Scripts\GE_ToggleFullScreenUI.cs" />
     <Compile Include="Assets\GE Common Assets\Scripts\GE_UIResponder.cs" />
     <Compile Include="Assets\HUD.cs" />
+    <Compile Include="Assets\kill_cono_vision.cs" />
     <Compile Include="Assets\liquidState.cs" />
     <Compile Include="Assets\LoadScene.cs" />
     <Compile Include="Assets\Menuctrl.cs" />

@@ -108,7 +108,9 @@ public class csAreaVision : MonoBehaviour {
 	Vector2[] initialUV;
 
 	// Use this for initialization
-	void Awake () { 
+	void Awake () {
+        
+        Physics.IgnoreLayerCollision(9, 8);
         meshFilter = transform.GetChild(2).GetChild(2).GetChild(0).GetChild(0).GetChild(1).GetChild(0).GetComponent<MeshFilter>();
         meshFilter.mesh = Cono();
         initialPosition = meshFilter.mesh.vertices;
