@@ -13,8 +13,8 @@ public class movement : MonoBehaviour
     GameObject weapon_hide;
 
     public float speed;
-    public float normalDash = 750;
-    public float superDash = 1500;
+    //public float normalDash = 10000;
+    //public float superDash = 15000;
 
     public bool onFloor = false;
     public bool jumping = false;
@@ -81,7 +81,7 @@ public class movement : MonoBehaviour
                         vectorDirection = ((moveVertical * transform.forward) + (moveHorizontal * transform.right));
                         vectorDirection.Normalize();
                         rb.velocity *= 0;
-                        rb.AddForce(vectorDirection * normalDash);
+                        rb.AddForce(vectorDirection * 10000);
                         startDash = Time.frameCount;
                         activateDash = false;
                     }
