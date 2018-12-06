@@ -6,7 +6,7 @@ public class kill_cono_vision : MonoBehaviour {
 
     private int angulo = 140;
     private int w_ref = 40;
-    private int rango = 1;
+    private int rango = 5;
 
     MeshFilter meshFilter;
     Vector3 oldPosition;
@@ -14,6 +14,15 @@ public class kill_cono_vision : MonoBehaviour {
     Vector3 oldScale;
 
     static Animator anim;
+    private GameObject player;
+    private GameObject target;
+    private Vector3 killTargetPos;
+    private Vector3 playerPos;
+    private float altura;
+    private bool aproaching;
+    enum killState { WATCHING, APROACHING, KILLING, RETURNING };
+    killState actualState;
+    private float ghostRef;
 
 
     Mesh Cono()
@@ -81,12 +90,18 @@ public class kill_cono_vision : MonoBehaviour {
     // Use this for initialization
     void Awake()
     {
-        Physics.IgnoreLayerCollision(9, 8);
+        target = null;
+        ghostRef = Time.realtimeSinceStartup;
+        actualState = killState.WATCHING;
+        altura = 0;
+        aproaching = false;
+        killTargetPos = new Vector3(0.0f, 0.0f, 0.0f);
         meshFilter = transform.GetComponent<MeshFilter>();
         meshFilter.mesh = Cono();
         initialPosition = meshFilter.mesh.vertices;
         initialUV = meshFilter.mesh.uv;
-        anim = GameObject.Find("Jugador").GetComponent<Animator>();
+        player = GameObject.Find("Jugador");
+        anim = player.GetComponent<Animator>();
     }
 
     Mesh areaMesh(Mesh mesh)
@@ -106,9 +121,41 @@ public class kill_cono_vision : MonoBehaviour {
         {
 
             worldPoint = transform.localToWorldMatrix.MultiplyPoint3x4(initialPosition[i]);
-
             if (Physics.Linecast(center, worldPoint, out hit))
             {
+                if (hit.transform.gameObject.tag == "enemy")
+                {
+                        ghostRef = Time.realtimeSinceStartup;
+                        target = hit.transform.gameObject;
+                        target.transform.GetChild(4).gameObject.SetActive(true);
+
+                    if (Input.GetKeyDown(KeyCode.Mouse0))
+                    {
+                        player.GetComponent<Rigidbody>().useGravity = false;
+                        player.GetComponent<Collider>().enabled = false;
+                        anim.SetBool("Is_Damaging", true);
+                        playerPos = player.transform.position;
+                        target.transform.GetChild(4).gameObject.SetActive(false);
+                        actualState = killState.APROACHING;
+            //aproaching = true;
+                        killTargetPos = target.transform.position;
+                     }
+                    //if (hit.distance <= 0.75f && aproaching)
+                    //{
+                    //    StartCoroutine(ExecuteAfterTime(1.25f));
+                    //    aproaching = false;
+                    //    player.GetComponent<Rigidbody>().velocity *= 0;
+                    //    hit.transform.gameObject.GetComponent<Animator>().SetTrigger("Is_Dying");
+                    //    killEnemy();
+                    //}
+                    //else  || aproaching)
+                    // {
+                    //     if (aproaching)
+                    //     {
+                    //         
+                    //     }//aproachEnemy(killTarget);
+
+                }
                 if (hit.transform.position != transform.position)
                 {
                     vertices[i] = transform.worldToLocalMatrix.MultiplyPoint3x4(hit.point);
@@ -141,11 +188,70 @@ public class kill_cono_vision : MonoBehaviour {
 
     private void Update()
     {
-        if (anim.GetBool("Is_Detected") == true) kill_vision();
+        switch(actualState)
+        {
+            case killState.WATCHING:
+                if (anim.GetBool("Is_Detected")) kill_vision();
+                break;
+            case killState.APROACHING:
+                aproachEnemy(killTargetPos);
+                break;
+            case killState.KILLING:
+                break;
+            case killState.RETURNING:
+                player.transform.position = playerPos;
+                player.GetComponent<Collider>().enabled = true;
+                player.GetComponent<Rigidbody>().useGravity = true;
+                actualState = killState.WATCHING;
+                break;
+            default:
+                break;
+        }
     }
     public void kill_vision()
     {
-        Debug.Log("Dale");
         meshFilter.mesh = areaMesh(meshFilter.mesh);
+        CheckGhost();
     }
+
+    private void aproachEnemy(Vector3 destination)
+    {
+        player.transform.position = target.transform.GetChild(4).transform.position;
+        player.GetComponent<Rigidbody>().transform.LookAt(destination);
+        //player.GetComponent<Rigidbody>().velocity *= 0;
+        //destination.Normalize();
+        //player.GetComponent<Rigidbody>().AddForce(destination * 10);
+        actualState = killState.KILLING;
+        StartCoroutine(ExecuteAfterTime(1.0f));
+        aproaching = false;
+        player.GetComponent<Rigidbody>().velocity *= 0;
+        target.gameObject.GetComponent<Animator>().SetTrigger("Is_Dying");
+        killEnemy();
+    }
+
+    private void killEnemy()
+    {
+        
+        anim.SetBool("Is_Running", false);
+            anim.SetBool("Is_Crouching", false);
+            anim.SetBool("Is_Walking", false);
+            anim.SetBool("Is_Idle", false);
+            anim.SetTrigger("Is_Hitting");
+        target.GetComponent<Collider>().enabled = false;
+    }
+
+    void CheckGhost()
+    {
+        if(target != null && ghostRef + 0.1f < Time.realtimeSinceStartup)
+        target.transform.GetChild(4).gameObject.SetActive(false);
+    }
+
+    IEnumerator ExecuteAfterTime(float time)
+    {
+        yield return new WaitForSeconds(time);
+
+        anim.SetBool("Is_Damaging", false);
+        actualState = killState.RETURNING;
+    }
+   
 }

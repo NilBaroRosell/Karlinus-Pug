@@ -37,7 +37,6 @@ public class movement : MonoBehaviour
     public enum playerState { IDLE, HITTING, DYING, LIQUID };
     public playerState state;
     Collider w_collider;
-    private bool hitting = false;
 
     public static bool liquidState = false;
     private bool cooldown = false;
@@ -94,18 +93,7 @@ public class movement : MonoBehaviour
                         state = playerState.LIQUID;
                     }
 
-                    //Weapon
-                    if (anim.GetBool("Is_Detected") == true && Input.GetKeyDown(KeyCode.Mouse0))
-                    {
-                        anim.SetBool("Is_Running", false);
-                        anim.SetBool("Is_Crouching", false);
-                        anim.SetBool("Is_Walking", false);
-                        anim.SetBool("Is_Idle", false);
-                        anim.SetTrigger("Is_Hitting");
-                        hitting = true;
-                        anim.SetBool("Is_Damaging", true);
-                        startHit = Time.frameCount;
-                    }
+                    
 
                     if (anim.GetBool("Is_Dying") == true)
                     {
@@ -125,7 +113,6 @@ public class movement : MonoBehaviour
                 }
             case playerState.LIQUID:
                 {
-                    Debug.Log(movement.liquidState);
                     movePlayer();
                     if (!liquidState) state = playerState.IDLE;
                     break;
@@ -234,16 +221,6 @@ public class movement : MonoBehaviour
 
             if (!adPressed) moveHorizontal = 0;
             else moveHorizontal = Input.GetAxis("Horizontal");
-
-            if (hitting)
-            {
-                finishHit = Time.frameCount;
-                if ((finishHit - startHit) > 30)
-                {
-                    hitting = false;
-                    anim.SetBool("Is_Damaging", false);
-                }
-            }
 
             if (rb.velocity.magnitude > speed) rb.velocity = rb.velocity.normalized * speed;
             vectorDirection = ((moveVertical * transform.forward) + (moveHorizontal * transform.right));
