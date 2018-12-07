@@ -85,7 +85,7 @@ public class liquidState : MonoBehaviour
 
                 finishLiquid = Time.frameCount;
 
-                if (finishLiquid - startLiquid > hidratation * 3)
+                if ((finishLiquid - startLiquid > hidratation * 3) || (Input.GetKey(KeyCode.Q) && startLiquid + 30 < Time.frameCount))
                 {
                     liquidStateOn = false;
                     movement.liquidState = liquidStateOn;

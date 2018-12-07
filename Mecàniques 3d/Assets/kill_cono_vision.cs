@@ -137,23 +137,8 @@ public class kill_cono_vision : MonoBehaviour {
                         playerPos = player.transform.position;
                         target.transform.GetChild(4).gameObject.SetActive(false);
                         actualState = killState.APROACHING;
-            //aproaching = true;
                         killTargetPos = target.transform.position;
                      }
-                    //if (hit.distance <= 0.75f && aproaching)
-                    //{
-                    //    StartCoroutine(ExecuteAfterTime(1.25f));
-                    //    aproaching = false;
-                    //    player.GetComponent<Rigidbody>().velocity *= 0;
-                    //    hit.transform.gameObject.GetComponent<Animator>().SetTrigger("Is_Dying");
-                    //    killEnemy();
-                    //}
-                    //else  || aproaching)
-                    // {
-                    //     if (aproaching)
-                    //     {
-                    //         
-                    //     }//aproachEnemy(killTarget);
 
                 }
                 if (hit.transform.position != transform.position)

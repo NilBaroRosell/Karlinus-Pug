@@ -87,13 +87,7 @@ public class movement : MonoBehaviour
 
                     checkCooldown = GetComponent<liquidState>();
                     cooldown = checkCooldown.cooldown;
-                    if (Input.GetKeyDown(KeyCode.Q) && !cooldown)
-                    {
-                        rb.useGravity = false;
-                        GetComponent<Collider>().enabled = false;
-                        liquidState = true;
-                        state = playerState.LIQUID;
-                    }
+                    
 
                     
 
@@ -128,6 +122,13 @@ public class movement : MonoBehaviour
                 {
                     break;
                 }
+        }
+        if ((Input.GetKeyDown(KeyCode.Q) && !cooldown))
+        {
+            rb.useGravity = false;
+            GetComponent<Collider>().enabled = false;
+            liquidState = true;
+            state = playerState.LIQUID;
         }
     }
 
