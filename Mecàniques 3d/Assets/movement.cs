@@ -89,6 +89,8 @@ public class movement : MonoBehaviour
                     cooldown = checkCooldown.cooldown;
                     if (Input.GetKeyDown(KeyCode.Q) && !cooldown)
                     {
+                        rb.useGravity = false;
+                        GetComponent<Collider>().enabled = false;
                         liquidState = true;
                         state = playerState.LIQUID;
                     }
@@ -114,7 +116,12 @@ public class movement : MonoBehaviour
             case playerState.LIQUID:
                 {
                     movePlayer();
-                    if (!liquidState) state = playerState.IDLE;
+                    if (!liquidState)
+                    {
+                        rb.useGravity = true;
+                        GetComponent<Collider>().enabled = true;
+                        state = playerState.IDLE;
+                    }
                     break;
                 }
             default:
@@ -137,7 +144,7 @@ public class movement : MonoBehaviour
 
     public void Take_sword(int message)
     {
-        if (message == 1)
+        if (anim.GetBool("Is_Detected"))
         {
             weapon_show.SetActive(true);
             weapon_hide.SetActive(false);
