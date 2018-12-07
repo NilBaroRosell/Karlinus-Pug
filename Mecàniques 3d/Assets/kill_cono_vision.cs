@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.AI;
 using UnityEngine;
 
 public class kill_cono_vision : MonoBehaviour {
@@ -17,6 +18,7 @@ public class kill_cono_vision : MonoBehaviour {
     private GameObject player;
     private GameObject target;
     private liquidState liquidKill;
+    private movement playerMovement;
     private Vector3 killTargetPos;
     private Vector3 playerPos;
     private float altura;
@@ -25,6 +27,8 @@ public class kill_cono_vision : MonoBehaviour {
     killState actualState;
     private float ghostRef;
 
+    //Nav Mesh
+    NavMeshAgent liquidAgent;
 
     Mesh Cono()
     {
@@ -93,6 +97,13 @@ public class kill_cono_vision : MonoBehaviour {
     {
         player = GameObject.Find("Jugador");
         liquidKill = player.GetComponent<liquidState>();
+        playerMovement = player.GetComponent<movement>();
+        liquidAgent = player.GetComponent<NavMeshAgent>();
+        if (liquidAgent == null)
+        {
+            Debug.LogError("Nav Mesh error");
+        }
+        liquidAgent.enabled = false;
         target = null;
         ghostRef = Time.realtimeSinceStartup;
         actualState = killState.WATCHING;
@@ -133,10 +144,15 @@ public class kill_cono_vision : MonoBehaviour {
 
                     if (Input.GetKeyDown(KeyCode.Mouse0))
                     {
+                        playerPos = player.transform.position;
+                        playerMovement.state = movement.playerState.HITTING;
+                        liquidAgent.enabled = true;
+                        liquidAgent.SetDestination(target.transform.GetChild(4).gameObject.transform.position);
                         player.GetComponent<Rigidbody>().useGravity = false;
                         player.GetComponent<Collider>().enabled = false;
+                        target.GetComponent<Collider>().enabled = false;
+                        target.GetComponent<Rigidbody>().useGravity = false;
                         anim.SetBool("Is_Damaging", true);
-                        playerPos = player.transform.position;
                         target.transform.GetChild(4).gameObject.SetActive(false);
                         liquidKill.showLiquid();
                         actualState = killState.APROACHING;
@@ -182,17 +198,12 @@ public class kill_cono_vision : MonoBehaviour {
                 if (anim.GetBool("Is_Detected")) kill_vision();
                 break;
             case killState.APROACHING:
-                aproachEnemy(killTargetPos);
+                if (liquidAgent.remainingDistance <= 0.1f) aproachEnemy(killTargetPos);
                 break;
             case killState.KILLING:
                 break;
             case killState.RETURNING:
-                player.transform.position = playerPos;
-                player.GetComponent<Collider>().enabled = true;
-                player.GetComponent<Rigidbody>().useGravity = true;
-                liquidKill.setHidratation();
-                liquidKill.hideLiquid();
-                actualState = killState.WATCHING;
+                if (liquidAgent.remainingDistance <= 0.1f) returnToPosition();
                 break;
             default:
                 break;
@@ -207,12 +218,10 @@ public class kill_cono_vision : MonoBehaviour {
     private void aproachEnemy(Vector3 destination)
     {
         liquidKill.hideLiquid();
-        player.transform.position = target.transform.GetChild(4).transform.position;
+        //player.transform.position = target.transform.GetChild(4).transform.position;
         player.GetComponent<Rigidbody>().transform.LookAt(destination);
-        //player.GetComponent<Rigidbody>().velocity *= 0;
-        //destination.Normalize();
-        //player.GetComponent<Rigidbody>().AddForce(destination * 10);
         actualState = killState.KILLING;
+        liquidAgent.enabled = false;
         StartCoroutine(ExecuteAfterTime(1.0f));
         aproaching = false;
         player.GetComponent<Rigidbody>().velocity *= 0;
@@ -228,7 +237,17 @@ public class kill_cono_vision : MonoBehaviour {
             anim.SetBool("Is_Walking", false);
             anim.SetBool("Is_Idle", false);
             anim.SetTrigger("Is_Hitting");
-        target.GetComponent<Collider>().enabled = false;
+    }
+
+    private void returnToPosition()
+    {
+        player.GetComponent<Collider>().enabled = true;
+        player.GetComponent<Rigidbody>().useGravity = true;
+        liquidKill.setHidratation();
+        liquidKill.hideLiquid();
+        playerMovement.state = movement.playerState.IDLE;
+        liquidAgent.enabled = false;
+        actualState = killState.WATCHING;
     }
 
     void CheckGhost()
@@ -244,6 +263,8 @@ public class kill_cono_vision : MonoBehaviour {
         anim.SetBool("Is_Damaging", false);
         actualState = killState.RETURNING;
         liquidKill.showLiquid();
+        liquidAgent.enabled = true;
+        liquidAgent.SetDestination(playerPos);
     }
    
 }

@@ -46,6 +46,7 @@ public class movement : MonoBehaviour
     public float lastYPos;
     public Vector3 vel;
 
+
     // Use this for initialization
     void Start()
     {
@@ -104,6 +105,8 @@ public class movement : MonoBehaviour
                     }
                     break;
                 }
+            case playerState.HITTING:
+                break;
             case playerState.DYING:
                 {
                     finishDie = Time.frameCount;
@@ -115,7 +118,7 @@ public class movement : MonoBehaviour
                 }
             case playerState.LIQUID:
                 {
-                    if(anim.GetBool("Is_Damaging") == false) movePlayer();
+                    movePlayer();
                     if (!liquidState)
                     {
                         rb.useGravity = true;
@@ -145,7 +148,7 @@ public class movement : MonoBehaviour
 
     public void Take_sword(int message)
     {
-        if (anim.GetBool("Is_Damaging") == false)
+        if (anim.GetBool("Is_Damaging") == false && state != playerState.LIQUID)
         {
             if (anim.GetBool("Is_Detected"))
             {
