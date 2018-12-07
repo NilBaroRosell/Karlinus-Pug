@@ -49,9 +49,9 @@ public class misions : MonoBehaviour {
         if (GameObject.Find("Jugador") != null)
         {
             Jugador = GameObject.Find("Jugador");
-            Cursor.visible = false;
+            Cursor.lockState = CursorLockMode.Locked;
         }
-        else Cursor.visible = true;
+        else Cursor.lockState = CursorLockMode.None;
         switch (ActualMision)
         {
             case Misions.NONE:

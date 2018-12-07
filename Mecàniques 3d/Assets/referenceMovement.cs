@@ -34,10 +34,7 @@ public class referenceMovement : MonoBehaviour {
         {
             if (!jumping)
             {
-                if (transform.position.y != player.transform.position.y && (wsPressed || adPressed) && (player.transform.position.x > lastPos.x + 1 || player.transform.position.x < lastPos.x - 1 || player.transform.position.z > lastPos.z + 1 || player.transform.position.z < lastPos.z - 1))
-                {
-                    following = true;
-                }
+                following = true;
             }
         }
 

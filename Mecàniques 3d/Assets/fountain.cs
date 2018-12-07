@@ -2,20 +2,20 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class fountain : MonoBehaviour {
+public class fountain : MonoBehaviour{
 
     public bool inFountain = false;
     public bool drinking = false;
     public bool cooldownFountain = false;
     public float startCooldownFountain;
     public float finishCooldownFountain;
-    public int fountainExtra;
 
-	// Update is called once per frame
-	void FixedUpdate () {
+    // Update is called once per frame
+    void FixedUpdate()
+    {
         if (drinking)
         {
-            liquidState.hidratation += fountainExtra;
+            liquidState.hidratation = 100;
             drinking = false;
         }
 
