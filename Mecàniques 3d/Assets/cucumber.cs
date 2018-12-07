@@ -11,7 +11,7 @@ public class cucumber : MonoBehaviour
     public GameObject cucumber_show;
     public GameObject cucumber_thrown;
     public Rigidbody cucumberRig;
-    public enum cucumberState { HIDE, SHOW, FLYING, FLOOR, COOLDOWN };
+    public enum cucumberState { HIDE, SHOW, FLYING, FLOOR, COOLDOWN, LIQUID };
     public cucumberState state;
     public static bool onFloor = false;
     public bool touchingCucumber = false;

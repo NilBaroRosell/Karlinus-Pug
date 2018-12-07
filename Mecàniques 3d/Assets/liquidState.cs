@@ -15,6 +15,7 @@ public class liquidState : MonoBehaviour
     public GameObject wellHidratated;
     public GameObject badlyHidratated;
     public GameObject dead;
+    public GameObject[] weapons = new GameObject[4];
     public bool liquidStateOn = false;
     public bool cooldown = false;
     public bool firstFrameLiquid = true;
@@ -28,6 +29,7 @@ public class liquidState : MonoBehaviour
     public int hidratationPrice;
     public bool inFountain = false;
     public bool drinking = false;
+    public bool stopLiquid = false;
 
     // Use this for initialization
     void Start()
@@ -52,10 +54,7 @@ public class liquidState : MonoBehaviour
         {
             if (firstFrameNormal)
             {
-                alphaJoints.SetActive(true);
-                alphaSurface.SetActive(true);
-                mixamorigHips.SetActive(true);
-                liquid.SetActive(false);
+                hideLiquid();
                 firstFrameNormal = false;
             }
 
@@ -75,10 +74,7 @@ public class liquidState : MonoBehaviour
             {
                 if (firstFrameLiquid)
                 {
-                    alphaJoints.SetActive(false);
-                    alphaSurface.SetActive(false);
-                    mixamorigHips.SetActive(false);
-                    liquid.SetActive(true);
+                    showLiquid();
                     startLiquid = Time.frameCount;
                     firstFrameLiquid = false;
                 }
@@ -92,9 +88,7 @@ public class liquidState : MonoBehaviour
                     cooldown = true;
                     startCooldown = Time.frameCount;
                     firstFrameNormal = true;
-                    hidratationPrice = hidratation / 4;
-                    if (hidratation < 10) hidratationPrice = 10;
-                    hidratation -= hidratationPrice;
+                    setHidratation();
                 }
             }
 
@@ -146,5 +140,46 @@ public class liquidState : MonoBehaviour
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.tag == "fountain") inFountain = true;
+    }
+
+    public void setHidratation()
+    {
+        hidratationPrice = hidratation / 4;
+        if (hidratation < 10) hidratationPrice = 10;
+        hidratation -= hidratationPrice;
+    }
+    public void showLiquid()
+    {
+        alphaJoints.SetActive(false);
+        alphaSurface.SetActive(false);
+        transform.GetComponent<cucumber>().enabled = false;
+        for (int i = 0; i < mixamorigHips.transform.childCount; i++)
+        {
+            var child = mixamorigHips.transform.GetChild(i).gameObject;
+            if (child != null && child.GetComponent<Renderer>() != null)
+                child.GetComponent<Renderer>().enabled = false;
+        }
+        for (int i = 0; i < weapons.Length; i++) weapons[i].SetActive(false);
+        liquid.SetActive(true);
+    }
+
+    public void hideLiquid()
+    {
+        alphaJoints.SetActive(true);
+        alphaSurface.SetActive(true);
+        for (int i = 0; i < mixamorigHips.transform.childCount; i++)
+        {
+            var child = mixamorigHips.transform.GetChild(i).gameObject;
+            if (child != null && child.GetComponent<Renderer>() != null)
+                child.GetComponent<Renderer>().enabled = true;
+        }
+        transform.GetComponent<cucumber>().enabled = true;
+        for (int i = 0; i < weapons.Length; i++) weapons[i].SetActive(true);
+        if (transform.GetComponent<Animator>().GetBool("Is_Detected"))
+        {
+            weapons[0].SetActive(false);
+        }
+        else weapons[3].SetActive(false);
+        liquid.SetActive(false);
     }
 }

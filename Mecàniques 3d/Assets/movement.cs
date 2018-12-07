@@ -87,9 +87,15 @@ public class movement : MonoBehaviour
 
                     checkCooldown = GetComponent<liquidState>();
                     cooldown = checkCooldown.cooldown;
-                    
+                    if ((Input.GetKeyDown(KeyCode.Q) && !cooldown))
+                    {
+                        rb.useGravity = false;
+                        GetComponent<Collider>().enabled = false;
+                        liquidState = true;
+                        state = playerState.LIQUID;
+                    }
 
-                    
+
 
                     if (anim.GetBool("Is_Dying") == true)
                     {
@@ -109,7 +115,7 @@ public class movement : MonoBehaviour
                 }
             case playerState.LIQUID:
                 {
-                    movePlayer();
+                    if(anim.GetBool("Is_Damaging") == false) movePlayer();
                     if (!liquidState)
                     {
                         rb.useGravity = true;
@@ -123,13 +129,7 @@ public class movement : MonoBehaviour
                     break;
                 }
         }
-        if ((Input.GetKeyDown(KeyCode.Q) && !cooldown))
-        {
-            rb.useGravity = false;
-            GetComponent<Collider>().enabled = false;
-            liquidState = true;
-            state = playerState.LIQUID;
-        }
+        
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -145,15 +145,18 @@ public class movement : MonoBehaviour
 
     public void Take_sword(int message)
     {
-        if (anim.GetBool("Is_Detected"))
+        if (anim.GetBool("Is_Damaging") == false)
         {
-            weapon_show.SetActive(true);
-            weapon_hide.SetActive(false);
-        }
-        else
-        {
-            weapon_show.SetActive(false);
-            weapon_hide.SetActive(true);
+            if (anim.GetBool("Is_Detected"))
+            {
+                weapon_show.SetActive(true);
+                weapon_hide.SetActive(false);
+            }
+            else
+            {
+                weapon_show.SetActive(false);
+                weapon_hide.SetActive(true);
+            }
         }
     }
 

@@ -16,6 +16,7 @@ public class kill_cono_vision : MonoBehaviour {
     static Animator anim;
     private GameObject player;
     private GameObject target;
+    private liquidState liquidKill;
     private Vector3 killTargetPos;
     private Vector3 playerPos;
     private float altura;
@@ -90,6 +91,8 @@ public class kill_cono_vision : MonoBehaviour {
     // Use this for initialization
     void Awake()
     {
+        player = GameObject.Find("Jugador");
+        liquidKill = player.GetComponent<liquidState>();
         target = null;
         ghostRef = Time.realtimeSinceStartup;
         actualState = killState.WATCHING;
@@ -100,7 +103,6 @@ public class kill_cono_vision : MonoBehaviour {
         meshFilter.mesh = Cono();
         initialPosition = meshFilter.mesh.vertices;
         initialUV = meshFilter.mesh.uv;
-        player = GameObject.Find("Jugador");
         anim = player.GetComponent<Animator>();
     }
 
@@ -136,6 +138,7 @@ public class kill_cono_vision : MonoBehaviour {
                         anim.SetBool("Is_Damaging", true);
                         playerPos = player.transform.position;
                         target.transform.GetChild(4).gameObject.SetActive(false);
+                        liquidKill.showLiquid();
                         actualState = killState.APROACHING;
                         killTargetPos = target.transform.position;
                      }
@@ -187,6 +190,8 @@ public class kill_cono_vision : MonoBehaviour {
                 player.transform.position = playerPos;
                 player.GetComponent<Collider>().enabled = true;
                 player.GetComponent<Rigidbody>().useGravity = true;
+                liquidKill.setHidratation();
+                liquidKill.hideLiquid();
                 actualState = killState.WATCHING;
                 break;
             default:
@@ -201,6 +206,7 @@ public class kill_cono_vision : MonoBehaviour {
 
     private void aproachEnemy(Vector3 destination)
     {
+        liquidKill.hideLiquid();
         player.transform.position = target.transform.GetChild(4).transform.position;
         player.GetComponent<Rigidbody>().transform.LookAt(destination);
         //player.GetComponent<Rigidbody>().velocity *= 0;
@@ -237,6 +243,7 @@ public class kill_cono_vision : MonoBehaviour {
 
         anim.SetBool("Is_Damaging", false);
         actualState = killState.RETURNING;
+        liquidKill.showLiquid();
     }
    
 }
