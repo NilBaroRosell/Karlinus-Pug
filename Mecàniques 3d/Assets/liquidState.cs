@@ -68,7 +68,7 @@ public class liquidState : MonoBehaviour
         }
         else
         {
-            liquidStateOn = movement.liquidState;
+            liquidStateOn = movement.LiquidState;
 
             if (liquidStateOn)
             {
@@ -84,7 +84,7 @@ public class liquidState : MonoBehaviour
                 if ((finishLiquid - startLiquid > hidratation * 3) || (Input.GetKey(KeyCode.Q) && startLiquid + 30 < Time.frameCount))
                 {
                     liquidStateOn = false;
-                    movement.liquidState = liquidStateOn;
+                    movement.LiquidState = liquidStateOn;
                     cooldown = true;
                     startCooldown = Time.frameCount;
                     firstFrameNormal = true;
@@ -131,8 +131,7 @@ public class liquidState : MonoBehaviour
                 wellHidratated.SetActive(false);
                 badlyHidratated.SetActive(false);
                 dead.SetActive(true);
-                //mostrar que ha mort
-                SceneManager.LoadScene("DEAD");
+                hidratation = 0;
             }
         }
     }

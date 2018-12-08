@@ -37,8 +37,8 @@ public class movement : MonoBehaviour
     public enum playerState { IDLE, HITTING, DYING, LIQUID };
     public playerState state;
     Collider w_collider;
-
-    public static bool liquidState = false;
+    
+    public static bool LiquidState = false;
     private bool cooldown = false;
     private liquidState checkCooldown;
     private bool onWater = false;
@@ -88,11 +88,11 @@ public class movement : MonoBehaviour
 
                     checkCooldown = GetComponent<liquidState>();
                     cooldown = checkCooldown.cooldown;
-                    if ((Input.GetKeyDown(KeyCode.Q) && !cooldown))
+                    if (Input.GetKeyDown(KeyCode.Q) && !cooldown && liquidState.hidratation > 0)
                     {
                         rb.useGravity = false;
                         GetComponent<Collider>().enabled = false;
-                        liquidState = true;
+                        LiquidState = true;
                         state = playerState.LIQUID;
                     }
 
@@ -119,7 +119,7 @@ public class movement : MonoBehaviour
             case playerState.LIQUID:
                 {
                     movePlayer();
-                    if (!liquidState)
+                    if (!LiquidState)
                     {
                         rb.useGravity = true;
                         GetComponent<Collider>().enabled = true;
@@ -202,7 +202,7 @@ public class movement : MonoBehaviour
 
             speed = 9;
 
-            if (liquidState)
+            if (LiquidState)
             {
                 if (onWater) speed = 11;
             }
@@ -241,7 +241,7 @@ public class movement : MonoBehaviour
             vectorDirection.Normalize();
             rb.velocity = vectorDirection * speed;
 
-            if (!liquidState && Input.GetKeyDown(KeyCode.Space) && !anim.GetBool("Is_Withdrawing") && !anim.GetBool("Is_Hitting") && !anim.GetBool("Is_Sheathing") && onFloor)
+            if (!LiquidState && Input.GetKeyDown(KeyCode.Space) && !anim.GetBool("Is_Withdrawing") && !anim.GetBool("Is_Hitting") && !anim.GetBool("Is_Sheathing") && onFloor)
             {
                 Physics.gravity = new Vector3(0, -100, 0);
                 anim.SetTrigger("Is_Jumping");

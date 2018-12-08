@@ -17,18 +17,23 @@ public class kill_cono_vision : MonoBehaviour {
     static Animator anim;
     private GameObject player;
     private GameObject target;
+    private Renderer targetRenderer;
+    private csAreaVision targetState;
     private liquidState liquidKill;
     private movement playerMovement;
     private Vector3 killTargetPos;
     private Vector3 playerPos;
     private float altura;
     private bool aproaching;
+    private bool stuck;
+    private float stuckReference;
     enum killState { WATCHING, APROACHING, KILLING, RETURNING };
     killState actualState;
     private float ghostRef;
 
     //Nav Mesh
     NavMeshAgent liquidAgent;
+    public Material[] textures;
 
     Mesh Cono()
     {
@@ -95,6 +100,10 @@ public class kill_cono_vision : MonoBehaviour {
     // Use this for initialization
     void Awake()
     {
+        stuckReference = 0.0f;
+        stuck = false;
+        targetRenderer = null;
+        targetState = null;
         player = GameObject.Find("Jugador");
         liquidKill = player.GetComponent<liquidState>();
         playerMovement = player.GetComponent<movement>();
@@ -138,27 +147,38 @@ public class kill_cono_vision : MonoBehaviour {
             {
                 if (hit.transform.gameObject.tag == "enemy")
                 {
-                        ghostRef = Time.realtimeSinceStartup;
-                        target = hit.transform.gameObject;
-                        target.transform.GetChild(4).gameObject.SetActive(true);
-
-                    if (Input.GetKeyDown(KeyCode.Mouse0))
+                    ghostRef = Time.realtimeSinceStartup;
+                    target = hit.transform.gameObject;
+                    target.transform.GetChild(4).gameObject.SetActive(true);
+                    targetRenderer = target.transform.GetChild(4).gameObject.GetComponent<Renderer>();
+                    targetState = target.GetComponent<csAreaVision>();
+                    if (liquidState.hidratation > 0 && targetState.canBeKilled())
                     {
-                        playerPos = player.transform.position;
-                        playerMovement.state = movement.playerState.HITTING;
-                        liquidAgent.enabled = true;
-                        liquidAgent.SetDestination(target.transform.GetChild(4).gameObject.transform.position);
-                        player.GetComponent<Rigidbody>().useGravity = false;
-                        player.GetComponent<Collider>().enabled = false;
-                        target.GetComponent<Collider>().enabled = false;
-                        target.GetComponent<Rigidbody>().useGravity = false;
-                        anim.SetBool("Is_Damaging", true);
-                        target.transform.GetChild(4).gameObject.SetActive(false);
-                        liquidKill.showLiquid();
-                        actualState = killState.APROACHING;
-                        killTargetPos = target.transform.position;
-                     }
+                        targetRenderer.material = textures[0];
 
+                        if (Input.GetKeyDown(KeyCode.Mouse0))
+                        {
+                            playerPos = player.transform.position;
+                            playerMovement.state = movement.playerState.HITTING;
+                            liquidAgent.enabled = true;
+                            liquidAgent.SetDestination(target.transform.GetChild(4).gameObject.transform.position);
+                            player.GetComponent<Rigidbody>().useGravity = false;
+                            target.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePosition;
+                            player.GetComponent<Collider>().enabled = false;
+                            target.GetComponent<Collider>().enabled = false;
+                            target.GetComponent<Rigidbody>().useGravity = false;
+                            anim.SetBool("Is_Damaging", true);
+                            target.GetComponent<NavMeshObstacle>().enabled = true;
+                            target.GetComponent<NavMeshAgent>().enabled = false;
+                            target.transform.GetChild(4).gameObject.SetActive(false);
+                            stuckReference = Time.realtimeSinceStartup;
+                            liquidKill.showLiquid();
+                            //Physics.IgnoreLayerCollision(9, 8);
+                            actualState = killState.APROACHING;
+                            killTargetPos = target.transform.position;
+                        }
+                    }
+                    else targetRenderer.material = textures[1];
                 }
                 if (hit.transform.position != transform.position)
                 {
@@ -198,12 +218,12 @@ public class kill_cono_vision : MonoBehaviour {
                 if (anim.GetBool("Is_Detected")) kill_vision();
                 break;
             case killState.APROACHING:
-                if (liquidAgent.remainingDistance <= 0.1f) aproachEnemy(killTargetPos);
+                if (liquidAgent.remainingDistance <= 0.2f || stuckReference + 2.5f < Time.realtimeSinceStartup) aproachEnemy(killTargetPos);
                 break;
             case killState.KILLING:
                 break;
             case killState.RETURNING:
-                if (liquidAgent.remainingDistance <= 0.1f) returnToPosition();
+                if (liquidAgent.remainingDistance <= 0.1f || stuckReference + 2.5f < Time.realtimeSinceStartup) returnToPosition();
                 break;
             default:
                 break;
@@ -226,6 +246,7 @@ public class kill_cono_vision : MonoBehaviour {
         aproaching = false;
         player.GetComponent<Rigidbody>().velocity *= 0;
         target.gameObject.GetComponent<Animator>().SetTrigger("Is_Dying");
+        targetState.dead = true;
         killEnemy();
     }
 
@@ -262,9 +283,9 @@ public class kill_cono_vision : MonoBehaviour {
 
         anim.SetBool("Is_Damaging", false);
         actualState = killState.RETURNING;
+        stuckReference = Time.realtimeSinceStartup;
         liquidKill.showLiquid();
         liquidAgent.enabled = true;
         liquidAgent.SetDestination(playerPos);
     }
-   
 }

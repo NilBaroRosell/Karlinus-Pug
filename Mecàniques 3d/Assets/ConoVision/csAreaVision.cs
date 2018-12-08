@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.AI;
+using UnityEngine.SceneManagement;
 using System.Collections;
 using System;
 
@@ -21,6 +22,7 @@ public class csAreaVision : MonoBehaviour {
     private Rigidbody rb;
     static Animator anim;
     static Animator playerAnim;
+    private movement playerMovement;
 
     public int speed;
 
@@ -44,7 +46,8 @@ public class csAreaVision : MonoBehaviour {
     Renderer alertRend;
     private bool hittingEnemy = false;
     private bool sneaky = false;
-    private bool dead = false;
+    public bool dead = false;
+    private float canAtackRef;
 
     //Nav Mesh
     NavMeshAgent enemyAgent;
@@ -109,7 +112,8 @@ public class csAreaVision : MonoBehaviour {
 
 	// Use this for initialization
 	void Awake () {
-        
+        GetComponent<NavMeshObstacle>().enabled = false;
+        canAtackRef = 0.0f;
         Physics.IgnoreLayerCollision(9, 8);
         meshFilter = transform.GetChild(2).GetChild(2).GetChild(0).GetChild(0).GetChild(1).GetChild(0).GetComponent<MeshFilter>();
         meshFilter.mesh = Cono();
@@ -133,6 +137,7 @@ public class csAreaVision : MonoBehaviour {
         transform.GetChild(4).gameObject.SetActive(false);
         KarlinusEspectre.transform.position = new Vector3(0.15f, 0.023f, -0.7f) * -1 + transform.position;
         KarlinusEspectre.SetActive(false);
+        playerMovement = GameObject.Find("Jugador").GetComponent<movement>();
         playerDist = new Vector3(GameObject.Find("Jugador").transform.position.x - rb.transform.position.x, 0.0f, GameObject.Find("Jugador").transform.position.z - rb.transform.position.z);
         discovered = false;
         discoveredRef = Time.realtimeSinceStartup;
@@ -157,24 +162,31 @@ public class csAreaVision : MonoBehaviour {
         switch (speed)
         {
             case 0:
-                if (playerAnim.GetBool("Is_Damaging") == false && dead == false)
+                if (dead)
+                {
+                    anim.SetBool("Is_Running", false);
+                    anim.SetBool("Is_Walking", false);
+                    anim.SetBool("Is_Fighting", false);
+                    StartCoroutine(ExecuteAfterTime(4));
+                }
+                else if (canBeKilled())
+                {
+                    anim.SetBool("Is_Running", false);
+                    anim.SetBool("Is_Walking", false);
+                    anim.SetBool("Is_Fighting", false);
+                }
+                else if(playerAnim.GetBool("Is_Damaging") == false && dead == false)
                 {
                     anim.SetBool("Is_Running", false);
                     anim.SetBool("Is_Walking", false);
                     if (Time.realtimeSinceStartup > atackRef + 1)
                     {
+                        StartCoroutine(playerDeath(3.5f));
                         anim.SetBool("Is_Fighting", true);
                         atacking = true;
+                        playerAnim.SetBool("Is_Dying", true);
                     }
-                }
-                else
-                {
-                    anim.SetBool("Is_Running", false);
-                    anim.SetBool("Is_Walking", false);
-                    anim.SetBool("Is_Fighting", false);
-                    dead = true;
-                    StartCoroutine(ExecuteAfterTime(4));
-                }                
+                }              
                 break;
             case 10:
                 anim.SetBool("Is_Running", false);
@@ -258,9 +270,17 @@ public class csAreaVision : MonoBehaviour {
 	void FixedUpdate () { 
     playerDist = new Vector3(GameObject.Find("Jugador").transform.position.x - rb.transform.position.x, 0.0f, GameObject.Find("Jugador").transform.position.z - rb.transform.position.z);
         destinationPoint.y = transform.position.y + 0.8f;
-        enemyAgent.SetDestination(destinationPoint);
-        enemyAgent.speed = speed / 10;
-        rb.transform.LookAt(destinationPoint);
+        if (GetComponent<NavMeshObstacle>().enabled == false)
+        {
+            enemyAgent.SetDestination(destinationPoint);
+            enemyAgent.speed = speed / 10;
+            rb.transform.LookAt(destinationPoint);
+        }
+        else
+        {
+            anim.SetBool("Is_Running", false);
+            anim.SetBool("Is_Walking", false);
+        }
         vecEnemy1 = new Vector3(destinationPoint.x - rb.transform.position.x, 0.0f, destinationPoint.z - rb.transform.position.z);
         if (oldPosition != transform.position || oldRotation != transform.rotation || oldScale != transform.localScale)
         {
@@ -364,9 +384,10 @@ public class csAreaVision : MonoBehaviour {
                 if (((playerDist.magnitude <= rango/2 || searchingRef + 5.0f < Time.realtimeSinceStartup) && 
                     lastState == enemyState.PATROLLING) || lastState == enemyState.SEARCHING && speed == 45)//Change to FIGHTING
                 {
+                    canAtackRef = Time.realtimeSinceStartup;
                     actualState = enemyState.FIGHTING;
                     lastState = enemyState.DETECTING;
-                    speed = 50;
+                    speed = 0;
                     //playerAnim.SetBool("Is_Detected", true);
                     //playerAnim.SetTrigger("Is_Sheathing");//Tendrá dos segundos de margen
                     alertRend.material.SetColor("_Color", Color.red);
@@ -387,30 +408,37 @@ public class csAreaVision : MonoBehaviour {
                 break;
             case enemyState.FIGHTING:
                 destinationPoint = GameObject.Find("Jugador").transform.position;
-                if (playerDist.magnitude < 1.5f)
+                if (canBeKilled() == false)
                 {
-                    speed = 0;
-                    if (atackRefTaken == false)
+                    speed = 50;
+                    if (playerDist.magnitude < 1.5f)
                     {
-                        atackRef = Time.realtimeSinceStartup;
-                        atackRefTaken = true;
+                        speed = 0;
+                        playerMovement.state = movement.playerState.HITTING;
+                       if (atacking == false)playerDeath(3.0f);
+                        if (atackRefTaken == false)
+                        {
+                            atackRef = Time.realtimeSinceStartup;
+                            atackRefTaken = true;
+                        }
+                    }
+                    else if (playerDist.magnitude >= 1.5f) speed = 50;
+                    if (playerDist.magnitude > rango)//Change to SEARCHING
+                    {
+                        actualState = enemyState.SEARCHING;
+                        lastState = enemyState.FIGHTING;
+                        speed = 25;
+                        //playerAnim.SetBool("Is_Detected", true);
+                        lastSeenPosition = GameObject.Find("Jugador").transform.position;
+                        KarlinusEspectre.SetActive(true);
+                        KarlinusEspectre.transform.position = lastSeenPosition;
+                        playerAnim.SetBool("Is_Detected", true);
+                        playerAnim.ResetTrigger("Is_Withdrawing");
+                        playerAnim.SetTrigger("Is_Withdrawing");
                     }
                 }
-                else if (playerDist.magnitude >= 1.5f) speed = 50;
-                if (playerDist.magnitude > rango)//Change to SEARCHING
-                {
-                    actualState = enemyState.SEARCHING;
-                    lastState = enemyState.FIGHTING;
-                    speed = 25;
-                    //playerAnim.SetBool("Is_Detected", true);
-                    lastSeenPosition = GameObject.Find("Jugador").transform.position;
-                    KarlinusEspectre.SetActive(true);
-                    KarlinusEspectre.transform.position = lastSeenPosition;
-                    playerAnim.SetBool("Is_Detected", true);
-                    playerAnim.ResetTrigger("Is_Withdrawing");
-                    playerAnim.SetTrigger("Is_Withdrawing");
-                }
-                    break;
+                else if (playerAnim.GetBool("Is_Damaging") && GetComponent<Collider>().enabled == false) speed = 0;
+                break;
             default:
                 break;
         }
@@ -421,24 +449,14 @@ public class csAreaVision : MonoBehaviour {
         if (dead) speed = 0;
     }
 
-    private void OnCollisionEnter(Collision collision)
+    public bool canBeKilled()
     {
-        if (collision.gameObject.tag == "Player" && atacking && dead == false)
-        {
-            playerAnim.SetBool("Is_Dying", true);
-            playerAnim.SetBool("Is_Running", false);
-            playerAnim.SetBool("Is_Crouching", false);
-            playerAnim.SetBool("Is_Walking", false);
-            playerAnim.SetBool("Is_Idle", false);
-        }
-        if (collision.gameObject.tag == "weapon" && playerAnim.GetBool("Is_Damaging") == true)
-        {
-            speed = 0;
-            dead = true;
-            Start();
-            StartCoroutine(ExecuteAfterTime(4));
-        }
+        if (actualState == enemyState.FIGHTING && canAtackRef + 2.0f > Time.realtimeSinceStartup)
+            return true;
+        else if (actualState != enemyState.FIGHTING) return true;
+        return false;
     }
+
     IEnumerator ExecuteAfterTime(float time)
     {
         yield return new WaitForSeconds(time);
@@ -447,6 +465,13 @@ public class csAreaVision : MonoBehaviour {
         playerAnim.SetBool("Is_Detected", false);
         playerAnim.ResetTrigger("Is_Hitting");
         transform.gameObject.SetActive(false);
+    }
+
+    IEnumerator playerDeath(float time)
+    {
+        yield return new WaitForSeconds(time);
+
+        SceneManager.LoadScene("DEAD");
     }
 }
 
