@@ -78,10 +78,16 @@ public class movement : MonoBehaviour
                     if ((finishDash - startDash) > 80) activateDash = true;
                     if (Input.GetKeyDown(KeyCode.F) && activateDash)
                     {
-                        vectorDirection = ((moveVertical * transform.forward) + (moveHorizontal * transform.right));
-                        vectorDirection.Normalize();
+                        if (direction == "L") vectorDirection = (moveHorizontal * transform.right).normalized * -10000;
+                        else if (direction == "R") vectorDirection = (moveHorizontal * transform.right).normalized * 10000;
+                        else if (direction == "B") vectorDirection = (moveVertical * transform.forward).normalized * -10000;
+                        else if (direction == "F") vectorDirection = (moveVertical * transform.forward).normalized * 10000;
+                        else if (direction == "FL" || direction == "FR") vectorDirection = ((moveVertical * transform.forward) + (moveHorizontal * transform.right)).normalized * 10000;
+                        else if (direction == "BL" || direction == "BR") vectorDirection = ((moveVertical * transform.forward) + (moveHorizontal * transform.right)).normalized * -10000;
+                        /*vectorDirection = ((moveVertical * transform.forward) + (moveHorizontal * transform.right));
+                        vectorDirection.Normalize();*/
                         rb.velocity *= 0;
-                        rb.AddForce(vectorDirection * 10000);
+                        rb.AddForce(vectorDirection);
                         startDash = Time.frameCount;
                         activateDash = false;
                     }
