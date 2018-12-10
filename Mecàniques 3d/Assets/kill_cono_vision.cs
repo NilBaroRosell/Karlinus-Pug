@@ -168,8 +168,8 @@ public class kill_cono_vision : MonoBehaviour {
                             target.GetComponent<Collider>().enabled = false;
                             target.GetComponent<Rigidbody>().useGravity = false;
                             anim.SetBool("Is_Damaging", true);
-                            target.GetComponent<NavMeshObstacle>().enabled = true;
                             target.GetComponent<NavMeshAgent>().enabled = false;
+                            target.GetComponent<NavMeshObstacle>().enabled = true;
                             target.transform.GetChild(4).gameObject.SetActive(false);
                             stuckReference = Time.realtimeSinceStartup;
                             liquidKill.showLiquid();

@@ -39,4 +39,5 @@ public class fountain : MonoBehaviour{
     {
         if (collision.gameObject.tag == "Player") inFountain = true;
     }
+
 }

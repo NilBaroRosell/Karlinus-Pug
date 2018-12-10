@@ -1,47 +1,44 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class HUD : MonoBehaviour {
 
     public float startTime;
     public float finalTime;
-    public float startTime2;
-    public float finalTime2;
     public bool started;
-    public GameObject firstdMision;
-    public GameObject secondMision;
-    public GameObject Zona1;
-    public GameObject Zona2;
+    public GameObject Objective;
+    private GameObject Objective_text;
+    public GameObject M1_Texts;
+    public static GameObject canvasHUD;
 
 	// Use this for initialization
-	void Start () {
-        firstdMision.SetActive(true);
-        secondMision.SetActive(false);
+	void Awake () {
+        Objective_text = Objective.transform.GetChild(0).gameObject;
+        M1_Texts.SetActive(false);
+        Objective.SetActive(false);
         startTime = Time.frameCount;
-        startTime2 = 0;
         started = false;
+        canvasHUD = GameObject.Find("Canvas");
     }
 
     // Update is called once per frame
     void Update()
     {
-        finalTime = Time.frameCount;
-        if (finalTime - startTime > 300) firstdMision.SetActive(false);
-
-        if (transform.localPosition.z > 39 && !started)
+            finalTime = Time.frameCount;
+        if (finalTime - startTime > 300)
         {
-            startTime2 = Time.frameCount;
-            secondMision.SetActive(true);
-            Zona2.SetActive(true);
-            Zona1.SetActive(false);
-            started = true;
+            Objective.SetActive(false);
         }
+    }
 
-        if (startTime2 > 0)
-        {
-            finalTime2 = Time.frameCount;
-            if (finalTime2 - startTime2 > 300) secondMision.SetActive(false);
-        }
+    public void showM1Objective(int text_to_show)
+    {
+        M1_Texts.SetActive(true);
+        Objective.SetActive(true);       
+        Objective_text.GetComponent<Text>().text = M1_Texts.transform.GetChild(text_to_show).gameObject.GetComponent<Text>().text;
+        M1_Texts.SetActive(false);
+        startTime = Time.frameCount;
     }
 }

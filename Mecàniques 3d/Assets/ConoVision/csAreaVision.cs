@@ -464,6 +464,7 @@ public class csAreaVision : MonoBehaviour {
         playerAnim.SetTrigger("Is_Sheathing");
         playerAnim.SetBool("Is_Detected", false);
         playerAnim.ResetTrigger("Is_Hitting");
+        playerMovement.state = movement.playerState.IDLE;
         transform.gameObject.SetActive(false);
     }
 

@@ -13,8 +13,6 @@ public class movement : MonoBehaviour
     GameObject weapon_hide;
 
     public float speed;
-    //public float normalDash = 10000;
-    //public float superDash = 15000;
 
     public bool onFloor = false;
     public bool jumping = false;
@@ -55,8 +53,6 @@ public class movement : MonoBehaviour
         anim = GetComponent<Animator>();
         direction = "F";
         state = playerState.IDLE;
-        transform.position = new Vector3(PlayerPrefs.GetFloat("KarlinusPosX"), PlayerPrefs.GetFloat("KarlinusPosY"),
-        PlayerPrefs.GetFloat("KarlinusPosZ"));//(-84.99f, 1.27f, -41.88f);
         weapon_show = GameObject.Find("weapon_show");
         weapon_hide = GameObject.Find("weapon_hide");
         weapon_show.SetActive(false);
@@ -84,8 +80,6 @@ public class movement : MonoBehaviour
                         else if (direction == "F") vectorDirection = (moveVertical * transform.forward).normalized * 10000;
                         else if (direction == "FL" || direction == "FR") vectorDirection = ((moveVertical * transform.forward) + (moveHorizontal * transform.right)).normalized * 10000;
                         else if (direction == "BL" || direction == "BR") vectorDirection = ((moveVertical * transform.forward) + (moveHorizontal * transform.right)).normalized * -10000;
-                        /*vectorDirection = ((moveVertical * transform.forward) + (moveHorizontal * transform.right));
-                        vectorDirection.Normalize();*/
                         rb.velocity *= 0;
                         rb.AddForce(vectorDirection);
                         startDash = Time.frameCount;
@@ -315,11 +309,6 @@ public class movement : MonoBehaviour
             {
                 transform.position = new Vector3(50.89f, -6.778945f, 37.37239f);
                 camara.transform.position = new Vector3(50.811f, -3.91f, 31.41f);
-            }
-
-            if (Input.GetKeyDown(KeyCode.Escape))
-            {
-                SceneManager.LoadScene("Menu_1");
             }
 
             if (moveVertical == 0 && moveHorizontal == 0)
