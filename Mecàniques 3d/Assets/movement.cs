@@ -88,7 +88,7 @@ public class movement : MonoBehaviour
 
                     checkCooldown = GetComponent<liquidState>();
                     cooldown = checkCooldown.cooldown;
-                    if (Input.GetKeyDown(KeyCode.Q) && !cooldown && liquidState.hidratation > 0)
+                    if (Input.GetKeyDown(KeyCode.Q) && !cooldown && liquidState.hidratation >= 0)
                     {
                         rb.useGravity = false;
                         GetComponent<Collider>().enabled = false;
@@ -240,19 +240,6 @@ public class movement : MonoBehaviour
             vectorDirection = ((moveVertical * transform.forward) + (moveHorizontal * transform.right));
             vectorDirection.Normalize();
             rb.velocity = vectorDirection * speed;
-
-            if (!LiquidState && Input.GetKeyDown(KeyCode.Space) && !anim.GetBool("Is_Withdrawing") && !anim.GetBool("Is_Hitting") && !anim.GetBool("Is_Sheathing") && onFloor)
-            {
-                Physics.gravity = new Vector3(0, -100, 0);
-                anim.SetTrigger("Is_Jumping");
-                speed = 4;
-                vectorDirection *= 2;
-                vectorDirection += new Vector3(0, 6, 0);
-                rb.velocity = vectorDirection * speed;
-                onFloor = false;
-                jumping = true;
-            }
-            else Physics.gravity = new Vector3(0, -250, 0);
 
             if (moveVertical > 0 && moveHorizontal > 0)
             {
