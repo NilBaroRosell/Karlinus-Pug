@@ -367,6 +367,7 @@
     <Compile Include="Assets\Cinemachine\Timeline\CinemachineTrack.cs" />
     <Compile Include="Assets\collision.cs" />
     <Compile Include="Assets\ConoVision\csAreaVision.cs" />
+    <Compile Include="Assets\ConoVision\NPC_movement.cs" />
     <Compile Include="Assets\cucumber.cs" />
     <Compile Include="Assets\Fantasy Skybox FREE\Demo\Scripts\GE_FantasySkyboxFREE_Demo.cs" />
     <Compile Include="Assets\Fantasy Skybox FREE\Demo\Scripts\GE_FantasySkyboxFREE_UIs.cs" />
