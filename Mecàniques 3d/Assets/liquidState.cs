@@ -48,90 +48,93 @@ public class liquidState : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        showHidratation = hidratation;
-
-        if (cooldown)
+        if (!movement.hitting)
         {
-            if (firstFrameNormal)
-            {
-                hideLiquid();
-                firstFrameNormal = false;
-            }
+            showHidratation = hidratation;
 
-            finishCooldown = Time.frameCount;
-
-            if (finishCooldown - startCooldown > 300)
+            if (cooldown)
             {
-                cooldown = false;
-                firstFrameLiquid = true;
-            }
-        }
-        else
-        {
-            liquidStateOn = movement.LiquidState;
-
-            if (liquidStateOn)
-            {
-                if (firstFrameLiquid)
+                if (firstFrameNormal)
                 {
-                    showLiquid();
-                    startLiquid = Time.frameCount;
-                    firstFrameLiquid = false;
+                    hideLiquid();
+                    firstFrameNormal = false;
                 }
 
-                finishLiquid = Time.frameCount;
+                finishCooldown = Time.frameCount;
 
-                if ((finishLiquid - startLiquid > hidratation * 3) || (Input.GetKey(KeyCode.Q) && startLiquid + 30 < Time.frameCount))
+                if (finishCooldown - startCooldown > 300)
                 {
-                    liquidStateOn = false;
-                    movement.LiquidState = liquidStateOn;
-                    cooldown = true;
-                    startCooldown = Time.frameCount;
-                    firstFrameNormal = true;
-                    setHidratation();
+                    cooldown = false;
+                    firstFrameLiquid = true;
                 }
-            }
-
-            else
-            {
-                if (inFountain && Input.GetKey(KeyCode.E)) drinking = true;
-
-                if (drinking)
-                {
-                    Debug.Log(liquidState.hidratation);
-                    drinking = false;
-                }
-            }
-
-            if (hidratation > 100) hidratation = 100;
-            else if (hidratation > 66)
-            {
-                perfectlyHidratated.SetActive(true);
-                wellHidratated.SetActive(false);
-                badlyHidratated.SetActive(false);
-                dead.SetActive(false);
-            }
-            else if (hidratation > 33)
-            {
-                perfectlyHidratated.SetActive(false);
-                wellHidratated.SetActive(true);
-                badlyHidratated.SetActive(false);
-                dead.SetActive(false);
-            }
-            else if (hidratation > 0)
-            {
-                perfectlyHidratated.SetActive(false);
-                wellHidratated.SetActive(false);
-                badlyHidratated.SetActive(true);
-                dead.SetActive(false);
             }
             else
             {
-                perfectlyHidratated.SetActive(false);
-                wellHidratated.SetActive(false);
-                badlyHidratated.SetActive(false);
-                dead.SetActive(true);
-                hidratation = 0;
+                liquidStateOn = movement.LiquidState;
+
+                if (liquidStateOn)
+                {
+                    if (firstFrameLiquid)
+                    {
+                        showLiquid();
+                        startLiquid = Time.frameCount;
+                        firstFrameLiquid = false;
+                    }
+
+                    finishLiquid = Time.frameCount;
+
+                    if ((finishLiquid - startLiquid > hidratation * 3) || (Input.GetKey(KeyCode.Q) && startLiquid + 30 < Time.frameCount))
+                    {
+                        liquidStateOn = false;
+                        movement.LiquidState = liquidStateOn;
+                        cooldown = true;
+                        startCooldown = Time.frameCount;
+                        firstFrameNormal = true;
+                        setHidratation();
+                    }
+                }
+
+                else
+                {
+                    if (inFountain && Input.GetKey(KeyCode.E)) drinking = true;
+
+                    if (drinking)
+                    {
+                        Debug.Log(liquidState.hidratation);
+                        drinking = false;
+                    }
+                }
+
+                if (hidratation > 100) hidratation = 100;
+                else if (hidratation > 66)
+                {
+                    perfectlyHidratated.SetActive(true);
+                    wellHidratated.SetActive(false);
+                    badlyHidratated.SetActive(false);
+                    dead.SetActive(false);
+                }
+                else if (hidratation > 33)
+                {
+                    perfectlyHidratated.SetActive(false);
+                    wellHidratated.SetActive(true);
+                    badlyHidratated.SetActive(false);
+                    dead.SetActive(false);
+                }
+                else if (hidratation > 0)
+                {
+                    perfectlyHidratated.SetActive(false);
+                    wellHidratated.SetActive(false);
+                    badlyHidratated.SetActive(true);
+                    dead.SetActive(false);
+                }
+                else
+                {
+                    perfectlyHidratated.SetActive(false);
+                    wellHidratated.SetActive(false);
+                    badlyHidratated.SetActive(false);
+                    dead.SetActive(true);
+                    hidratation = 0;
+                }
             }
         }
     }

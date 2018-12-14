@@ -45,6 +45,11 @@ public class Respawns : MonoBehaviour {
         Mision_Objects[0] = GameObject.Find("Enemies_Zone_2");
     }
 
+    public Vector3 NONE()
+    {
+        return RespawnPoints[(int)LoadScene.respawnToLoad];
+    }
+
     public Vector3 M1(int checkPoint)
     {
         //LOAD M1

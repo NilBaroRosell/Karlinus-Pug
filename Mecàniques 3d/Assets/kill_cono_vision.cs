@@ -15,6 +15,7 @@ public class kill_cono_vision : MonoBehaviour {
     Vector3 oldScale;
 
     static Animator anim;
+    public static bool returnPlayer;
     private GameObject player;
     private GameObject target;
     private Renderer targetRenderer;
@@ -124,6 +125,7 @@ public class kill_cono_vision : MonoBehaviour {
         initialPosition = meshFilter.mesh.vertices;
         initialUV = meshFilter.mesh.uv;
         anim = player.GetComponent<Animator>();
+        returnPlayer = false;
     }
 
     Mesh areaMesh(Mesh mesh)
@@ -172,6 +174,8 @@ public class kill_cono_vision : MonoBehaviour {
                             target.GetComponent<NavMeshObstacle>().enabled = true;
                             target.transform.GetChild(4).gameObject.SetActive(false);
                             stuckReference = Time.realtimeSinceStartup;
+                            liquidKill.firstFrameNormal = false;
+                            liquidKill.cooldown = false;
                             liquidKill.showLiquid();
                             //Physics.IgnoreLayerCollision(9, 8);
                             actualState = killState.APROACHING;
@@ -221,6 +225,7 @@ public class kill_cono_vision : MonoBehaviour {
                 if (liquidAgent.remainingDistance <= 0.2f || stuckReference + 2.5f < Time.realtimeSinceStartup) aproachEnemy(killTargetPos);
                 break;
             case killState.KILLING:
+                if (returnPlayer) setReturn();
                 break;
             case killState.RETURNING:
                 if (liquidAgent.remainingDistance <= 0.1f || stuckReference + 2.5f < Time.realtimeSinceStartup) returnToPosition();
@@ -242,7 +247,7 @@ public class kill_cono_vision : MonoBehaviour {
         player.GetComponent<Rigidbody>().transform.LookAt(destination);
         actualState = killState.KILLING;
         liquidAgent.enabled = false;
-        StartCoroutine(ExecuteAfterTime(1.0f));
+        //StartCoroutine(ExecuteAfterTime(1.0f));
         aproaching = false;
         player.GetComponent<Rigidbody>().velocity *= 0;
         target.gameObject.GetComponent<Animator>().SetTrigger("Is_Dying");
@@ -276,10 +281,24 @@ public class kill_cono_vision : MonoBehaviour {
         if(target != null && ghostRef + 0.1f < Time.realtimeSinceStartup)
         target.transform.GetChild(4).gameObject.SetActive(false);
     }
-
-    IEnumerator ExecuteAfterTime(float time)
+    public void finishAnim(int message)
     {
-        yield return new WaitForSeconds(time);
+        if (message == 1)
+        {
+            anim.SetBool("Is_Damaging", false);
+            actualState = killState.RETURNING;
+            stuckReference = Time.realtimeSinceStartup;
+            liquidKill.showLiquid();
+            liquidAgent.enabled = true;
+            liquidAgent.SetDestination(playerPos);
+        }
+
+    }
+
+    //IEnumerator ExecuteAfterTime(float time)
+    void setReturn()
+    {
+      //  yield return new WaitForSeconds(time);
 
         anim.SetBool("Is_Damaging", false);
         actualState = killState.RETURNING;
@@ -287,5 +306,6 @@ public class kill_cono_vision : MonoBehaviour {
         liquidKill.showLiquid();
         liquidAgent.enabled = true;
         liquidAgent.SetDestination(playerPos);
+        returnPlayer = false;
     }
 }

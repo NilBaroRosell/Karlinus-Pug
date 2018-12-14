@@ -18,6 +18,7 @@ public class movement : MonoBehaviour
     public bool jumping = false;
     public bool adPressed = false;
     public bool wsPressed = false;
+    public static bool hitting;
 
     public string direction;
     public Vector3 vectorDirection;
@@ -58,6 +59,7 @@ public class movement : MonoBehaviour
         weapon_show.SetActive(false);
         weapon_hide.SetActive(true);
         Physics.IgnoreLayerCollision(9, 8);
+        hitting = false;
     }
 
     private void FixedUpdate()
@@ -66,6 +68,7 @@ public class movement : MonoBehaviour
         {
             case playerState.IDLE:
                 {
+                    hitting = false;
                     vel = rb.velocity;
 
                     movePlayer();
@@ -106,6 +109,7 @@ public class movement : MonoBehaviour
                     break;
                 }
             case playerState.HITTING:
+                hitting = true;
                 break;
             case playerState.DYING:
                 {
@@ -118,6 +122,7 @@ public class movement : MonoBehaviour
                 }
             case playerState.LIQUID:
                 {
+                    hitting = false;
                     movePlayer();
                     if (!LiquidState)
                     {
@@ -161,6 +166,15 @@ public class movement : MonoBehaviour
                 weapon_hide.SetActive(true);
             }
         }
+    }
+
+    public void finishAnim(int message)
+    {
+        if (message == 1)
+        {
+            kill_cono_vision.returnPlayer = true;
+        }
+
     }
 
     public void movePlayer()

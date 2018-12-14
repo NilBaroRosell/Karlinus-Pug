@@ -7,6 +7,7 @@ public class LoadScene : MonoBehaviour {
 
     public enum Scenes {SEWER_1, SEWER_2, CITY_1, CITY_2, PUB, HOUSE, PALACE};
     public Scenes SceneToLoad;
+    public static Scenes respawnToLoad;
     private bool changeScene;
 
     // Use this for initialization
@@ -21,6 +22,7 @@ public class LoadScene : MonoBehaviour {
             switch (SceneToLoad)
             {
                 case Scenes.SEWER_1:
+                    respawnToLoad = Scenes.SEWER_1;
                     SceneManager.LoadScene("sewer");                    
                     break;
                 case Scenes.CITY_1:
