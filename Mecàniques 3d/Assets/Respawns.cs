@@ -4,11 +4,14 @@ using UnityEngine;
 
 public class Respawns : MonoBehaviour {
 
+    public enum InitialRespawns { SEWER_1, SEWER_2, SEWER_3, CITY_1, CITY_2, PUB, HOUSE, PALACE, NONE };
     private Vector3[] RespawnPoints;
     private GameObject All_Mision_Objects;
     public GameObject[] BoxTriggers;
     public GameObject[] Enemies;
     public GameObject []Mision_Objects;
+    public InitialRespawns initialRespawn;
+    private int initialRespawnIndex;
 
     private void Awake()
     {
@@ -20,8 +23,12 @@ public class Respawns : MonoBehaviour {
     private void LoadNONE()
     {
         //NONE Mision RESPAWNS
-        RespawnPoints = new Vector3[1];
-        RespawnPoints[0] = new Vector3(-84.99f, -27.56327f, -41.88f);
+        RespawnPoints = new Vector3[5];
+        RespawnPoints[0] = new Vector3(-63.28f, -9.1f, 89.17f);
+        RespawnPoints[1] = new Vector3(85.8f, -9.1f, 321.1f);
+        RespawnPoints[2] = new Vector3(-73.16f, -9.1f, 400.28f);
+        RespawnPoints[3] = new Vector3(-84.99f, -27.56327f, -41.88f);
+        RespawnPoints[4] = new Vector3(100.59f, -27.56327f, 257.55f);
     }
 
     private void LoadM1()
@@ -47,7 +54,14 @@ public class Respawns : MonoBehaviour {
 
     public Vector3 NONE()
     {
-        return RespawnPoints[(int)LoadScene.respawnToLoad];
+        LoadNONE();
+        if (initialRespawn == InitialRespawns.NONE) return RespawnPoints[(int)LoadScene.respawnToLoad];
+        else
+        {
+            initialRespawnIndex = (int)initialRespawn;
+            initialRespawn = InitialRespawns.NONE;
+            return RespawnPoints[initialRespawnIndex];
+        }
     }
 
     public Vector3 M1(int checkPoint)

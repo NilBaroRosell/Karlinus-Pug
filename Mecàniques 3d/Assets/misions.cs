@@ -71,7 +71,17 @@ public class misions : MonoBehaviour {
             switch (ActualMision)
             {
                 case Misions.NONE:
-                    Player.transform.position = new Vector3(-84.99f, -27.56327f, -41.88f);
+                    if (GameObject.Find("Secundary Camera") != null)
+                    {
+                        secundaryCamera = GameObject.Find("Secundary Camera");
+                        secundaryCamera.SetActive(false);
+                    }
+                    if (GameObject.Find("Camera Destination") != null)
+                    {
+                        secundaryCameraDestination = GameObject.Find("Camera Destination");
+                        secundaryCameraDestination.SetActive(false);
+                    }
+                    Player.transform.position = loadRespawn.NONE();
                     showMisionPoints();
                     break;
                 case Misions.M1:
@@ -191,6 +201,7 @@ public class misions : MonoBehaviour {
                 {
                     ActualMision = Misions.NONE;
                     PrincipalMision.MisionsCompleted[0] = true;
+                    loadRespawn.initialRespawn = Respawns.InitialRespawns.CITY_1;
                     SceneManager.LoadScene("city");
                 }
                 break;
