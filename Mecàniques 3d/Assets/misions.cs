@@ -115,7 +115,6 @@ public class misions : MonoBehaviour {
             }
         }
         else Cursor.lockState = CursorLockMode.None;
-        Debug.Log(misionIndex);
     }
 
     // Update is called once per frame

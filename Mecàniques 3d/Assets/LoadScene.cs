@@ -23,15 +23,17 @@ public class LoadScene : MonoBehaviour {
             switch (SceneToLoad)
             {
                 case Scenes.SEWER_1:
-                    respawnToLoad = Scenes.SEWER_1;
+                case Scenes.SEWER_2:
+                case Scenes.SEWER_3:
+                    respawnToLoad = SceneToLoad;
                     SceneManager.LoadScene("sewer");                    
                     break;
                 case Scenes.CITY_1:
-                    respawnToLoad = Scenes.CITY_1;
+                case Scenes.CITY_2:
+                    respawnToLoad = SceneToLoad;
                     SceneManager.LoadScene("city");
                     break;
                 default:                    
-                    SceneManager.LoadScene("city");
                     break;
             }
         }

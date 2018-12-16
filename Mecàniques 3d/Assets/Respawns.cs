@@ -55,9 +55,12 @@ public class Respawns : MonoBehaviour {
     public Vector3 NONE()
     {
         LoadNONE();
+        if (GameObject.Find("Zone_1") != null) GameObject.Find("Zone_1").SetActive(false);
+        if (GameObject.Find("Enemies_Zone_2") != null) GameObject.Find("Enemies_Zone_2").SetActive(true);
         if (initialRespawn == InitialRespawns.NONE) return RespawnPoints[(int)LoadScene.respawnToLoad];
         else
         {
+            LoadScene.respawnToLoad = (LoadScene.Scenes)initialRespawn;
             initialRespawnIndex = (int)initialRespawn;
             initialRespawn = InitialRespawns.NONE;
             return RespawnPoints[initialRespawnIndex];

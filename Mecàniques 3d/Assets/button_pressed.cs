@@ -12,6 +12,19 @@ public class button_pressed : MonoBehaviour {
 	
 	// Update is called once per frame
 	public void sceneChange() {
-        SceneManager.LoadScene("sewer");
+        switch (LoadScene.respawnToLoad)
+        {
+            case LoadScene.Scenes.SEWER_1:
+            case LoadScene.Scenes.SEWER_2:
+            case LoadScene.Scenes.SEWER_3:
+                SceneManager.LoadScene("sewer");
+                break;
+            case LoadScene.Scenes.CITY_1:
+            case LoadScene.Scenes.CITY_2:
+                SceneManager.LoadScene("city");
+                break;
+            default:
+                break;
+        }
     }
 }
