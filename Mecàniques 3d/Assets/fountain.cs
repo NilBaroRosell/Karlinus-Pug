@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class fountain : MonoBehaviour{
+public class fountain : MonoBehaviour
+{
 
     public bool inFountain = false;
     public bool drinking = false;
@@ -35,9 +36,13 @@ public class fountain : MonoBehaviour{
         }
     }
 
-    private void OnCollisionEnter(Collision collision)
+    private void OnTriggerEnter(Collider collision)
     {
         if (collision.gameObject.tag == "Player") inFountain = true;
     }
 
+    private void OnTriggerExit(Collider collision)
+    {
+        if (collision.gameObject.tag == "Player") inFountain = false;
+    }
 }

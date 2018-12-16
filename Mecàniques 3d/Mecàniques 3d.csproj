@@ -385,6 +385,7 @@
     <Compile Include="Assets\Respawns.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Assets\2Ginge\GritBuildupShader\Shaders\GritBuildupShader.shader" />
     <None Include="Assets\Cinemachine\ReleaseNotes.txt" />
     <None Include="Assets\Fantasy Skybox FREE\Fog and Ambient references.txt" />
     <None Include="Assets\Fantasy Skybox FREE\Readme.txt" />
