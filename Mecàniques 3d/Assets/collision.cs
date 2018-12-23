@@ -14,5 +14,6 @@ public class collision : MonoBehaviour {
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.tag == "floor") onFloor = true;
+        else onFloor = false;
     }
 }
