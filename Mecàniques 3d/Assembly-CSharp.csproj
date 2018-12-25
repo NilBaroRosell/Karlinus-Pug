@@ -141,6 +141,7 @@
     <None Include="Assets\Fantasy Skybox FREE\Fog and Ambient references.txt" />
     <None Include="Assets\Cinemachine\ReleaseNotes.txt" />
     <None Include="Assets\GE Common Assets\Readme.txt" />
+    <None Include="Assets\UrbanNightSky\Readme.txt" />
     <Reference Include="UnityEditor.StandardEvents">
       <HintPath>D:/documents enti/projecte2/Karlinus-Pug/Mecàniques 3d/Library/ScriptAssemblies/UnityEditor.StandardEvents.dll</HintPath>
     </Reference>
