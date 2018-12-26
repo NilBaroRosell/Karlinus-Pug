@@ -54,6 +54,7 @@ public class movement : MonoBehaviour
         anim = GetComponent<Animator>();
         direction = "F";
         state = playerState.IDLE;
+        anim.SetBool("Is_Draw", true);
         weapon_show = GameObject.Find("weapon_show");
         weapon_hide = GameObject.Find("weapon_hide");
         weapon_show.SetActive(false);
@@ -110,6 +111,10 @@ public class movement : MonoBehaviour
                 }
             case playerState.HITTING:
                 hitting = true;
+                anim.SetBool("Is_Running", false);
+                anim.SetBool("Is_Walking", false);
+                anim.SetBool("Is_Crouching", false);
+                anim.SetBool("Is_Idle", true);
                 break;
             case playerState.DYING:
                 {

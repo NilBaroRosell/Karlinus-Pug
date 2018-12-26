@@ -75,15 +75,18 @@ public class Respawns : MonoBehaviour {
         switch(checkPoint)
         {
             case 0:
+                if (GameObject.Find("Enemigo (3)") != null) GameObject.Find("Enemigo (3)").GetComponent<csAreaVision>().speed = 0;
                 Enemies[2].SetActive(false);
                 Mision_Objects[0].SetActive(false);
                 HUD.canvasHUD.SetActive(false);
                 break;
             case 1:
                 if (GameObject.Find("Enemigo (3)") != null) GameObject.Find("Enemigo (3)").SetActive(false);
+                for (int i = 3; i < BoxTriggers.Length; i++) BoxTriggers[i].SetActive(true);
                 break;
             case 2:
                 if (GameObject.Find("Zone_1") != null) GameObject.Find("Zone_1").SetActive(false);
+                for (int i = 6; i < BoxTriggers.Length; i++) BoxTriggers[i].SetActive(true);
                 Mision_Objects[0].SetActive(true);
                 break;
             default:

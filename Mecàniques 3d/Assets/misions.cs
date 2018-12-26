@@ -98,12 +98,12 @@ public class misions : MonoBehaviour {
                             case 1:
                             secundaryCamera.SetActive(false);
                             secundaryCameraDestination.SetActive(false);
-                            misionIndex = 4;
+                            misionIndex = 9;
                             break;
                             case 2:
                             secundaryCamera.SetActive(false);
                             secundaryCameraDestination.SetActive(false);
-                            misionIndex = 5;
+                            misionIndex = 12;
                             break;
                     }
                     
@@ -144,6 +144,7 @@ public class misions : MonoBehaviour {
         {
             case 0:
                 playerMovement.state = movement.playerState.HITTING;
+                Player.GetComponent<Animator>().SetBool("Is_Draw", false);
                 if (nextEvent)
                 {
                     misionIndex++;
@@ -168,35 +169,120 @@ public class misions : MonoBehaviour {
                 secundaryCamera.transform.rotation = Quaternion.Lerp(secundaryCamera.transform.rotation, secundaryCameraDestination.transform.rotation, 1.25f * Time.deltaTime);
                 if (nextEvent)
                 {
+                    secundaryCamera.transform.position = new Vector3(-40.49f, 2.57f, -18.57f);
+                    secundaryCamera.transform.eulerAngles = new Vector3(0.0f, 18.425f, 0.0f);
                     secundaryCamera.SetActive(false);
                     secundaryCameraDestination.SetActive(false);
                     misionIndex++;
                     nextEvent = false;
                     HUD.canvasHUD.SetActive(true);
                     HUD_Script.showM1Objective(0);
+                    HUD_Script.showM1Helps(0, 60);
                     playerMovement.state = movement.playerState.IDLE;
                 }
                 break;
             case 3:
                 if (loadRespawn.BoxTriggers[0].activeSelf == false)
                 {
-                    misionIndex++;
-                    respawnIndex++;
-                    HUD_Script.showM1Objective(1);
+                    Player.transform.position = new Vector3(-48.61f, 0.5040904f, -16.74f);
+                    Player.transform.eulerAngles = new Vector3(0.0f, 147.341f, 0.0f);
+                    playerMovement.state = movement.playerState.HITTING;
+                    secundaryCamera.SetActive(true);
+                    if (GameObject.Find("Enemigo (3)") != null) GameObject.Find("Enemigo (3)").GetComponent<csAreaVision>().speed = 10;
+                    misionIndex ++;
+                    HUD_Script.showM1Helps(1, 45);
+                    Player.GetComponent<Animator>().SetTrigger("Is_Withdrawing");
+                    Player.GetComponent<Animator>().SetBool("Is_Detected", true);
+                    StartCoroutine(ExecuteAfterTime(9.0f));
                 }
                 break;
             case 4:
+                if (nextEvent)
+                {
+                    nextEvent = false;
+                    misionIndex++;
+                    secundaryCameraDestination.transform.position = mainCamera.transform.position;
+                    secundaryCameraDestination.transform.rotation = mainCamera.transform.rotation;
+                    HUD_Script.showM1Helps(2, 45);
+                    StartCoroutine(ExecuteAfterTime(5.0f));
+                }
+                break;
+            case 5:
+                secundaryCamera.transform.position = Vector3.Lerp(secundaryCamera.transform.position, secundaryCameraDestination.transform.position, 1.25f * Time.deltaTime);
+                secundaryCamera.transform.rotation = Quaternion.Lerp(secundaryCamera.transform.rotation, secundaryCameraDestination.transform.rotation, 1.25f * Time.deltaTime);
+                if(nextEvent)
+                {
+                    secundaryCamera.SetActive(false);
+                    nextEvent = false;
+                    misionIndex++;
+                    HUD_Script.showM1Helps(3, 40);
+                }
+                break;
+            case 6:
+                if (GameObject.Find("Enemigo (3)") != null && GameObject.Find("Enemigo (3)").transform.GetChild(4).gameObject.activeSelf)
+                {
+                    HUD_Script.showM1Helps(4, 32);
+                    GameObject.Find("Enemigo (3)").GetComponent<csAreaVision>().speed = 0;
+                }
+                if (GameObject.Find("Enemigo (3)") == null)
+                {
+                    misionIndex++;
+                    HUD_Script.showM1Helps(5, 45);
+                    Player.GetComponent<Animator>().SetBool("Is_Detected", true);
+                    Player.GetComponent<Animator>().SetBool("Is_Draw", true);
+                    playerMovement.state = movement.playerState.IDLE;
+                }
+                break;
+            case 7:
                 if (loadRespawn.BoxTriggers[1].activeSelf == false)
+                {
+                    misionIndex++;
+                    HUD_Script.showM1Helps(6, 35);
+                }
+                break;
+            case 8:
+                if (loadRespawn.BoxTriggers[2].activeSelf == false)
+                {
+                    misionIndex++;
+                    respawnIndex++;
+                    HUD_Script.showM1Objective(1);
+                    HUD_Script.showM1Helps(7, 38);
+                }
+                break;
+            case 9:
+                if (loadRespawn.BoxTriggers[3].activeSelf == false)
+                {
+                    misionIndex++;
+                    HUD_Script.showM1Helps(8, 38);
+                }
+                break;
+            case 10:
+                if (loadRespawn.BoxTriggers[4].activeSelf == false)
+                {
+                    misionIndex++;
+                    HUD_Script.showM1Helps(9, 50);
+                }
+                break;
+            case 11:
+                if (loadRespawn.BoxTriggers[5].activeSelf == false)
                 {
                     misionIndex++;
                     respawnIndex++;
                     loadRespawn.Mision_Objects[0].SetActive(true);
                     GameObject.Find("Zone_1").SetActive(false);
                     HUD_Script.showM1Objective(2);
+                    HUD_Script.showM1Helps(10, 45);
                 }
                 break;
-            case 5:
-                if (loadRespawn.BoxTriggers[2].activeSelf == false)
+            case 12:
+                if (loadRespawn.BoxTriggers[6].activeSelf == false)
+                {
+                    misionIndex++;
+                    HUD_Script.showM1Helps(11, 38);
+                }
+                break;
+            case 13:
+                if (loadRespawn.BoxTriggers[7].activeSelf == false)
                 {
                     ActualMision = Misions.NONE;
                     PrincipalMision.MisionsCompleted[0] = true;

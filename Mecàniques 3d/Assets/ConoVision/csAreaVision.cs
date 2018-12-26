@@ -20,7 +20,7 @@ public class csAreaVision : MonoBehaviour {
 	Vector3 oldScale;
 
     private Rigidbody rb;
-    static Animator anim;
+    private Animator anim;
     static Animator playerAnim;
     private movement playerMovement;
 
@@ -232,7 +232,6 @@ public class csAreaVision : MonoBehaviour {
 
                 if (Physics.Linecast(center, worldPoint, out hit))
                 {
-                //if(.gameObject.tag == "Jugador")
                 if (hit.transform.position == GameObject.Find("Jugador").transform.position)
                 {
                     discovered = true;
@@ -304,33 +303,15 @@ public class csAreaVision : MonoBehaviour {
                     if (patrollingIndex >= Points.Length) patrollingIndex = 0;
                     destinationPoint = Points[patrollingIndex];
                 }
-                if (playerDist.magnitude <= rango/3 && sneaky == false)
-                {
-                    sneaky = true;
-                    playerAnim.SetBool("Is_Detected", true);
-                    playerAnim.ResetTrigger("Is_Withdrawing");
-                    playerAnim.SetTrigger("Is_Withdrawing");
-                }
-                else if(sneaky && playerDist.magnitude > rango/3)
-                {
-                        sneaky = false;
-                        playerAnim.SetBool("Is_Detected", false);
-                        playerAnim.ResetTrigger("Is_Sheathing");
-                        playerAnim.SetTrigger("Is_Sheathing");
-                        playerAnim.ResetTrigger("Is_Hitting");
-                }
+                if (playerDist.magnitude <= rango/3 && sneaky == false) sneaky = true;
+                else if(sneaky && playerDist.magnitude > rango/3) sneaky = false;
                 if (playerDist.magnitude <= rango && discovered)//Change to DETECTING
                 {
                     actualState = enemyState.DETECTING;
                     searchingRef = Time.realtimeSinceStartup;
                     lastState = enemyState.PATROLLING;
-                    //playerAnim.SetBool("Is_Detected", true);
                     alertRend.material.SetColor("_Color", Color.yellow);
                     destinationPoint = GameObject.Find("Jugador").transform.position;
-                    //if (playerAnim.GetBool("Is_Detected") == false && sneaky == false)
-                    //{
-                    //    playerAnim.SetTrigger("Is_Withdrawing");
-                    //}
                     KarlinusEspectre.SetActive(false);
                 }
                 break;
@@ -354,29 +335,19 @@ public class csAreaVision : MonoBehaviour {
                 {
                     actualState = enemyState.PATROLLING;
                     lastState = enemyState.SEARCHING;
-                    playerAnim.ResetTrigger("Is_Hitting");
                     speed = 10;
                     alertRend.material.SetColor("_Color", Color.green);
                     KarlinusEspectre.transform.position = new Vector3(0.15f, 0.023f, -0.7f) * -1 + transform.position;
                     KarlinusEspectre.SetActive(false);
-                    playerAnim.SetBool("Is_Detected", false);
-                    playerAnim.ResetTrigger("Is_Sheathing");
-                    playerAnim.SetTrigger("Is_Sheathing");
-                    playerAnim.ResetTrigger("Is_Hitting");
                 }
                 else if(playerDist.magnitude <= rango && discovered)//Change to DETECTING
                 {
                     actualState = enemyState.DETECTING;
                     searchingRef = Time.realtimeSinceStartup;
                     lastState = enemyState.PATROLLING;
-                    //playerAnim.SetBool("Is_Detected", true);
                     alertRend.material.SetColor("_Color", Color.yellow);
                     destinationPoint = GameObject.Find("Jugador").transform.position;
                     KarlinusEspectre.SetActive(false);
-                    playerAnim.SetBool("Is_Detected", false);
-                    playerAnim.ResetTrigger("Is_Sheathing");
-                    playerAnim.SetTrigger("Is_Sheathing");
-                    playerAnim.ResetTrigger("Is_Hitting");
                 }
                 break;
             case enemyState.DETECTING:
@@ -388,8 +359,6 @@ public class csAreaVision : MonoBehaviour {
                     actualState = enemyState.FIGHTING;
                     lastState = enemyState.DETECTING;
                     speed = 0;
-                    //playerAnim.SetBool("Is_Detected", true);
-                    //playerAnim.SetTrigger("Is_Sheathing");//Tendrá dos segundos de margen
                     alertRend.material.SetColor("_Color", Color.red);
                 }
                 else if(discovered == false)//Change to SEARCHING
@@ -397,13 +366,9 @@ public class csAreaVision : MonoBehaviour {
                     actualState = enemyState.SEARCHING;
                     lastState = enemyState.DETECTING;
                     discoveredRef = Time.realtimeSinceStartup;
-                    //playerAnim.SetBool("Is_Detected", true);
                     lastSeenPosition = GameObject.Find("Jugador").transform.position;
                     KarlinusEspectre.SetActive(true);
                     KarlinusEspectre.transform.position = lastSeenPosition;
-                    playerAnim.SetBool("Is_Detected", true);
-                    playerAnim.ResetTrigger("Is_Withdrawing");
-                    playerAnim.SetTrigger("Is_Withdrawing");
                 }
                 break;
             case enemyState.FIGHTING:
@@ -428,13 +393,9 @@ public class csAreaVision : MonoBehaviour {
                         actualState = enemyState.SEARCHING;
                         lastState = enemyState.FIGHTING;
                         speed = 25;
-                        //playerAnim.SetBool("Is_Detected", true);
                         lastSeenPosition = GameObject.Find("Jugador").transform.position;
                         KarlinusEspectre.SetActive(true);
                         KarlinusEspectre.transform.position = lastSeenPosition;
-                        playerAnim.SetBool("Is_Detected", true);
-                        playerAnim.ResetTrigger("Is_Withdrawing");
-                        playerAnim.SetTrigger("Is_Withdrawing");
                     }
                 }
                 else if (playerAnim.GetBool("Is_Damaging") && GetComponent<Collider>().enabled == false) speed = 0;
@@ -461,9 +422,6 @@ public class csAreaVision : MonoBehaviour {
     {
         yield return new WaitForSeconds(time);
 
-        playerAnim.SetTrigger("Is_Sheathing");
-        playerAnim.SetBool("Is_Detected", false);
-        playerAnim.ResetTrigger("Is_Hitting");
         playerMovement.state = movement.playerState.IDLE;
         transform.gameObject.SetActive(false);
     }

@@ -15,6 +15,7 @@ public class kill_cono_vision : MonoBehaviour {
     Vector3 oldScale;
 
     static Animator anim;
+    private bool auxPressed;
     public static bool returnPlayer;
     private GameObject player;
     private GameObject target;
@@ -103,6 +104,7 @@ public class kill_cono_vision : MonoBehaviour {
     {
         stuckReference = 0.0f;
         stuck = false;
+        auxPressed = false;
         targetRenderer = null;
         targetState = null;
         player = GameObject.Find("Jugador");
@@ -177,7 +179,6 @@ public class kill_cono_vision : MonoBehaviour {
                             liquidKill.firstFrameNormal = false;
                             liquidKill.cooldown = false;
                             liquidKill.showLiquid();
-                            //Physics.IgnoreLayerCollision(9, 8);
                             actualState = killState.APROACHING;
                             killTargetPos = target.transform.position;
                         }
@@ -220,6 +221,7 @@ public class kill_cono_vision : MonoBehaviour {
         {
             case killState.WATCHING:
                 if (anim.GetBool("Is_Detected")) kill_vision();
+                if(!anim.GetBool("Is_Damaging")) draw_Weapon();
                 break;
             case killState.APROACHING:
                 if (liquidAgent.remainingDistance <= 0.2f || stuckReference + 2.5f < Time.realtimeSinceStartup) aproachEnemy(killTargetPos);
@@ -295,7 +297,28 @@ public class kill_cono_vision : MonoBehaviour {
 
     }
 
-    //IEnumerator ExecuteAfterTime(float time)
+    private void draw_Weapon()
+    {
+        if (Input.GetKeyDown(KeyCode.Mouse1) && !auxPressed && anim.GetBool("Is_Draw"))
+        {
+            auxPressed = true;
+            if (anim.GetBool("Is_Detected"))
+            {
+                anim.SetBool("Is_Detected", false);
+                anim.ResetTrigger("Is_Sheathing");
+                anim.SetTrigger("Is_Sheathing");
+            }
+            else if (!anim.GetBool("Is_Detected"))
+            {
+                anim.SetBool("Is_Detected", true);
+                anim.ResetTrigger("Is_Withdrawing");
+                anim.SetTrigger("Is_Withdrawing");
+            }
+        }
+        else if (!Input.GetKeyDown(KeyCode.Mouse1)) auxPressed = false;
+    }
+
+
     void setReturn()
     {
       //  yield return new WaitForSeconds(time);

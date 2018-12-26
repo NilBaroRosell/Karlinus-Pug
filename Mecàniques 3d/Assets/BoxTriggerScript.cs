@@ -14,7 +14,7 @@ public class BoxTriggerScript : MonoBehaviour {
     {
         if (collision.gameObject.tag == "Player")
         {
-            if (gameObject.tag == "CheckPoint_Trigger") gameObject.SetActive(false);GetComponent<Collider>().enabled = false;
+            if (gameObject.tag == "CheckPoint_Trigger") gameObject.SetActive(false);
         }
     }
 }
