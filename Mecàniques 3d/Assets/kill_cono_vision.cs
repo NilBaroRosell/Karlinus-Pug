@@ -7,7 +7,7 @@ public class kill_cono_vision : MonoBehaviour {
 
     private int angulo = 140;
     private int w_ref = 40;
-    private int rango = 200;
+    private int rango = 175;
 
     MeshFilter meshFilter;
     Vector3 oldPosition;

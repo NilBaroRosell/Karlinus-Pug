@@ -6,9 +6,7 @@ using UnityEngine.UI;
 
 public class liquidState : MonoBehaviour
 {
-
-    public GameObject alphaJoints;
-    public GameObject alphaSurface;
+    public GameObject _highpug;
     public GameObject mixamorigHips;
     public GameObject liquid;
     public GameObject perfectlyHidratated;
@@ -35,8 +33,7 @@ public class liquidState : MonoBehaviour
     void Start()
     {
         hidratation = 100;
-        alphaJoints.SetActive(true);
-        alphaSurface.SetActive(true);
+        _highpug.SetActive(true);
         mixamorigHips.SetActive(true);
         liquid.SetActive(false);
         perfectlyHidratated.SetActive(false);
@@ -152,8 +149,7 @@ public class liquidState : MonoBehaviour
     }
     public void showLiquid()
     {
-        alphaJoints.SetActive(false);
-        alphaSurface.SetActive(false);
+        _highpug.SetActive(false);
         transform.GetComponent<cucumber>().enabled = false;
         for (int i = 0; i < mixamorigHips.transform.childCount; i++)
         {
@@ -167,8 +163,7 @@ public class liquidState : MonoBehaviour
 
     public void hideLiquid()
     {
-        alphaJoints.SetActive(true);
-        alphaSurface.SetActive(true);
+        _highpug.SetActive(true);
         for (int i = 0; i < mixamorigHips.transform.childCount; i++)
         {
             var child = mixamorigHips.transform.GetChild(i).gameObject;
