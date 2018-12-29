@@ -48,8 +48,9 @@ public class Respawns : MonoBehaviour {
         Enemies = GameObject.FindGameObjectsWithTag("enemy");
 
         //MISION 1 OTHER OBJECTS
-        Mision_Objects = new GameObject[1];
+        Mision_Objects = new GameObject[2];
         Mision_Objects[0] = GameObject.Find("Enemies_Zone_2");
+        Mision_Objects[1] = GameObject.Find("Enemigo (3)");
     }
 
     public Vector3 NONE()
@@ -75,7 +76,7 @@ public class Respawns : MonoBehaviour {
         switch(checkPoint)
         {
             case 0:
-                if (GameObject.Find("Enemigo (3)") != null) GameObject.Find("Enemigo (3)").GetComponent<csAreaVision>().speed = 0;
+                Mision_Objects[1].SetActive(false);
                 Enemies[2].SetActive(false);
                 Mision_Objects[0].SetActive(false);
                 HUD.canvasHUD.SetActive(false);

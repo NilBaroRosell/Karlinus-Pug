@@ -12,9 +12,9 @@ public class csAreaVision : MonoBehaviour {
 	private int rango  = 30;
 
 	MeshFilter meshFilter;
-    enum enemyState { PATROLLING, DETECTING, SEARCHING, FIGHTING};
-    enemyState actualState = enemyState.PATROLLING;
-    enemyState lastState = enemyState.PATROLLING;
+    public enum enemyState { PATROLLING, DETECTING, SEARCHING, FIGHTING};
+    public enemyState actualState = enemyState.PATROLLING;
+    public enemyState lastState = enemyState.PATROLLING;
     Vector3 oldPosition;
 	Quaternion oldRotation;
 	Vector3 oldScale;
@@ -31,7 +31,7 @@ public class csAreaVision : MonoBehaviour {
     private Vector3[] Points;
     private int patrollingIndex;
     public GameObject KarlinusEspectre;
-    private Vector3 lastSeenPosition;
+    public Vector3 lastSeenPosition;
     private Vector3 destinationPoint;
     private Vector3 vecEnemy1;
     private Vector3 rbDirection;
@@ -143,7 +143,7 @@ public class csAreaVision : MonoBehaviour {
         discoveredRef = Time.realtimeSinceStartup;
         searchingRef = Time.realtimeSinceStartup;
         atackRef = Time.realtimeSinceStartup;
-        lastSeenPosition = GameObject.Find("Jugador").transform.position;
+        lastSeenPosition = new Vector3(0.0f,0.0f,0.0f);
         alertRend = transform.GetChild(3).GetComponent<Renderer>();
        // alertRend.material.shader = Shader.Find("_Color");
         alertRend.material.SetColor("_Color", Color.green);
@@ -195,8 +195,8 @@ public class csAreaVision : MonoBehaviour {
                 atackRefTaken = false;
                 atacking = false;
                 break;
-            case 45:
             case 50:
+            case 80:
                 anim.SetBool("Is_Running", true);
                 anim.SetBool("Is_Walking", false);
                 anim.SetBool("Is_Fighting", false);
@@ -316,6 +316,7 @@ public class csAreaVision : MonoBehaviour {
                 }
                 break;
             case enemyState.SEARCHING:
+                if(lastState == enemyState.PATROLLING) lastSeenPosition = GameObject.Find("Jugador").transform.position;
                 if (playerAnim.GetBool("Is_Damaging") && GetComponent<Collider>().enabled == false) speed = 0;
                 KarlinusEspectre.transform.position = destinationPoint;
                 if (discoveredRef + 0.25f < Time.realtimeSinceStartup && searchingState)
@@ -353,13 +354,29 @@ public class csAreaVision : MonoBehaviour {
             case enemyState.DETECTING:
                 destinationPoint = GameObject.Find("Jugador").transform.position;
                 if (((playerDist.magnitude <= rango/2 || searchingRef + 5.0f < Time.realtimeSinceStartup) && 
-                    lastState == enemyState.PATROLLING) || lastState == enemyState.SEARCHING && speed == 45)//Change to FIGHTING
+                    lastState == enemyState.PATROLLING) || lastState == enemyState.SEARCHING && speed == 50)//Change to FIGHTING
                 {
                     canAtackRef = Time.realtimeSinceStartup;
                     actualState = enemyState.FIGHTING;
                     lastState = enemyState.DETECTING;
-                    speed = 0;
+                    speed = 50;
                     alertRend.material.SetColor("_Color", Color.red);
+                    Vector3 enemyDist;
+                    GameObject[] nearEnemies = GameObject.FindGameObjectsWithTag("enemy");
+                    for (int i = 0; i < nearEnemies.Length; i++)
+                    {
+                        if (!GameObject.ReferenceEquals(nearEnemies[i], gameObject) && nearEnemies[i].GetComponent<csAreaVision>().actualState != enemyState.FIGHTING)
+                        {
+                            enemyDist = new Vector3(nearEnemies[i].transform.position.x - rb.transform.position.x, 0.0f, nearEnemies[i].transform.position.z - rb.transform.position.z);
+                            if (enemyDist.magnitude <= 50)
+                            {
+                                nearEnemies[i].GetComponent<csAreaVision>().actualState = enemyState.SEARCHING;
+                                nearEnemies[i].GetComponent<csAreaVision>().lastState = enemyState.PATROLLING;
+                                nearEnemies[i].GetComponent<csAreaVision>().lastSeenPosition = GameObject.Find("Jugador").transform.position;
+                                nearEnemies[i].GetComponent<csAreaVision>().speed = 50;
+                            }
+                        }
+                    }
                 }
                 else if(discovered == false)//Change to SEARCHING
                 {
@@ -375,7 +392,6 @@ public class csAreaVision : MonoBehaviour {
                 destinationPoint = GameObject.Find("Jugador").transform.position;
                 if (canBeKilled() == false)
                 {
-                    speed = 50;
                     if (playerDist.magnitude < 1.5f)
                     {
                         speed = 0;
@@ -387,12 +403,12 @@ public class csAreaVision : MonoBehaviour {
                             atackRefTaken = true;
                         }
                     }
-                    else if (playerDist.magnitude >= 1.5f) speed = 50;
+                    else if (playerDist.magnitude >= 1.5f) speed = 80;
                     if (playerDist.magnitude > rango)//Change to SEARCHING
                     {
                         actualState = enemyState.SEARCHING;
                         lastState = enemyState.FIGHTING;
-                        speed = 25;
+                        speed = 50;
                         lastSeenPosition = GameObject.Find("Jugador").transform.position;
                         KarlinusEspectre.SetActive(true);
                         KarlinusEspectre.transform.position = lastSeenPosition;
@@ -412,7 +428,7 @@ public class csAreaVision : MonoBehaviour {
 
     public bool canBeKilled()
     {
-        if (actualState == enemyState.FIGHTING && canAtackRef + 2.0f > Time.realtimeSinceStartup)
+        if (actualState == enemyState.FIGHTING && canAtackRef + 2.0f > Time.realtimeSinceStartup && !playerAnim.GetBool("Is_Running"))
             return true;
         else if (actualState != enemyState.FIGHTING) return true;
         return false;

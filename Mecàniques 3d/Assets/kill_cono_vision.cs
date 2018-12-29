@@ -224,13 +224,13 @@ public class kill_cono_vision : MonoBehaviour {
                 if(!anim.GetBool("Is_Damaging")) draw_Weapon();
                 break;
             case killState.APROACHING:
-                if (liquidAgent.remainingDistance <= 0.2f || stuckReference + 2.5f < Time.realtimeSinceStartup) aproachEnemy(killTargetPos);
+                if ((liquidAgent.remainingDistance <= 0.0f && stuckReference + 0.5f < Time.realtimeSinceStartup) || stuckReference + 2.5f < Time.realtimeSinceStartup) aproachEnemy(killTargetPos);
                 break;
             case killState.KILLING:
                 if (returnPlayer) setReturn();
                 break;
             case killState.RETURNING:
-                if (liquidAgent.remainingDistance <= 0.1f || stuckReference + 2.5f < Time.realtimeSinceStartup) returnToPosition();
+                if ((liquidAgent.remainingDistance <= 0.0f && stuckReference + 0.5f < Time.realtimeSinceStartup) || stuckReference + 2.5f < Time.realtimeSinceStartup) returnToPosition();
                 break;
             default:
                 break;

@@ -71,8 +71,10 @@ public class movement : MonoBehaviour
                 {
                     hitting = false;
                     vel = rb.velocity;
-
-                    movePlayer();
+                    if (!anim.GetCurrentAnimatorStateInfo(0).IsName("Sheathing Sword") && !anim.GetCurrentAnimatorStateInfo(0).IsName("Withdrawing Sword"))
+                    {
+                        movePlayer();
+                    }
 
                     finishDash = Time.frameCount;
                     if ((finishDash - startDash) > 80) activateDash = true;
@@ -180,6 +182,29 @@ public class movement : MonoBehaviour
             kill_cono_vision.returnPlayer = true;
         }
 
+    }
+
+    public void stepNoise()
+    {
+        float dist;
+        Vector3 enemyDist;
+        GameObject[] nearEnemies = GameObject.FindGameObjectsWithTag("enemy");
+        if (anim.GetBool("Is_Walking")) dist = 10;
+        else dist = 30;
+        for (int i = 0; i < nearEnemies.Length; i++)
+        {
+            if (nearEnemies[i].GetComponent<csAreaVision>().actualState != csAreaVision.enemyState.FIGHTING)
+            {
+                enemyDist = new Vector3(nearEnemies[i].transform.position.x - rb.transform.position.x, 0.0f, nearEnemies[i].transform.position.z - rb.transform.position.z);
+                if (enemyDist.magnitude <= dist)
+                {
+                    nearEnemies[i].GetComponent<csAreaVision>().actualState = csAreaVision.enemyState.SEARCHING;
+                    nearEnemies[i].GetComponent<csAreaVision>().lastState = csAreaVision.enemyState.FIGHTING;
+                    nearEnemies[i].GetComponent<csAreaVision>().lastSeenPosition = GameObject.Find("Jugador").transform.position;
+                    nearEnemies[i].GetComponent<csAreaVision>().speed = 50;
+                }
+            }
+        }
     }
 
     public void movePlayer()

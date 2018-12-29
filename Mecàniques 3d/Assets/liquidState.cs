@@ -102,9 +102,9 @@ public class liquidState : MonoBehaviour
                     }
                 }
 
-                if (hidratation > 100) hidratation = 100;
-                else if (hidratation > 66)
+                if (hidratation > 66)
                 {
+                    hidratation = 100;
                     perfectlyHidratated.SetActive(true);
                     wellHidratated.SetActive(false);
                     badlyHidratated.SetActive(false);
@@ -112,6 +112,7 @@ public class liquidState : MonoBehaviour
                 }
                 else if (hidratation > 33)
                 {
+                    hidratation = 50;
                     perfectlyHidratated.SetActive(false);
                     wellHidratated.SetActive(true);
                     badlyHidratated.SetActive(false);
@@ -119,6 +120,7 @@ public class liquidState : MonoBehaviour
                 }
                 else if (hidratation > 0)
                 {
+                    hidratation = 10;
                     perfectlyHidratated.SetActive(false);
                     wellHidratated.SetActive(false);
                     badlyHidratated.SetActive(true);
@@ -126,6 +128,7 @@ public class liquidState : MonoBehaviour
                 }
                 else
                 {
+                    hidratation = 0;
                     perfectlyHidratated.SetActive(false);
                     wellHidratated.SetActive(false);
                     badlyHidratated.SetActive(false);
@@ -143,7 +146,7 @@ public class liquidState : MonoBehaviour
 
     public void setHidratation()
     {
-        hidratationPrice = hidratation / 4;
+        hidratationPrice = 40;
         if (hidratation < 10) hidratationPrice = 10;
         hidratation -= hidratationPrice;
     }
