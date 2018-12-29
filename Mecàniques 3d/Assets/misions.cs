@@ -59,12 +59,14 @@ public class misions : MonoBehaviour {
         }
     }
     // Use this for initialization
-    void Start() {
+    void Start()
+    {
         if (GameObject.Find("Jugador") != null)
         {
             Player = GameObject.Find("Jugador");
             playerMovement = Player.GetComponent<movement>();
             HUD_Script = Player.GetComponent<HUD>();
+            Cursor.visible = false;
             Cursor.lockState = CursorLockMode.Locked;
             hideMisionPoints();
             nextEvent = false;
@@ -95,18 +97,18 @@ public class misions : MonoBehaviour {
                             misionIndex = 0;
                             StartCoroutine(ExecuteAfterTime(5.0f));
                             break;
-                            case 1:
+                        case 1:
                             secundaryCamera.SetActive(false);
                             secundaryCameraDestination.SetActive(false);
                             misionIndex = 9;
                             break;
-                            case 2:
+                        case 2:
                             secundaryCamera.SetActive(false);
                             secundaryCameraDestination.SetActive(false);
                             misionIndex = 12;
                             break;
                     }
-                    
+
                     break;
                 case Misions.M2:
                     break;
@@ -114,7 +116,11 @@ public class misions : MonoBehaviour {
                     break;
             }
         }
-        else Cursor.lockState = CursorLockMode.None;
+        else
+        {
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.None;
+        }
     }
 
     // Update is called once per frame

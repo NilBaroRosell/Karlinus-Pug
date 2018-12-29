@@ -113,6 +113,14 @@ public class cucumber : MonoBehaviour
         }
     }
 
+    /*private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.tag == "cucumber")
+        {
+            touchingCucumber = true;
+        }
+    }*/
+
     public void CheckPlayer()
     {
         if ((transform.position.x < voxelUp.x && transform.position.x > voxelDown.x) && (transform.position.y < voxelUp.y && transform.position.y > voxelDown.y) && (transform.position.z < voxelUp.z && transform.position.z > voxelDown.z)) touchingCucumber = true;
