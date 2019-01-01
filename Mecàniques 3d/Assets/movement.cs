@@ -12,7 +12,7 @@ public class movement : MonoBehaviour
     GameObject weapon_show;
     GameObject weapon_hide;
 
-    public float speed;
+    public static float speed;
 
     public bool onFloor = false;
     public bool jumping = false;
@@ -242,9 +242,10 @@ public class movement : MonoBehaviour
                 transform.rotation = camara.transform.rotation;
                 rot = camara.transform.rotation.eulerAngles;
                 transform.Rotate(-rot.x, 0, -rot.z);
+                speed = 9;
             }
 
-            speed = 9;
+            else speed = 0;
 
             if (LiquidState)
             {

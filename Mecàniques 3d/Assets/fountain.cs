@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class fountain : MonoBehaviour
 {
-
     public bool inFountain = false;
     public bool drinking = false;
     public bool cooldownFountain = false;

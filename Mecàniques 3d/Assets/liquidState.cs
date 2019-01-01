@@ -26,8 +26,9 @@ public class liquidState : MonoBehaviour
     public int showHidratation;
     public int hidratationPrice;
     public bool inFountain = false;
-    public bool drinking = false;
+    public static bool drinking = false;
     public bool stopLiquid = false;
+    public bool a;
 
     // Use this for initialization
     void Start()
@@ -95,9 +96,8 @@ public class liquidState : MonoBehaviour
                 {
                     if (inFountain && Input.GetKey(KeyCode.E)) drinking = true;
 
-                    if (drinking)
+                    else if (drinking)
                     {
-                        Debug.Log(liquidState.hidratation);
                         drinking = false;
                     }
                 }
@@ -137,6 +137,7 @@ public class liquidState : MonoBehaviour
                 }
             }
         }
+        a = drinking;
     }
 
     private void OnCollisionEnter(Collision collision)
