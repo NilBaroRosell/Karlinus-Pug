@@ -30,6 +30,7 @@ public class kill_cono_vision : MonoBehaviour {
     private bool stuck;
     private float stuckReference;
     enum killState { WATCHING, APROACHING, KILLING, RETURNING };
+    public static string actualString;
     killState actualState;
     private float ghostRef;
 
@@ -222,15 +223,19 @@ public class kill_cono_vision : MonoBehaviour {
             case killState.WATCHING:
                 if (anim.GetBool("Is_Detected")) kill_vision();
                 if(!anim.GetBool("Is_Damaging")) draw_Weapon();
+                actualString = "W";
                 break;
             case killState.APROACHING:
                 if ((liquidAgent.remainingDistance <= 0.0f && stuckReference + 0.5f < Time.realtimeSinceStartup) || stuckReference + 2.5f < Time.realtimeSinceStartup) aproachEnemy(killTargetPos);
+                actualString = "A";
                 break;
             case killState.KILLING:
                 if (returnPlayer) setReturn();
+                actualString = "K";
                 break;
             case killState.RETURNING:
                 if ((liquidAgent.remainingDistance <= 0.0f && stuckReference + 0.5f < Time.realtimeSinceStartup) || stuckReference + 2.5f < Time.realtimeSinceStartup) returnToPosition();
+                actualString = "R";
                 break;
             default:
                 break;

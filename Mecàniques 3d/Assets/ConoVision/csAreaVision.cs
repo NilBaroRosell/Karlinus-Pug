@@ -14,6 +14,7 @@ public class csAreaVision : MonoBehaviour {
 	MeshFilter meshFilter;
     public enum enemyState { PATROLLING, DETECTING, SEARCHING, FIGHTING};
     public enemyState actualState = enemyState.PATROLLING;
+    public static string actualString;
     public enemyState lastState = enemyState.PATROLLING;
     Vector3 oldPosition;
 	Quaternion oldRotation;
@@ -48,6 +49,9 @@ public class csAreaVision : MonoBehaviour {
     private bool sneaky = false;
     public bool dead = false;
     private float canAtackRef;
+    public AudioClip catSound;
+    AudioSource source;
+    private bool first = true;
 
     //Nav Mesh
     NavMeshAgent enemyAgent;
@@ -158,6 +162,7 @@ public class csAreaVision : MonoBehaviour {
 
     void Start()
     {
+        source = GetComponent<AudioSource>();
         anim = GetComponent<Animator>();
         switch (speed)
         {
@@ -314,6 +319,7 @@ public class csAreaVision : MonoBehaviour {
                     destinationPoint = GameObject.Find("Jugador").transform.position;
                     KarlinusEspectre.SetActive(false);
                 }
+                actualString = "P";
                 break;
             case enemyState.SEARCHING:
                 if(lastState == enemyState.PATROLLING) lastSeenPosition = GameObject.Find("Jugador").transform.position;
@@ -350,6 +356,7 @@ public class csAreaVision : MonoBehaviour {
                     destinationPoint = GameObject.Find("Jugador").transform.position;
                     KarlinusEspectre.SetActive(false);
                 }
+                actualString = "S";
                 break;
             case enemyState.DETECTING:
                 destinationPoint = GameObject.Find("Jugador").transform.position;
@@ -387,8 +394,15 @@ public class csAreaVision : MonoBehaviour {
                     KarlinusEspectre.SetActive(true);
                     KarlinusEspectre.transform.position = lastSeenPosition;
                 }
+                actualString = "D";
                 break;
             case enemyState.FIGHTING:
+                if (first)
+                {
+                    source.clip = catSound;
+                    source.Play();
+                    first = false;
+                }
                 destinationPoint = GameObject.Find("Jugador").transform.position;
                 if (canBeKilled() == false)
                 {
@@ -415,6 +429,7 @@ public class csAreaVision : MonoBehaviour {
                     }
                 }
                 else if (playerAnim.GetBool("Is_Damaging") && GetComponent<Collider>().enabled == false) speed = 0;
+                actualString = "F";
                 break;
             default:
                 break;

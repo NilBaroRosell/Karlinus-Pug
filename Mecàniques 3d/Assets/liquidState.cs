@@ -25,10 +25,11 @@ public class liquidState : MonoBehaviour
     public static int hidratation;
     public int showHidratation;
     public int hidratationPrice;
-    public bool inFountain = false;
+    public bool inFountain;
     public static bool drinking = false;
     public bool stopLiquid = false;
-    public bool a;
+    public static string fountain;
+    public string aux;
 
     // Use this for initialization
     void Start()
@@ -137,12 +138,30 @@ public class liquidState : MonoBehaviour
                 }
             }
         }
-        a = drinking;
+
+        aux = fountain;
     }
 
-    private void OnCollisionEnter(Collision collision)
+    private void OnTriggerEnter(Collider collision)
     {
-        if (collision.gameObject.tag == "fountain") inFountain = true;
+        if (fountain != "NONE")
+        {
+            if (collision.gameObject.name == fountain)
+            {
+                inFountain = true;
+            }
+        } 
+    }
+
+    private void OnTriggerExit(Collider collision)
+    {
+        if (fountain != "NONE")
+        {
+            if (collision.gameObject.name == fountain)
+            {
+                inFountain = false;
+            }
+        }
     }
 
     public void setHidratation()

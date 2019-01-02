@@ -9,7 +9,7 @@ public class misions : MonoBehaviour {
     public enum Misions { M1, M2, M3, M4, SM_1 = 0, SM_2 = 0, SM_3 = 0, SM_4 = 1, SM_5 = 1, SM_6 = 1, NONE = 10 };
     public Misions ActualMision;
     private int respawnIndex;
-    private int misionIndex;
+    public static int misionIndex;
     private Respawns loadRespawn;
     private HUD HUD_Script;
     private GameObject Player;
