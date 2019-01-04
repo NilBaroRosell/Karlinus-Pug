@@ -130,7 +130,7 @@ public class misions : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             Destroy(gameObject);
-            SceneManager.LoadScene("Menu_1");
+            SceneManager.LoadScene("PauseMenu");
         }
         switch (ActualMision)
         {
