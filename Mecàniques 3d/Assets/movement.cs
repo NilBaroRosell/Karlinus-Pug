@@ -184,12 +184,12 @@ public class movement : MonoBehaviour
 
     }
 
-    public void stepNoise()
+    public void stepNoise(int message)
     {
         float dist;
         Vector3 enemyDist;
         GameObject[] nearEnemies = GameObject.FindGameObjectsWithTag("enemy");
-        if (anim.GetBool("Is_Walking")) dist = 10;
+        if (message == 1) dist = 10;
         else dist = 30;
         for (int i = 0; i < nearEnemies.Length; i++)
         {

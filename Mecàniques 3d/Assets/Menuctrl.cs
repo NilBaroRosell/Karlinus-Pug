@@ -13,9 +13,7 @@ public class Menuctrl : MonoBehaviour {
 
     public void LoadScene(string sceneName)
     {
-        PlayerPrefs.SetFloat("KarlinusPosX", -84.99f);
-        PlayerPrefs.SetFloat("KarlinusPosY", 1.27f);
-        PlayerPrefs.SetFloat("KarlinusPosZ", -41.88f);
+        GameObject.Find("Misiones").GetComponent<misions>().ActualMision = misions.Misions.M1;
         SceneManager.LoadScene(sceneName);
         
     }

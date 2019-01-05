@@ -304,20 +304,21 @@ public class kill_cono_vision : MonoBehaviour {
 
     private void draw_Weapon()
     {
-        if (Input.GetKeyDown(KeyCode.Mouse1) && !auxPressed && anim.GetBool("Is_Draw"))
+        if (!auxPressed && anim.GetBool("Is_Draw"))
         {
-            auxPressed = true;
-            if (anim.GetBool("Is_Detected"))
+            if (Input.GetKeyDown(KeyCode.Mouse1) && anim.GetBool("Is_Detected"))
             {
                 anim.SetBool("Is_Detected", false);
                 anim.ResetTrigger("Is_Sheathing");
                 anim.SetTrigger("Is_Sheathing");
+                auxPressed = true;
             }
-            else if (!anim.GetBool("Is_Detected"))
+            else if ((Input.GetKeyDown(KeyCode.Mouse1) || Input.GetKeyDown(KeyCode.Mouse0)) && !anim.GetBool("Is_Detected"))
             {
                 anim.SetBool("Is_Detected", true);
                 anim.ResetTrigger("Is_Withdrawing");
                 anim.SetTrigger("Is_Withdrawing");
+                auxPressed = true;
             }
         }
         else if (!Input.GetKeyDown(KeyCode.Mouse1)) auxPressed = false;

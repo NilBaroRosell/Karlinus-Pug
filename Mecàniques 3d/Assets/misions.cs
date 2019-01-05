@@ -199,6 +199,8 @@ public class misions : MonoBehaviour {
                     playerMovement.state = movement.playerState.HITTING;
                     secundaryCamera.SetActive(true);
                     loadRespawn.Mision_Objects[1].SetActive(true);
+                    loadRespawn.Mision_Objects[1].GetComponent<csAreaVision>().speed = 10;
+                    loadRespawn.Mision_Objects[1].GetComponent<csAreaVision>().actualState = csAreaVision.enemyState.PATROLLING;
                     misionIndex ++;
                     HUD_Script.showM1Helps(1, 45);
                     Player.GetComponent<Animator>().SetTrigger("Is_Withdrawing");
@@ -208,6 +210,8 @@ public class misions : MonoBehaviour {
                 break;
             case 4:
                 liquidState.hidratation = 100;
+                loadRespawn.Mision_Objects[1].GetComponent<csAreaVision>().speed = 10;
+                loadRespawn.Mision_Objects[1].GetComponent<csAreaVision>().actualState = csAreaVision.enemyState.PATROLLING;
                 if (nextEvent)
                 {
                     nextEvent = false;
@@ -219,6 +223,8 @@ public class misions : MonoBehaviour {
                 }
                 break;
             case 5:
+                loadRespawn.Mision_Objects[1].GetComponent<csAreaVision>().speed = 10;
+                loadRespawn.Mision_Objects[1].GetComponent<csAreaVision>().actualState = csAreaVision.enemyState.PATROLLING;
                 liquidState.hidratation = 100;
                 secundaryCamera.transform.position = Vector3.Lerp(secundaryCamera.transform.position, secundaryCameraDestination.transform.position, 1.25f * Time.deltaTime);
                 secundaryCamera.transform.rotation = Quaternion.Lerp(secundaryCamera.transform.rotation, secundaryCameraDestination.transform.rotation, 1.25f * Time.deltaTime);

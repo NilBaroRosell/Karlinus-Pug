@@ -130,11 +130,16 @@
     <Compile Include="Assets\kill_cono_vision.cs" />
     <Compile Include="Assets\liquidState.cs" />
     <Compile Include="Assets\LoadScene.cs" />
+    <Compile Include="Assets\MainMenu.cs" />
     <Compile Include="Assets\Menuctrl.cs" />
     <Compile Include="Assets\misions.cs" />
     <Compile Include="Assets\movement.cs" />
+    <Compile Include="Assets\PauseMenu.cs" />
     <Compile Include="Assets\referenceMovement.cs" />
     <Compile Include="Assets\Respawns.cs" />
+    <Compile Include="Assets\SoundCucumber.cs" />
+    <Compile Include="Assets\SoundEnemy.cs" />
+    <Compile Include="Assets\SoundPlayer.cs" />
     <None Include="Assets\Fantasy Skybox FREE\Readme.txt" />
     <None Include="Assets\2Ginge\GritBuildupShader\Shaders\GritBuildupShader.shader" />
     <None Include="Assets\read me.txt" />
