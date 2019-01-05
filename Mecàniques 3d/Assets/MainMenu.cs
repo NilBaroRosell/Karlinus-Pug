@@ -43,7 +43,7 @@ public class MainMenu : MonoBehaviour {
     {
         if (!finished)
         {
-            if (Time.frameCount < 200)
+            if (Time.frameCount < 150)
             {
                 gameLogo.SetActive(true);
                 gameLogo2.SetActive(false);
@@ -53,7 +53,7 @@ public class MainMenu : MonoBehaviour {
                 startButton.SetActive(false);
                 startBackground.SetActive(false);
             }
-            else if (Time.frameCount < 400)
+            else if (Time.frameCount < 300)
             {
                 gameLogo.SetActive(false);
                 gameLogo2.SetActive(false);

@@ -57,6 +57,8 @@ public class misions : MonoBehaviour {
         {
             DestroyObject(gameObject);
         }
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
     }
     // Use this for initialization
     void Start()

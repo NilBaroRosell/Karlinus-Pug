@@ -232,6 +232,9 @@
     <Reference Include="Managed/Unity.Locator">
       <HintPath>C:\Program Files\Unity\Editor\Data\Managed/Unity.Locator.dll</HintPath>
     </Reference>
+    <Reference Include="Facebook.Unity.Settings">
+      <HintPath>Library/FacebookSDK/Facebook.Unity.Settings.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEngine.UI">
       <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
     </Reference>
@@ -378,11 +381,16 @@
     <Compile Include="Assets\kill_cono_vision.cs" />
     <Compile Include="Assets\liquidState.cs" />
     <Compile Include="Assets\LoadScene.cs" />
+    <Compile Include="Assets\MainMenu.cs" />
     <Compile Include="Assets\Menuctrl.cs" />
     <Compile Include="Assets\misions.cs" />
     <Compile Include="Assets\movement.cs" />
+    <Compile Include="Assets\PauseMenu.cs" />
     <Compile Include="Assets\referenceMovement.cs" />
     <Compile Include="Assets\Respawns.cs" />
+    <Compile Include="Assets\SoundCucumber.cs" />
+    <Compile Include="Assets\SoundEnemy.cs" />
+    <Compile Include="Assets\SoundPlayer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\2Ginge\GritBuildupShader\Shaders\GritBuildupShader.shader" />
@@ -390,6 +398,7 @@
     <None Include="Assets\Fantasy Skybox FREE\Fog and Ambient references.txt" />
     <None Include="Assets\Fantasy Skybox FREE\Readme.txt" />
     <None Include="Assets\GE Common Assets\Readme.txt" />
+    <None Include="Assets\UrbanNightSky\Readme.txt" />
     <None Include="Assets\read me.txt" />
     <None Include="Packages\com.unity.package-manager-ui\Editor\Resources\Styles\Main_Dark.uss" />
     <None Include="Packages\com.unity.package-manager-ui\Editor\Resources\Styles\Main_Light.uss" />
