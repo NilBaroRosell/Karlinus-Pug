@@ -1,13 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 using UnityEngine;
 
 public class misions : MonoBehaviour {
 
 
     public enum Misions { M1, M2, M3, M4, SM_1 = 0, SM_2 = 0, SM_3 = 0, SM_4 = 1, SM_5 = 1, SM_6 = 1, NONE = 10 };
-    public Misions ActualMision;
+    public  Misions ActualMision;
     private int respawnIndex;
     public static int misionIndex;
     private Respawns loadRespawn;
@@ -131,8 +132,8 @@ public class misions : MonoBehaviour {
         else if (Input.GetKeyDown(KeyCode.C) && Cursor.lockState == CursorLockMode.None) Cursor.lockState = CursorLockMode.Locked;
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            Destroy(gameObject);
-            SceneManager.LoadScene("PauseMenu");
+            ActualMision = Misions.NONE;
+            loadScreen.Instancia.CargarEscena("PauseMenu");
         }
         switch (ActualMision)
         {
@@ -151,6 +152,12 @@ public class misions : MonoBehaviour {
         switch (misionIndex)
         {
             case 0:
+                Color c = GameObject.Find("Logo_M1").transform.GetChild(0).GetComponent<Image>().color;
+                if (c.a < 1)
+                {
+                    c.a += 0.04f;
+                    GameObject.Find("Logo_M1").transform.GetChild(0).GetComponent<Image>().color = c;
+                }
                 playerMovement.state = movement.playerState.HITTING;
                 Player.GetComponent<Animator>().SetBool("Is_Draw", false);
                 liquidState.hidratation = 100;
@@ -162,6 +169,12 @@ public class misions : MonoBehaviour {
                 }
                 break;
             case 1:
+                Color c2 = GameObject.Find("Logo_M1").transform.GetChild(0).GetComponent<Image>().color;
+                if (c2.a > 0)
+                {
+                    c2.a -= 0.04f;
+                    GameObject.Find("Logo_M1").transform.GetChild(0).GetComponent<Image>().color = c2;
+                }
                 liquidState.hidratation = 100;
                 secundaryCamera.transform.position = Vector3.Lerp(secundaryCamera.transform.position, secundaryCameraDestination.transform.position, 0.75f * Time.deltaTime);
                 secundaryCamera.transform.rotation = Quaternion.Lerp(secundaryCamera.transform.rotation, secundaryCameraDestination.transform.rotation, 0.75f * Time.deltaTime);
@@ -169,6 +182,7 @@ public class misions : MonoBehaviour {
                 {
                     secundaryCameraDestination.transform.position = mainCamera.transform.position;
                     secundaryCameraDestination.transform.rotation = mainCamera.transform.rotation;
+                    GameObject.Find("Logo_M1").SetActive(false);
                     StartCoroutine(ExecuteAfterTime(5.0f));
                     misionIndex++;
                     nextEvent = false;
@@ -314,7 +328,7 @@ public class misions : MonoBehaviour {
                     ActualMision = Misions.NONE;
                     PrincipalMision.MisionsCompleted[0] = true;
                     loadRespawn.initialRespawn = Respawns.InitialRespawns.CITY_1;
-                    SceneManager.LoadScene("city");
+                    loadScreen.Instancia.CargarEscena("city");
                 }
                 break;
             default:
@@ -412,6 +426,7 @@ public class misions : MonoBehaviour {
         {
             Debug.Log("LOADED");
             loadRespawn.setAllFalse();
+            if (SceneManager.GetActiveScene().name == "Menu_1") respawnIndex = 0;
             Start();
         }
     }

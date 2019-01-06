@@ -17,11 +17,11 @@ public class button_pressed : MonoBehaviour {
             case LoadScene.Scenes.SEWER_1:
             case LoadScene.Scenes.SEWER_2:
             case LoadScene.Scenes.SEWER_3:
-                SceneManager.LoadScene("sewer");
+                loadScreen.Instancia.CargarEscena("sewer");
                 break;
             case LoadScene.Scenes.CITY_1:
             case LoadScene.Scenes.CITY_2:
-                SceneManager.LoadScene("city");
+                loadScreen.Instancia.CargarEscena("city");
                 break;
             default:
                 break;

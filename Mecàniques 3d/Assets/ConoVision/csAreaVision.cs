@@ -461,7 +461,7 @@ public class csAreaVision : MonoBehaviour {
     {
         yield return new WaitForSeconds(time);
 
-        SceneManager.LoadScene("DEAD");
+        loadScreen.Instancia.CargarEscena("DEAD");
     }
 }
 

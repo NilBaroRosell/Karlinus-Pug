@@ -26,12 +26,12 @@ public class LoadScene : MonoBehaviour {
                 case Scenes.SEWER_2:
                 case Scenes.SEWER_3:
                     respawnToLoad = SceneToLoad;
-                    SceneManager.LoadScene("sewer");                    
+                    loadScreen.Instancia.CargarEscena("sewer");
                     break;
                 case Scenes.CITY_1:
                 case Scenes.CITY_2:
                     respawnToLoad = SceneToLoad;
-                    SceneManager.LoadScene("city");
+                    loadScreen.Instancia.CargarEscena("city");
                     break;
                 default:                    
                     break;

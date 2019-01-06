@@ -123,7 +123,7 @@ public class movement : MonoBehaviour
                     finishDie = Time.frameCount;
                     if ((finishDie - startDie) > 250)
                     {
-                        SceneManager.LoadScene("DEAD");
+                        //loadScreen.Instancia.CargarEscena("DEAD");
                     }
                     break;
                 }

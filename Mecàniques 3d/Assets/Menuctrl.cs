@@ -14,8 +14,7 @@ public class Menuctrl : MonoBehaviour {
     public void LoadScene(string sceneName)
     {
         GameObject.Find("Misiones").GetComponent<misions>().ActualMision = misions.Misions.M1;
-        SceneManager.LoadScene(sceneName);
-        
+        loadScreen.Instancia.CargarEscena(sceneName);
     }
 
     public void ExitGameBtn()
