@@ -381,6 +381,7 @@
     <Compile Include="Assets\kill_cono_vision.cs" />
     <Compile Include="Assets\liquidState.cs" />
     <Compile Include="Assets\LoadScene.cs" />
+    <Compile Include="Assets\loadScreen.cs" />
     <Compile Include="Assets\MainMenu.cs" />
     <Compile Include="Assets\Menuctrl.cs" />
     <Compile Include="Assets\misions.cs" />
