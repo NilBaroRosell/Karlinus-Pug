@@ -116,6 +116,7 @@ public class movement : MonoBehaviour
                 anim.SetBool("Is_Running", false);
                 anim.SetBool("Is_Walking", false);
                 anim.SetBool("Is_Crouching", false);
+                anim.SetBool("Is_Crouched_Idle", false);
                 anim.SetBool("Is_Idle", true);
                 break;
             case playerState.DYING:
@@ -266,14 +267,33 @@ public class movement : MonoBehaviour
 
                 if (Input.GetKey(KeyCode.LeftControl))
                 {
-                     anim.SetBool("Is_Crouching", true);
-                     speed = 6;
+                    if (adPressed || wsPressed)
+                    {
+                        anim.SetBool("Is_Crouching", true);
+                        anim.SetBool("Is_Crouched_Idle", false);
+                    }
+                    else
+                    {
+                        Debug.Log("AAAAA");
+                        anim.SetBool("Is_Crouching", false);
+                        anim.SetBool("Is_Crouched_Idle", true);
+                    }
+                    anim.SetBool("Is_Idle", false);
+                    speed = 6;
                 }
-                else anim.SetBool("Is_Crouching", false);
+                else
+                {
+                    anim.SetBool("Is_Crouching", false);
+                    anim.SetBool("Is_Crouched_Idle", false);
+                }
 
                 if (Input.GetKeyUp(KeyCode.LeftShift)) anim.SetBool("Is_Running", false);
-                if (Input.GetKeyUp(KeyCode.LeftControl)) anim.SetBool("Is_Crouching", false);
-            }
+                if (Input.GetKeyUp(KeyCode.LeftControl))
+                {
+                    anim.SetBool("Is_Crouching", false);
+                    anim.SetBool("Is_Crouched_Idle", false);
+                }
+                }
 
             if (!wsPressed) moveVertical = 0;
             else moveVertical = Input.GetAxis("Vertical");
