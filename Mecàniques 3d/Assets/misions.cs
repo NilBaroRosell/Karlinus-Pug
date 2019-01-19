@@ -6,7 +6,8 @@ using UnityEngine;
 
 public class misions : MonoBehaviour {
 
-
+    public GameObject normalLight;
+    public GameObject sewerLight;
     public enum Misions { M1, M2, M3, M4, SM_1 = 0, SM_2 = 0, SM_3 = 0, SM_4 = 1, SM_5 = 1, SM_6 = 1, NONE = 10 };
     public  Misions ActualMision;
     private int respawnIndex;
@@ -152,6 +153,8 @@ public class misions : MonoBehaviour {
         switch (misionIndex)
         {
             case 0:
+                normalLight.SetActive(true);
+                sewerLight.SetActive(false);
                 Color c = GameObject.Find("Logo_M1").transform.GetChild(0).GetComponent<Image>().color;
                 if (c.a < 1)
                 {
@@ -311,6 +314,8 @@ public class misions : MonoBehaviour {
                     loadRespawn.Mision_Objects[0].SetActive(true);
                     for (int i = 0; i < loadRespawn.Mision_Objects[0].transform.childCount; i++) loadRespawn.Mision_Objects[0].transform.GetChild(i).gameObject.SetActive(true);
                     GameObject.Find("Zone_1").SetActive(false);
+                    normalLight.SetActive(false);
+                    sewerLight.SetActive(true);
                     HUD_Script.showM1Objective(2);
                     HUD_Script.showM1Helps(10, 45);
                 }
