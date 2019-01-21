@@ -33,7 +33,7 @@ public class misions : MonoBehaviour {
     public MisionPoint RatHood;
     public MisionPoint RebelCat;
     public MisionPoint ScaryDog;
-
+    public static bool pauseMenu;
 
     private void Awake()
     {
@@ -53,6 +53,7 @@ public class misions : MonoBehaviour {
         misionIndex = 0;
         nextEvent = false;
             respawnIndex = 0;
+            pauseMenu = false;
             Instance = this;
         }
         else
@@ -133,8 +134,19 @@ public class misions : MonoBehaviour {
         else if (Input.GetKeyDown(KeyCode.C) && Cursor.lockState == CursorLockMode.None) Cursor.lockState = CursorLockMode.Locked;
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            ActualMision = Misions.NONE;
-            loadScreen.Instancia.CargarEscena("PauseMenu");
+            if (pauseMenu)
+            {
+                pauseMenu = false;
+                Cursor.visible = false;
+                Cursor.lockState = CursorLockMode.Locked;
+            }
+            else
+            {
+                ActualMision = Misions.NONE;
+                pauseMenu = true;
+                Cursor.visible = true;
+                Cursor.lockState = CursorLockMode.None;
+            }
         }
         switch (ActualMision)
         {

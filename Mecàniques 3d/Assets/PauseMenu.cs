@@ -4,48 +4,59 @@ using UnityEngine;
 
 public class PauseMenu : MonoBehaviour {
 
-    public GameObject gameLogo;
-    public GameObject cont;
-    public GameObject back;
-    public GameObject continueButton;
-    public GameObject optionsButton;
-    public GameObject exitButton;
-    public GameObject backButton;
-    public GameObject applyButton;
+    public GameObject canvas1;
+    public GameObject canvas2;
+    public bool options;
 
     // Use this for initialization
     void Start () {
-        gameLogo.SetActive(true);
-        cont.SetActive(true);
-        back.SetActive(false);
-        continueButton.SetActive(true);
-        optionsButton.SetActive(true);
-        exitButton.SetActive(true);
-        backButton.SetActive(false);
-        applyButton.SetActive(false);
+        canvas1.SetActive(false);
+        canvas2.SetActive(false);
+        options = false;
+    }
+
+    public void Update()
+    {
+        if (!options)
+        { 
+            if (misions.pauseMenu)
+            {
+                canvas1.SetActive(true);
+                canvas2.SetActive(false);
+                Time.timeScale = 0;
+            }
+            else
+            {
+                canvas1.SetActive(false);
+                canvas2.SetActive(false);
+                Time.timeScale = 1;
+                Cursor.visible = false;
+                Cursor.lockState = CursorLockMode.Locked;
+            }
+        }
+    }
+
+    public void continueGame()
+    {
+        misions.pauseMenu = false;
+        canvas1.SetActive(false);
+        canvas2.SetActive(false);
+        Time.timeScale = 1;
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
     }
 
     public void enableOptions()
     {
-        gameLogo.SetActive(false);
-        cont.SetActive(false);
-        back.SetActive(true);
-        continueButton.SetActive(false);
-        optionsButton.SetActive(false);
-        exitButton.SetActive(false);
-        backButton.SetActive(true);
-        applyButton.SetActive(true);
+        canvas1.SetActive(false);
+        canvas2.SetActive(true);
+        options = true;
     }
 
     public void enableMainMenu()
     {
-        gameLogo.SetActive(true);
-        cont.SetActive(true);
-        back.SetActive(false);
-        continueButton.SetActive(true);
-        optionsButton.SetActive(true);
-        exitButton.SetActive(true);
-        backButton.SetActive(false);
-        applyButton.SetActive(false);
+        canvas1.SetActive(true);
+        canvas2.SetActive(false);
+        options = false;
     }
 }
