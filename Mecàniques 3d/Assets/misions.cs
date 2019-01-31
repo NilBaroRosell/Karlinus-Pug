@@ -10,7 +10,7 @@ public class misions : MonoBehaviour {
     public GameObject sewerLight;
     public enum Misions { M1, M2, M3, M4, SM_1 = 0, SM_2 = 0, SM_3 = 0, SM_4 = 1, SM_5 = 1, SM_6 = 1, NONE = 10 };
     public  Misions ActualMision;
-    private int respawnIndex;
+    public static int respawnIndex;
     public static int misionIndex;
     private Respawns loadRespawn;
     private HUD HUD_Script;
@@ -215,7 +215,6 @@ public class misions : MonoBehaviour {
                     secundaryCameraDestination.SetActive(false);
                     misionIndex++;
                     nextEvent = false;
-                    HUD.canvasHUD.SetActive(true);
                     HUD_Script.showM1Objective(0);
                     HUD_Script.showM1Helps(0, 60);
                     playerMovement.state = movement.playerState.IDLE;

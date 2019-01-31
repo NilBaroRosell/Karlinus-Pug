@@ -7,7 +7,7 @@ public class movement : MonoBehaviour
 {
     private Rigidbody rb;
     public GameObject camara;
-    static Animator anim;
+    public static Animator anim;
     //static Animator enemyAnim;
     GameObject weapon_show;
     GameObject weapon_hide;
@@ -45,6 +45,8 @@ public class movement : MonoBehaviour
     public float lastYPos;
     public Vector3 vel;
 
+    public GameObject hidratationStates;
+
 
     // Use this for initialization
     void Start()
@@ -65,6 +67,9 @@ public class movement : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (misions.misionIndex < 2) hidratationStates.SetActive(false);
+        else hidratationStates.SetActive(true);
+
         switch (state)
         {
             case playerState.IDLE:

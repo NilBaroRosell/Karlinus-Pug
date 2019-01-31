@@ -79,7 +79,6 @@ public class Respawns : MonoBehaviour {
                 Mision_Objects[1].SetActive(false);
                 Enemies[2].SetActive(false);
                 Mision_Objects[0].SetActive(false);
-                HUD.canvasHUD.SetActive(false);
                 break;
             case 1:
                 if (GameObject.Find("Enemigo (3)") != null) GameObject.Find("Enemigo (3)").SetActive(false);
