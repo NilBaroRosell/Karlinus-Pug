@@ -12,13 +12,14 @@ public class csAreaVision : MonoBehaviour {
 	private int rango  = 30;
 
 	MeshFilter meshFilter;
-    public enum enemyState { PATROLLING, DETECTING, SEARCHING, FIGHTING};
+    public enum enemyState { PATROLLING, DETECTING, SEARCHING, FIGHTING, LEAVING, RETURNING};
     public enemyState actualState = enemyState.PATROLLING;
     public static string actualString;
     public enemyState lastState = enemyState.PATROLLING;
     Vector3 oldPosition;
 	Quaternion oldRotation;
 	Vector3 oldScale;
+    Vector3 patrollingPosition;
 
     private Rigidbody rb;
     private Animator anim;
@@ -52,6 +53,7 @@ public class csAreaVision : MonoBehaviour {
     public AudioClip catSound;
     AudioSource source;
     private bool first = true;
+    private bool scared = false;
 
     //Nav Mesh
     NavMeshAgent enemyAgent;
@@ -237,12 +239,15 @@ public class csAreaVision : MonoBehaviour {
 
                 if (Physics.Linecast(center, worldPoint, out hit))
                 {
-                if (hit.transform.position == GameObject.Find("Jugador").transform.position)
-                {
-                    discovered = true;
-                    lastSeenPosition = GameObject.Find("Jugador").transform.position;
-                }
-                if (hit.transform.position != transform.position)
+                    if ((hit.transform.position.x - GameObject.Find("Pepino").transform.position.x < -3 && hit.transform.position.x - GameObject.Find("Pepino").transform.position.x > 3) && (hit.transform.position.z - GameObject.Find("Pepino").transform.position.z < -3 && hit.transform.position.z - GameObject.Find("Pepino").transform.position.z > 3)) scared = true;
+
+                    if (hit.transform.position == GameObject.Find("Jugador").transform.position)
+                    {
+                        discovered = true;
+                        lastSeenPosition = GameObject.Find("Jugador").transform.position;
+                    }
+
+                    if (hit.transform.position != transform.position) 
                     {
                         vertices[i] = transform.worldToLocalMatrix.MultiplyPoint3x4(hit.point);
                         uv[i] = new Vector2((rango + vertices[i].x) / (rango * 2), (rango + vertices[i].z) / (rango * 2));
@@ -273,6 +278,7 @@ public class csAreaVision : MonoBehaviour {
 	// Update is called once per frame
 	void FixedUpdate () { 
     playerDist = new Vector3(GameObject.Find("Jugador").transform.position.x - rb.transform.position.x, 0.0f, GameObject.Find("Jugador").transform.position.z - rb.transform.position.z);
+
         destinationPoint.y = transform.position.y + 0.8f;
         if (GetComponent<NavMeshObstacle>().enabled == false)
         {
@@ -318,6 +324,15 @@ public class csAreaVision : MonoBehaviour {
                     alertRend.material.SetColor("_Color", Color.yellow);
                     destinationPoint = GameObject.Find("Jugador").transform.position;
                     KarlinusEspectre.SetActive(false);
+                }
+                if (scared)
+                {
+                    destinationPoint = RandomDestination.findRandom(enemyAgent, this.gameObject);
+                    patrollingPosition = transform.position;
+                    actualState = enemyState.LEAVING;
+                    lastState = enemyState.PATROLLING;
+                    alertRend.material.SetColor("_Color", Color.green);
+                    scared = false;
                 }
                 actualString = "P";
                 break;
@@ -430,6 +445,24 @@ public class csAreaVision : MonoBehaviour {
                 }
                 else if (playerAnim.GetBool("Is_Damaging") && GetComponent<Collider>().enabled == false) speed = 0;
                 actualString = "F";
+                break;
+            case enemyState.LEAVING:
+                // anar fins a destinationPoint
+                if(vecEnemy1.magnitude < 1)
+                {
+                    actualState = enemyState.RETURNING;
+                    lastState = enemyState.LEAVING;
+                    alertRend.material.SetColor("_Color", Color.green);
+                    destinationPoint = patrollingPosition;
+                }
+                break;
+            case enemyState.RETURNING:
+                if(vecEnemy1.magnitude < 1)
+                {
+                    actualState = enemyState.PATROLLING;
+                    lastState = enemyState.RETURNING;
+                    alertRend.material.SetColor("_Color", Color.green);
+                }
                 break;
             default:
                 break;
