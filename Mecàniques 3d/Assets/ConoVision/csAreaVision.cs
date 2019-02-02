@@ -7,18 +7,18 @@ using System;
 
 public class csAreaVision : MonoBehaviour {
 
-	private int angulo = 140;
+    private int angulo = 140;
     private int w_ref = 40;
-	private int rango  = 30;
+    private int rango = 30;
 
-	MeshFilter meshFilter;
-    public enum enemyState { PATROLLING, DETECTING, SEARCHING, FIGHTING, LEAVING, RETURNING};
+    MeshFilter meshFilter;
+    public enum enemyState { PATROLLING, DETECTING, SEARCHING, FIGHTING, LEAVING };
     public enemyState actualState = enemyState.PATROLLING;
     public static string actualString;
     public enemyState lastState = enemyState.PATROLLING;
     Vector3 oldPosition;
-	Quaternion oldRotation;
-	Vector3 oldScale;
+    Quaternion oldRotation;
+    Vector3 oldScale;
     Vector3 patrollingPosition;
 
     private Rigidbody rb;
@@ -33,6 +33,7 @@ public class csAreaVision : MonoBehaviour {
     private Vector3[] Points;
     private int patrollingIndex;
     public GameObject KarlinusEspectre;
+    GameObject Pepino;
     public Vector3 lastSeenPosition;
     private Vector3 destinationPoint;
     private Vector3 vecEnemy1;
@@ -40,6 +41,7 @@ public class csAreaVision : MonoBehaviour {
     private Vector3 playerDist;
     private bool discovered;
     private bool searchingState;
+    private double scaredRef;
     private double discoveredRef;
     private double searchingRef;
     private double atackRef;
@@ -59,72 +61,72 @@ public class csAreaVision : MonoBehaviour {
     NavMeshAgent enemyAgent;
 
 
-    Mesh Cono(){
-		
-		Mesh _cono = new Mesh();
-		List<Vector3> vertices = new List<Vector3>();
-		List<Vector3> normals  = new List<Vector3>();
-		List<Vector2> uv       = new List<Vector2>();
+    Mesh Cono() {
 
-		Vector3 oldPosition,temp;
-		oldPosition = temp = Vector3.zero;
-		
-		vertices.Add(Vector3.zero);
-		normals.Add(Vector3.up);
-		uv.Add(Vector2.one*0.5f);
-		
-		int w,s;
-		for(w= w_ref; w<angulo;w++){
-			
-			for(s=0;s<rango;s++){
-                temp.x = Mathf.Cos(Mathf.Deg2Rad*w+Mathf.Deg2Rad*(s/rango))*rango;
-				temp.z = Mathf.Sin(Mathf.Deg2Rad*w+Mathf.Deg2Rad*(s/rango))*rango;
+        Mesh _cono = new Mesh();
+        List<Vector3> vertices = new List<Vector3>();
+        List<Vector3> normals = new List<Vector3>();
+        List<Vector2> uv = new List<Vector2>();
 
-				if(oldPosition!=temp){
-                   
-					oldPosition=temp;
-					vertices.Add(new Vector3(temp.x,temp.y,temp.z));
-					normals.Add(Vector3.up);
-					uv.Add(new Vector2((rango+temp.x)/(rango*2),(rango+temp.z)/(rango*2)));
+        Vector3 oldPosition, temp;
+        oldPosition = temp = Vector3.zero;
 
-				}
+        vertices.Add(Vector3.zero);
+        normals.Add(Vector3.up);
+        uv.Add(Vector2.one * 0.5f);
 
-			}
-			
-		}
-		
-		int[] triangles = new int[(vertices.Count-2)*3];
-		s = 0;
-		
-		for(w=1;w<(vertices.Count-2);w++){
-			
-			triangles[s++] = w+1;
-			triangles[s++] = w;
-			triangles[s++] = 0;
-			
-		}
-		
-		_cono.vertices = vertices.ToArray();
-		_cono.normals = normals.ToArray();
-		_cono.uv = uv.ToArray();
-		_cono.triangles = triangles;
-		
-		return _cono;
-		
-	}
+        int w, s;
+        for (w = w_ref; w < angulo; w++) {
 
-	Vector3[] initialPosition;
-	Vector2[] initialUV;
+            for (s = 0; s < rango; s++) {
+                temp.x = Mathf.Cos(Mathf.Deg2Rad * w + Mathf.Deg2Rad * (s / rango)) * rango;
+                temp.z = Mathf.Sin(Mathf.Deg2Rad * w + Mathf.Deg2Rad * (s / rango)) * rango;
 
-	// Use this for initialization
-	void Awake () {
+                if (oldPosition != temp) {
+
+                    oldPosition = temp;
+                    vertices.Add(new Vector3(temp.x, temp.y, temp.z));
+                    normals.Add(Vector3.up);
+                    uv.Add(new Vector2((rango + temp.x) / (rango * 2), (rango + temp.z) / (rango * 2)));
+
+                }
+
+            }
+
+        }
+
+        int[] triangles = new int[(vertices.Count - 2) * 3];
+        s = 0;
+
+        for (w = 1; w < (vertices.Count - 2); w++) {
+
+            triangles[s++] = w + 1;
+            triangles[s++] = w;
+            triangles[s++] = 0;
+
+        }
+
+        _cono.vertices = vertices.ToArray();
+        _cono.normals = normals.ToArray();
+        _cono.uv = uv.ToArray();
+        _cono.triangles = triangles;
+
+        return _cono;
+
+    }
+
+    Vector3[] initialPosition;
+    Vector2[] initialUV;
+
+    // Use this for initialization
+    void Awake() {
         GetComponent<NavMeshObstacle>().enabled = false;
         canAtackRef = 0.0f;
         Physics.IgnoreLayerCollision(9, 8);
         meshFilter = transform.GetChild(2).GetChild(2).GetChild(0).GetChild(0).GetChild(1).GetChild(0).GetComponent<MeshFilter>();
         meshFilter.mesh = Cono();
         initialPosition = meshFilter.mesh.vertices;
-		initialUV = meshFilter.mesh.uv;
+        initialUV = meshFilter.mesh.uv;
         rb = GetComponent<Rigidbody>();
         anim = GetComponent<Animator>();
         anim.SetBool("Is_Walking", true);
@@ -143,15 +145,17 @@ public class csAreaVision : MonoBehaviour {
         transform.GetChild(4).gameObject.SetActive(false);
         KarlinusEspectre.transform.position = new Vector3(0.15f, 0.023f, -0.7f) * -1 + transform.position;
         KarlinusEspectre.SetActive(false);
+        Pepino = GameObject.Find("Pepino");
         playerMovement = GameObject.Find("Jugador").GetComponent<movement>();
         playerDist = new Vector3(GameObject.Find("Jugador").transform.position.x - rb.transform.position.x, 0.0f, GameObject.Find("Jugador").transform.position.z - rb.transform.position.z);
         discovered = false;
         discoveredRef = Time.realtimeSinceStartup;
+        scaredRef = Time.realtimeSinceStartup;
         searchingRef = Time.realtimeSinceStartup;
         atackRef = Time.realtimeSinceStartup;
-        lastSeenPosition = new Vector3(0.0f,0.0f,0.0f);
+        lastSeenPosition = new Vector3(0.0f, 0.0f, 0.0f);
         alertRend = transform.GetChild(3).GetComponent<Renderer>();
-       // alertRend.material.shader = Shader.Find("_Color");
+        // alertRend.material.shader = Shader.Find("_Color");
         alertRend.material.SetColor("_Color", Color.green);
         enemyAgent = this.GetComponent<NavMeshAgent>();
         if (enemyAgent == null)
@@ -182,7 +186,7 @@ public class csAreaVision : MonoBehaviour {
                     anim.SetBool("Is_Walking", false);
                     anim.SetBool("Is_Fighting", false);
                 }
-                else if(playerAnim.GetBool("Is_Damaging") == false && dead == false)
+                else if (playerAnim.GetBool("Is_Damaging") == false && dead == false)
                 {
                     anim.SetBool("Is_Running", false);
                     anim.SetBool("Is_Walking", false);
@@ -193,7 +197,7 @@ public class csAreaVision : MonoBehaviour {
                         atacking = true;
                         playerAnim.SetBool("Is_Dying", true);
                     }
-                }              
+                }
                 break;
             case 10:
                 anim.SetBool("Is_Running", false);
@@ -220,64 +224,67 @@ public class csAreaVision : MonoBehaviour {
         }
     }
 
-    Mesh areaMesh(Mesh mesh){
-        
-            Mesh _mesh = new Mesh();
-            Vector3[] vertices = new Vector3[mesh.vertices.Length];
-            Vector2[] uv = new Vector2[mesh.uv.Length];
+    Mesh areaMesh(Mesh mesh) {
 
-            Vector3 center = transform.localToWorldMatrix.MultiplyPoint3x4(initialPosition[0]);
-            uv[0] = initialUV[0];
-            Vector3 worldPoint;
+        Mesh _mesh = new Mesh();
+        Vector3[] vertices = new Vector3[mesh.vertices.Length];
+        Vector2[] uv = new Vector2[mesh.uv.Length];
 
-            RaycastHit hit = new RaycastHit();
+        Vector3 center = transform.localToWorldMatrix.MultiplyPoint3x4(initialPosition[0]);
+        uv[0] = initialUV[0];
+        Vector3 worldPoint;
 
-            for (int i = 1; i < vertices.Length; i++)
+        RaycastHit hit = new RaycastHit();
+
+        for (int i = 1; i < vertices.Length; i++)
+        {
+
+            worldPoint = transform.localToWorldMatrix.MultiplyPoint3x4(initialPosition[i]);
+
+            if (Physics.Linecast(center, worldPoint, out hit))
             {
-
-                worldPoint = transform.localToWorldMatrix.MultiplyPoint3x4(initialPosition[i]);
-
-                if (Physics.Linecast(center, worldPoint, out hit))
+                if (hit.transform.gameObject.tag == "cucumber" && !scared)
                 {
-                    if ((hit.transform.position.x - GameObject.Find("Pepino").transform.position.x < -3 && hit.transform.position.x - GameObject.Find("Pepino").transform.position.x > 3) && (hit.transform.position.z - GameObject.Find("Pepino").transform.position.z < -3 && hit.transform.position.z - GameObject.Find("Pepino").transform.position.z > 3)) scared = true;
-
-                    if (hit.transform.position == GameObject.Find("Jugador").transform.position)
-                    {
-                        discovered = true;
-                        lastSeenPosition = GameObject.Find("Jugador").transform.position;
-                    }
-
-                    if (hit.transform.position != transform.position) 
-                    {
-                        vertices[i] = transform.worldToLocalMatrix.MultiplyPoint3x4(hit.point);
-                        uv[i] = new Vector2((rango + vertices[i].x) / (rango * 2), (rango + vertices[i].z) / (rango * 2));
-                    }
-
+                    getPanicDestination();
+                    scared = true;
                 }
-                else
+                if (hit.transform.gameObject.tag == "Player")
                 {
+                    discovered = true;
+                    lastSeenPosition = GameObject.Find("Jugador").transform.position;
+                }
 
-                    vertices[i] = initialPosition[i];
-                    uv[i] = initialUV[i];
-
+                if (hit.transform.position != transform.position)
+                {
+                    vertices[i] = transform.worldToLocalMatrix.MultiplyPoint3x4(hit.point);
+                    uv[i] = new Vector2((rango + vertices[i].x) / (rango * 2), (rango + vertices[i].z) / (rango * 2));
                 }
 
             }
+            else
+            {
 
-            _mesh.vertices = vertices;
-            _mesh.uv = uv;
-            _mesh.normals = mesh.normals;
-            _mesh.triangles = mesh.triangles;
+                vertices[i] = initialPosition[i];
+                uv[i] = initialUV[i];
 
-            return _mesh;
+            }
 
-        
+        }
 
-	}
-	
-	// Update is called once per frame
-	void FixedUpdate () { 
-    playerDist = new Vector3(GameObject.Find("Jugador").transform.position.x - rb.transform.position.x, 0.0f, GameObject.Find("Jugador").transform.position.z - rb.transform.position.z);
+        _mesh.vertices = vertices;
+        _mesh.uv = uv;
+        _mesh.normals = mesh.normals;
+        _mesh.triangles = mesh.triangles;
+
+        return _mesh;
+
+
+
+    }
+
+    // Update is called once per frame
+    void FixedUpdate() {
+        playerDist = new Vector3(GameObject.Find("Jugador").transform.position.x - rb.transform.position.x, 0.0f, GameObject.Find("Jugador").transform.position.z - rb.transform.position.z);
 
         destinationPoint.y = transform.position.y + 0.8f;
         if (GetComponent<NavMeshObstacle>().enabled == false)
@@ -300,8 +307,8 @@ public class csAreaVision : MonoBehaviour {
             oldScale = transform.localScale;
             if (playerDist.magnitude <= rango)
             {
-                if(actualState == enemyState.PATROLLING || actualState == enemyState.SEARCHING) searchingRef = Time.realtimeSinceStartup;
-                if(actualState != enemyState.FIGHTING) meshFilter.mesh = areaMesh(meshFilter.mesh);
+                if (actualState == enemyState.PATROLLING || actualState == enemyState.SEARCHING) searchingRef = Time.realtimeSinceStartup;
+                if (actualState != enemyState.FIGHTING) meshFilter.mesh = areaMesh(meshFilter.mesh);
             }
         }
         switch (actualState)
@@ -314,8 +321,8 @@ public class csAreaVision : MonoBehaviour {
                     if (patrollingIndex >= Points.Length) patrollingIndex = 0;
                     destinationPoint = Points[patrollingIndex];
                 }
-                if (playerDist.magnitude <= rango/3 && sneaky == false) sneaky = true;
-                else if(sneaky && playerDist.magnitude > rango/3) sneaky = false;
+                if (playerDist.magnitude <= rango / 3 && sneaky == false) sneaky = true;
+                else if (sneaky && playerDist.magnitude > rango / 3) sneaky = false;
                 if (playerDist.magnitude <= rango && discovered)//Change to DETECTING
                 {
                     actualState = enemyState.DETECTING;
@@ -325,19 +332,10 @@ public class csAreaVision : MonoBehaviour {
                     destinationPoint = GameObject.Find("Jugador").transform.position;
                     KarlinusEspectre.SetActive(false);
                 }
-                if (scared)
-                {
-                    destinationPoint = RandomDestination.findRandom(enemyAgent, this.gameObject);
-                    patrollingPosition = transform.position;
-                    actualState = enemyState.LEAVING;
-                    lastState = enemyState.PATROLLING;
-                    alertRend.material.SetColor("_Color", Color.green);
-                    scared = false;
-                }
                 actualString = "P";
                 break;
             case enemyState.SEARCHING:
-                if(lastState == enemyState.PATROLLING) lastSeenPosition = GameObject.Find("Jugador").transform.position;
+                if (lastState == enemyState.PATROLLING) lastSeenPosition = GameObject.Find("Jugador").transform.position;
                 if (playerAnim.GetBool("Is_Damaging") && GetComponent<Collider>().enabled == false) speed = 0;
                 KarlinusEspectre.transform.position = destinationPoint;
                 if (discoveredRef + 0.25f < Time.realtimeSinceStartup && searchingState)
@@ -353,7 +351,7 @@ public class csAreaVision : MonoBehaviour {
                     searchingState = true;
                 }
                 destinationPoint = lastSeenPosition;
-                if (vecEnemy1.magnitude < 1 &&  discovered == false)//Change to PATROLLING
+                if (vecEnemy1.magnitude < 1 && discovered == false)//Change to PATROLLING
                 {
                     actualState = enemyState.PATROLLING;
                     lastState = enemyState.SEARCHING;
@@ -362,7 +360,7 @@ public class csAreaVision : MonoBehaviour {
                     KarlinusEspectre.transform.position = new Vector3(0.15f, 0.023f, -0.7f) * -1 + transform.position;
                     KarlinusEspectre.SetActive(false);
                 }
-                else if(playerDist.magnitude <= rango && discovered)//Change to DETECTING
+                else if (playerDist.magnitude <= rango && discovered)//Change to DETECTING
                 {
                     actualState = enemyState.DETECTING;
                     searchingRef = Time.realtimeSinceStartup;
@@ -375,7 +373,7 @@ public class csAreaVision : MonoBehaviour {
                 break;
             case enemyState.DETECTING:
                 destinationPoint = GameObject.Find("Jugador").transform.position;
-                if (((playerDist.magnitude <= rango/2 || searchingRef + 5.0f < Time.realtimeSinceStartup) && 
+                if (((playerDist.magnitude <= rango / 2 || searchingRef + 5.0f < Time.realtimeSinceStartup) &&
                     lastState == enemyState.PATROLLING) || lastState == enemyState.SEARCHING && speed == 50)//Change to FIGHTING
                 {
                     canAtackRef = Time.realtimeSinceStartup;
@@ -400,7 +398,7 @@ public class csAreaVision : MonoBehaviour {
                         }
                     }
                 }
-                else if(discovered == false)//Change to SEARCHING
+                else if (discovered == false)//Change to SEARCHING
                 {
                     actualState = enemyState.SEARCHING;
                     lastState = enemyState.DETECTING;
@@ -425,7 +423,7 @@ public class csAreaVision : MonoBehaviour {
                     {
                         speed = 0;
                         playerMovement.state = movement.playerState.HITTING;
-                       if (atacking == false)playerDeath(3.0f);
+                        if (atacking == false) playerDeath(3.0f);
                         if (atackRefTaken == false)
                         {
                             atackRef = Time.realtimeSinceStartup;
@@ -447,29 +445,21 @@ public class csAreaVision : MonoBehaviour {
                 actualString = "F";
                 break;
             case enemyState.LEAVING:
+                alertRend.material.SetColor("_Color", Color.blue);
                 // anar fins a destinationPoint
-                if(vecEnemy1.magnitude < 1)
+                if (vecEnemy1.magnitude < 1 || scaredRef + 10.0f < Time.realtimeSinceStartup)
                 {
-                    actualState = enemyState.RETURNING;
+                    actualState = enemyState.PATROLLING;
                     lastState = enemyState.LEAVING;
                     alertRend.material.SetColor("_Color", Color.green);
                     destinationPoint = patrollingPosition;
+                    speed = 10;
                 }
-                break;
-            case enemyState.RETURNING:
-                if(vecEnemy1.magnitude < 1)
-                {
-                    actualState = enemyState.PATROLLING;
-                    lastState = enemyState.RETURNING;
-                    alertRend.material.SetColor("_Color", Color.green);
-                }
-                break;
-            default:
                 break;
         }
 
         Start();
-        discovered = false;        
+        discovered = false;
         vecEnemy1.Normalize();
         if (dead) speed = 0;
     }
@@ -480,6 +470,17 @@ public class csAreaVision : MonoBehaviour {
             return true;
         else if (actualState != enemyState.FIGHTING) return true;
         return false;
+    }
+
+    private void getPanicDestination()
+ {
+        destinationPoint = this.gameObject.GetComponent<RandomDestination>().RandomNavmeshLocation(this.gameObject, 60);
+        patrollingPosition = transform.position;
+        speed = 50;
+        actualState = enemyState.LEAVING;
+        lastState = enemyState.PATROLLING;
+        alertRend.material.SetColor("_Color", Color.green);
+        scaredRef = Time.realtimeSinceStartup;
     }
 
     IEnumerator ExecuteAfterTime(float time)

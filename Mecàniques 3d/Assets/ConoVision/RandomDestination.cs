@@ -6,28 +6,18 @@ using System.Collections;
 
 public class RandomDestination : MonoBehaviour {
 
-    NavMeshAgent enemyAgent;
-
-    // Use this for initialization
-    void Awake () {
-        enemyAgent = this.GetComponent<NavMeshAgent>();
-    }
-	
-	// Update is called once per frame
-	void Update () {
-
-	}
-
-    public static Vector3 findRandom(NavMeshAgent enemyAgent, GameObject enemy)
+    public Vector3 RandomNavmeshLocation(GameObject enemy, float radius)
     {
-        Vector3 destinationPoint = new Vector3();
-        float randomX = Random.Range(0, 60);
-        float randomZ = Random.Range(0, 60);
-        // buscar un punt aleatori a una certa distància de l'actual i marcar-lo com a objectiu
-        destinationPoint = new Vector3(enemy.transform.localPosition.x + randomX, enemy.transform.localPosition.y, enemy.transform.localPosition.z + randomZ);
-        NavMeshPath path = new NavMeshPath();
-        if (enemyAgent.CalculatePath(destinationPoint, path)) return destinationPoint;
-        else destinationPoint = findRandom(enemyAgent, enemy);
-        return destinationPoint;
+        Vector2 randomDirection = Random.insideUnitCircle * radius;
+        Vector3 sourcePos;
+        sourcePos = new Vector3(randomDirection.x, enemy.transform.position.y, randomDirection.y);
+        sourcePos += enemy.transform.position;
+        NavMeshHit hit;
+        Vector3 finalPosition = Vector3.zero;
+            if (NavMesh.SamplePosition(sourcePos, out hit, radius, 1) && hit.position.y == enemy.transform.position.y)
+            {
+                finalPosition = hit.position;
+            }
+        return finalPosition;
     }
 }
