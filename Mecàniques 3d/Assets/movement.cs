@@ -44,6 +44,8 @@ public class movement : MonoBehaviour
     public Vector3 rot;
     public float lastYPos;
     public Vector3 vel;
+    private Vector3 dashDistance;
+    public float distanceDash;
 
     public GameObject hidratationStates;
 
@@ -82,15 +84,27 @@ public class movement : MonoBehaviour
                     }
 
                     finishDash = Time.frameCount;
-                    if ((finishDash - startDash) > 80) activateDash = true;
-                    if (Input.GetKeyDown(KeyCode.F) && activateDash)
+
+                    RaycastHit hit;
+
+                    if (Physics.Raycast(transform.position, transform.forward, out hit))
                     {
-                        if (direction == "L") vectorDirection = (moveHorizontal * transform.right).normalized * -10000;
-                        else if (direction == "R") vectorDirection = (moveHorizontal * transform.right).normalized * 10000;
-                        else if (direction == "B") vectorDirection = (moveVertical * transform.forward).normalized * -10000;
-                        else if (direction == "F") vectorDirection = (moveVertical * transform.forward).normalized * 10000;
-                        else if (direction == "FL" || direction == "FR") vectorDirection = ((moveVertical * transform.forward) + (moveHorizontal * transform.right)).normalized * 10000;
-                        else if (direction == "BL" || direction == "BR") vectorDirection = ((moveVertical * transform.forward) + (moveHorizontal * transform.right)).normalized * -10000;
+                        dashDistance = new Vector3(transform.position.x - hit.transform.position.x, 0.0f, transform.position.z - hit.transform.position.z);
+                        distanceDash = dashDistance.magnitude;
+                        if (distanceDash < 4)
+                        {
+                            activateDash = false;
+                        }
+                        else
+                        {
+                            if ((finishDash - startDash) > 80) activateDash = true;
+                        }
+                        //Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.forward) * hit.distance, Color.yellow);
+                    }
+
+                    if (Input.GetKeyDown(KeyCode.F) && activateDash && direction == "F")
+                    {
+                        vectorDirection = (moveVertical * transform.forward).normalized * 10000;
                         rb.velocity *= 0;
                         rb.AddForce(vectorDirection);
                         startDash = Time.frameCount;
