@@ -46,6 +46,7 @@ public class movement : MonoBehaviour
     public Vector3 vel;
     private Vector3 dashDistance;
     public float distanceDash;
+    GameObject[] nearEnemies;
 
     public GameObject hidratationStates;
 
@@ -53,6 +54,7 @@ public class movement : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        nearEnemies = GameObject.FindGameObjectsWithTag("enemy");
         rb = GetComponent<Rigidbody>();
         Physics.gravity = new Vector3(0, -250, 0);
         anim = GetComponent<Animator>();
@@ -208,7 +210,6 @@ public class movement : MonoBehaviour
     {
         float dist;
         Vector3 enemyDist;
-        GameObject[] nearEnemies = GameObject.FindGameObjectsWithTag("enemy");
         if (message == 1) dist = 10;
         else dist = 30;
         for (int i = 0; i < nearEnemies.Length; i++)
@@ -293,7 +294,6 @@ public class movement : MonoBehaviour
                     }
                     else
                     {
-                        Debug.Log("AAAAA");
                         anim.SetBool("Is_Crouching", false);
                         anim.SetBool("Is_Crouched_Idle", true);
                     }

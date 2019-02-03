@@ -12,6 +12,7 @@ public class csAreaVision : MonoBehaviour {
     private int rango = 30;
 
     MeshFilter meshFilter;
+    csAreaVision disabler;
     public enum enemyState { PATROLLING, DETECTING, SEARCHING, FIGHTING, LEAVING };
     public enemyState actualState = enemyState.PATROLLING;
     public static string actualString;
@@ -39,6 +40,7 @@ public class csAreaVision : MonoBehaviour {
     private Vector3 vecEnemy1;
     private Vector3 rbDirection;
     private Vector3 playerDist;
+    private Vector3 stuckPos;
     private bool discovered;
     private bool searchingState;
     private double scaredRef;
@@ -121,7 +123,9 @@ public class csAreaVision : MonoBehaviour {
     // Use this for initialization
     void Awake() {
         GetComponent<NavMeshObstacle>().enabled = false;
+        disabler = GetComponent<csAreaVision>();
         canAtackRef = 0.0f;
+        stuckPos = Vector3.zero;
         Physics.IgnoreLayerCollision(9, 8);
         meshFilter = transform.GetChild(2).GetChild(2).GetChild(0).GetChild(0).GetChild(1).GetChild(0).GetComponent<MeshFilter>();
         meshFilter.mesh = Cono();
@@ -168,6 +172,7 @@ public class csAreaVision : MonoBehaviour {
 
     void Start()
     {
+        anim.enabled = true;
         source = GetComponent<AudioSource>();
         anim = GetComponent<Animator>();
         switch (speed)
@@ -245,8 +250,11 @@ public class csAreaVision : MonoBehaviour {
             {
                 if (hit.transform.gameObject.tag == "cucumber" && !scared)
                 {
-                    getPanicDestination();
+                    scaredRef = Time.realtimeSinceStartup;
+                    stuckPos = rb.transform.position;
+                    StartCoroutine(CheckStuck(1));
                     scared = true;
+                    getPanicDestination();
                 }
                 if (hit.transform.gameObject.tag == "Player")
                 {
@@ -286,7 +294,65 @@ public class csAreaVision : MonoBehaviour {
     void FixedUpdate() {
         playerDist = new Vector3(GameObject.Find("Jugador").transform.position.x - rb.transform.position.x, 0.0f, GameObject.Find("Jugador").transform.position.z - rb.transform.position.z);
 
-        destinationPoint.y = transform.position.y + 0.8f;
+        if (playerDist.magnitude <= 100)
+        {
+            IA_Controller();
+            Start();
+        }
+        else
+        {
+            anim.enabled = false;
+        }
+        discovered = false;
+        vecEnemy1.Normalize();
+        if (dead) speed = 0;
+    }
+
+    public bool canBeKilled()
+    {
+        if (actualState == enemyState.FIGHTING && canAtackRef + 2.0f > Time.realtimeSinceStartup && !playerAnim.GetBool("Is_Running"))
+            return true;
+        else if (actualState != enemyState.FIGHTING) return true;
+        return false;
+    }
+
+    private void getPanicDestination()
+    {
+        destinationPoint = this.gameObject.GetComponent<RandomDestination>().RandomNavmeshLocation(this.gameObject, 75);
+        patrollingPosition = transform.position;
+        speed = 50;
+        actualState = enemyState.LEAVING;
+        lastState = enemyState.PATROLLING;
+        alertRend.material.SetColor("_Color", Color.blue);
+    }
+    IEnumerator CheckStuck(float time)
+    {
+        yield return new WaitForSeconds(time);
+ 
+        stuckPos = new Vector3(stuckPos.x - rb.transform.position.x, 0.0f, stuckPos.z - rb.transform.position.z);
+        if (stuckPos.magnitude < 2) getPanicDestination();
+        stuckPos = transform.position;
+        if (actualState == enemyState.LEAVING) StartCoroutine(CheckStuck(1));
+    }
+
+    IEnumerator ExecuteAfterTime(float time)
+    {
+        yield return new WaitForSeconds(time);
+
+        playerMovement.state = movement.playerState.IDLE;
+        transform.gameObject.SetActive(false);
+    }
+
+    IEnumerator playerDeath(float time)
+    {
+        yield return new WaitForSeconds(time);
+
+        loadScreen.Instancia.CargarEscena("DEAD");
+    }
+
+    void IA_Controller()
+    {
+    destinationPoint.y = transform.position.y + 0.8f;
         if (GetComponent<NavMeshObstacle>().enabled == false)
         {
             enemyAgent.SetDestination(destinationPoint);
@@ -315,7 +381,7 @@ public class csAreaVision : MonoBehaviour {
         {
             case enemyState.PATROLLING:
                 if (playerAnim.GetBool("Is_Damaging") && GetComponent<Collider>().enabled == false) speed = 0;
-                if (vecEnemy1.magnitude < 1)
+                if (vecEnemy1.magnitude< 1)
                 {
                     patrollingIndex++;
                     if (patrollingIndex >= Points.Length) patrollingIndex = 0;
@@ -351,7 +417,7 @@ public class csAreaVision : MonoBehaviour {
                     searchingState = true;
                 }
                 destinationPoint = lastSeenPosition;
-                if (vecEnemy1.magnitude < 1 && discovered == false)//Change to PATROLLING
+                if (vecEnemy1.magnitude< 1 && discovered == false)//Change to PATROLLING
                 {
                     actualState = enemyState.PATROLLING;
                     lastState = enemyState.SEARCHING;
@@ -382,8 +448,8 @@ public class csAreaVision : MonoBehaviour {
                     speed = 50;
                     alertRend.material.SetColor("_Color", Color.red);
                     Vector3 enemyDist;
-                    GameObject[] nearEnemies = GameObject.FindGameObjectsWithTag("enemy");
-                    for (int i = 0; i < nearEnemies.Length; i++)
+GameObject[] nearEnemies = GameObject.FindGameObjectsWithTag("enemy");
+                    for (int i = 0; i<nearEnemies.Length; i++)
                     {
                         if (!GameObject.ReferenceEquals(nearEnemies[i], gameObject) && nearEnemies[i].GetComponent<csAreaVision>().actualState != enemyState.FIGHTING)
                         {
@@ -419,7 +485,7 @@ public class csAreaVision : MonoBehaviour {
                 destinationPoint = GameObject.Find("Jugador").transform.position;
                 if (canBeKilled() == false)
                 {
-                    if (playerDist.magnitude < 1.5f)
+                    if (playerDist.magnitude< 1.5f)
                     {
                         speed = 0;
                         playerMovement.state = movement.playerState.HITTING;
@@ -447,8 +513,9 @@ public class csAreaVision : MonoBehaviour {
             case enemyState.LEAVING:
                 alertRend.material.SetColor("_Color", Color.blue);
                 // anar fins a destinationPoint
-                if (vecEnemy1.magnitude < 1 || scaredRef + 10.0f < Time.realtimeSinceStartup)
+                if (vecEnemy1.magnitude< 1 || scaredRef + 15.0f < Time.realtimeSinceStartup)
                 {
+                    StopCoroutine(CheckStuck(1));
                     actualState = enemyState.PATROLLING;
                     lastState = enemyState.LEAVING;
                     alertRend.material.SetColor("_Color", Color.green);
@@ -457,45 +524,6 @@ public class csAreaVision : MonoBehaviour {
                 }
                 break;
         }
-
-        Start();
-        discovered = false;
-        vecEnemy1.Normalize();
-        if (dead) speed = 0;
-    }
-
-    public bool canBeKilled()
-    {
-        if (actualState == enemyState.FIGHTING && canAtackRef + 2.0f > Time.realtimeSinceStartup && !playerAnim.GetBool("Is_Running"))
-            return true;
-        else if (actualState != enemyState.FIGHTING) return true;
-        return false;
-    }
-
-    private void getPanicDestination()
- {
-        destinationPoint = this.gameObject.GetComponent<RandomDestination>().RandomNavmeshLocation(this.gameObject, 60);
-        patrollingPosition = transform.position;
-        speed = 50;
-        actualState = enemyState.LEAVING;
-        lastState = enemyState.PATROLLING;
-        alertRend.material.SetColor("_Color", Color.green);
-        scaredRef = Time.realtimeSinceStartup;
-    }
-
-    IEnumerator ExecuteAfterTime(float time)
-    {
-        yield return new WaitForSeconds(time);
-
-        playerMovement.state = movement.playerState.IDLE;
-        transform.gameObject.SetActive(false);
-    }
-
-    IEnumerator playerDeath(float time)
-    {
-        yield return new WaitForSeconds(time);
-
-        loadScreen.Instancia.CargarEscena("DEAD");
     }
 }
 
