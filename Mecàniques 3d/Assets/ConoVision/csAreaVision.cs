@@ -26,6 +26,7 @@ public class csAreaVision : MonoBehaviour {
     private Animator anim;
     static Animator playerAnim;
     private movement playerMovement;
+    private float maxDist;
 
     public int speed;
 
@@ -124,6 +125,8 @@ public class csAreaVision : MonoBehaviour {
     void Awake() {
         GetComponent<NavMeshObstacle>().enabled = false;
         disabler = GetComponent<csAreaVision>();
+        if (GameObject.Find("EnemyManager") != null) maxDist = GameObject.Find("EnemyManager").GetComponent<EnemyManager>().maxDist;
+        else maxDist = 100;
         canAtackRef = 0.0f;
         stuckPos = Vector3.zero;
         Physics.IgnoreLayerCollision(9, 8);
@@ -294,15 +297,13 @@ public class csAreaVision : MonoBehaviour {
     void FixedUpdate() {
         playerDist = new Vector3(GameObject.Find("Jugador").transform.position.x - rb.transform.position.x, 0.0f, GameObject.Find("Jugador").transform.position.z - rb.transform.position.z);
 
-        if (playerDist.magnitude <= 100)
+        if (playerDist.magnitude <= maxDist)
         {
             IA_Controller();
             Start();
         }
-        else
-        {
-            anim.enabled = false;
-        }
+        else if(playerDist.magnitude > maxDist) this.gameObject.SetActive(false);
+
         discovered = false;
         vecEnemy1.Normalize();
         if (dead) speed = 0;

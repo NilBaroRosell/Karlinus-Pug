@@ -122,6 +122,7 @@
     <Compile Include="Assets\ConoVision\NPC_movement.cs" />
     <Compile Include="Assets\ConoVision\RandomDestination.cs" />
     <Compile Include="Assets\cucumber.cs" />
+    <Compile Include="Assets\EnemyManager.cs" />
     <Compile Include="Assets\Fantasy Skybox FREE\Demo\Scripts\GE_FantasySkyboxFREE_Demo.cs" />
     <Compile Include="Assets\Fantasy Skybox FREE\Demo\Scripts\GE_FantasySkyboxFREE_UIs.cs" />
     <Compile Include="Assets\fountain.cs" />
