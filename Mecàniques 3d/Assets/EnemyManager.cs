@@ -12,6 +12,7 @@ public class EnemyManager : MonoBehaviour {
 	void Start () {
         Enemies = GameObject.FindGameObjectsWithTag("enemy");
         EnemiesPos = new Vector3[Enemies.Length];
+        Debug.Log(Enemies.Length);
         for (int i = 0; i < Enemies.Length; i++)
         {
             if (Enemies[i] != null)

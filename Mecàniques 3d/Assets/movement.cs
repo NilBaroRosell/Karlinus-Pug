@@ -46,7 +46,6 @@ public class movement : MonoBehaviour
     public Vector3 vel;
     private Vector3 dashDistance;
     public float distanceDash;
-    GameObject[] nearEnemies;
 
     public GameObject hidratationStates;
 
@@ -54,7 +53,6 @@ public class movement : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        nearEnemies = GameObject.FindGameObjectsWithTag("enemy");
         rb = GetComponent<Rigidbody>();
         Physics.gravity = new Vector3(0, -250, 0);
         anim = GetComponent<Animator>();
@@ -212,17 +210,17 @@ public class movement : MonoBehaviour
         Vector3 enemyDist;
         if (message == 1) dist = 10;
         else dist = 30;
-        for (int i = 0; i < nearEnemies.Length; i++)
+        for (int i = 0; i < EnemyManager.Enemies.Length; i++)
         {
-            if (nearEnemies[i].GetComponent<csAreaVision>().actualState != csAreaVision.enemyState.FIGHTING)
+            if (EnemyManager.Enemies[i].activeSelf && EnemyManager.Enemies[i].GetComponent<csAreaVision>().actualState != csAreaVision.enemyState.FIGHTING)
             {
-                enemyDist = new Vector3(nearEnemies[i].transform.position.x - rb.transform.position.x, 0.0f, nearEnemies[i].transform.position.z - rb.transform.position.z);
+                enemyDist = new Vector3(EnemyManager.Enemies[i].transform.position.x - rb.transform.position.x, 0.0f, EnemyManager.Enemies[i].transform.position.z - rb.transform.position.z);
                 if (enemyDist.magnitude <= dist)
                 {
-                    nearEnemies[i].GetComponent<csAreaVision>().actualState = csAreaVision.enemyState.SEARCHING;
-                    nearEnemies[i].GetComponent<csAreaVision>().lastState = csAreaVision.enemyState.FIGHTING;
-                    nearEnemies[i].GetComponent<csAreaVision>().lastSeenPosition = GameObject.Find("Jugador").transform.position;
-                    nearEnemies[i].GetComponent<csAreaVision>().speed = 50;
+                    EnemyManager.Enemies[i].GetComponent<csAreaVision>().actualState = csAreaVision.enemyState.SEARCHING;
+                    EnemyManager.Enemies[i].GetComponent<csAreaVision>().lastState = csAreaVision.enemyState.FIGHTING;
+                    EnemyManager.Enemies[i].GetComponent<csAreaVision>().lastSeenPosition = GameObject.Find("Jugador").transform.position;
+                    EnemyManager.Enemies[i].GetComponent<csAreaVision>().speed = 50;
                 }
             }
         }

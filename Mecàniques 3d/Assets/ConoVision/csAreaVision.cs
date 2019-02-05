@@ -351,9 +351,22 @@ public class csAreaVision : MonoBehaviour {
         playerMovement.state = movement.playerState.IDLE;
         if (GameObject.Find("EnemyManager") != null)
         {
+            GameObject[] aux = new GameObject[EnemyManager.Enemies.Length - 1];
+            Vector3[] auxPos = new Vector3[EnemyManager.EnemiesPos.Length - 1];
+            int j = 0;
             for (int i = 0; i < EnemyManager.Enemies.Length; i++)
-                if (this.gameObject == EnemyManager.Enemies[i]) EnemyManager.Enemies[i] = GameObject.Find("EnemyManager");
+            {
+                if (this.gameObject != EnemyManager.Enemies[i])
+                {
+                    aux[j] = EnemyManager.Enemies[i];
+                    auxPos[j] = EnemyManager.EnemiesPos[i];
+                    j++;
+                }
+            }
+            EnemyManager.Enemies = aux;
+            EnemyManager.EnemiesPos = auxPos;
         }
+        Debug.Log(EnemyManager.Enemies.Length);
         transform.gameObject.SetActive(false);
     }
 
@@ -462,18 +475,17 @@ public class csAreaVision : MonoBehaviour {
                     speed = 50;
                     alertRend.material.SetColor("_Color", Color.red);
                     Vector3 enemyDist;
-GameObject[] nearEnemies = GameObject.FindGameObjectsWithTag("enemy");
-                    for (int i = 0; i<nearEnemies.Length; i++)
+                    for (int i = 0; i< EnemyManager.Enemies.Length; i++)
                     {
-                        if (!GameObject.ReferenceEquals(nearEnemies[i], gameObject) && nearEnemies[i].GetComponent<csAreaVision>().actualState != enemyState.FIGHTING)
+                        if (EnemyManager.Enemies[i].activeSelf && !GameObject.ReferenceEquals(EnemyManager.Enemies[i], gameObject) && EnemyManager.Enemies[i].GetComponent<csAreaVision>().actualState != enemyState.FIGHTING)
                         {
-                            enemyDist = new Vector3(nearEnemies[i].transform.position.x - rb.transform.position.x, 0.0f, nearEnemies[i].transform.position.z - rb.transform.position.z);
+                            enemyDist = new Vector3(EnemyManager.Enemies[i].transform.position.x - rb.transform.position.x, 0.0f, EnemyManager.Enemies[i].transform.position.z - rb.transform.position.z);
                             if (enemyDist.magnitude <= 50)
                             {
-                                nearEnemies[i].GetComponent<csAreaVision>().actualState = enemyState.SEARCHING;
-                                nearEnemies[i].GetComponent<csAreaVision>().lastState = enemyState.PATROLLING;
-                                nearEnemies[i].GetComponent<csAreaVision>().lastSeenPosition = GameObject.Find("Jugador").transform.position;
-                                nearEnemies[i].GetComponent<csAreaVision>().speed = 50;
+                                EnemyManager.Enemies[i].GetComponent<csAreaVision>().actualState = enemyState.SEARCHING;
+                                EnemyManager.Enemies[i].GetComponent<csAreaVision>().lastState = enemyState.PATROLLING;
+                                EnemyManager.Enemies[i].GetComponent<csAreaVision>().lastSeenPosition = GameObject.Find("Jugador").transform.position;
+                                EnemyManager.Enemies[i].GetComponent<csAreaVision>().speed = 50;
                             }
                         }
                     }
