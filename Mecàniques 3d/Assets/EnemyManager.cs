@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class EnemyManager : MonoBehaviour {
 
-    GameObject[] Enemies;
-    Vector3[] EnemiesPos;
+    public static GameObject[] Enemies;
+    public static Vector3[] EnemiesPos;
     public GameObject Player;
     public float maxDist;
 	// Use this for initialization
@@ -28,7 +28,6 @@ public class EnemyManager : MonoBehaviour {
                 Vector3 playerDist = new Vector3(Player.transform.position.x - EnemiesPos[i].x, 0.0f, Player.transform.position.z - EnemiesPos[i].z);
                 if (playerDist.magnitude <= maxDist)
                 {
-                    
                     Enemies[i].SetActive(true);
                 }
             }

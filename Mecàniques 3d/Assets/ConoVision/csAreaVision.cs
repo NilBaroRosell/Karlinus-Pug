@@ -302,7 +302,15 @@ public class csAreaVision : MonoBehaviour {
             IA_Controller();
             Start();
         }
-        else if(playerDist.magnitude > maxDist) this.gameObject.SetActive(false);
+        else if (playerDist.magnitude > maxDist)
+        {
+            if (GameObject.Find("EnemyManager") != null)
+            {
+                for (int i = 0; i < EnemyManager.Enemies.Length; i++)
+                    if (this.gameObject == EnemyManager.Enemies[i]) EnemyManager.EnemiesPos[i] = this.gameObject.transform.position;
+            }
+            this.gameObject.SetActive(false);
+        }
 
         discovered = false;
         vecEnemy1.Normalize();
@@ -341,6 +349,11 @@ public class csAreaVision : MonoBehaviour {
         yield return new WaitForSeconds(time);
 
         playerMovement.state = movement.playerState.IDLE;
+        if (GameObject.Find("EnemyManager") != null)
+        {
+            for (int i = 0; i < EnemyManager.Enemies.Length; i++)
+                if (this.gameObject == EnemyManager.Enemies[i]) EnemyManager.Enemies[i] = GameObject.Find("EnemyManager");
+        }
         transform.gameObject.SetActive(false);
     }
 
