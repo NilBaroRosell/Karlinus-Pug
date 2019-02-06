@@ -48,9 +48,10 @@ public class Respawns : MonoBehaviour {
         Enemies = GameObject.FindGameObjectsWithTag("enemy");
 
         //MISION 1 OTHER OBJECTS
-        Mision_Objects = new GameObject[2];
+        Mision_Objects = new GameObject[3];
         Mision_Objects[0] = GameObject.Find("Enemies_Zone_2");
         Mision_Objects[1] = GameObject.Find("Enemigo (3)");
+        Mision_Objects[2] = GameObject.Find("EnemyManager");
     }
 
     public Vector3 NONE()
@@ -79,10 +80,12 @@ public class Respawns : MonoBehaviour {
                 Mision_Objects[1].SetActive(false);
                 Enemies[2].SetActive(false);
                 Mision_Objects[0].SetActive(false);
+                Mision_Objects[2].SetActive(false);
                 break;
             case 1:
                 if (GameObject.Find("Enemigo (3)") != null) GameObject.Find("Enemigo (3)").SetActive(false);
                 for (int i = 3; i < BoxTriggers.Length; i++) BoxTriggers[i].SetActive(true);
+                Mision_Objects[2].GetComponent<EnemyManager>().maxDist = 125;
                 break;
             case 2:
                 if (GameObject.Find("Zone_1") != null) GameObject.Find("Zone_1").SetActive(false);

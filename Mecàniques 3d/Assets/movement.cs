@@ -69,13 +69,11 @@ public class movement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (misions.misionIndex < 2) hidratationStates.SetActive(false);
-        else hidratationStates.SetActive(true);
-
         switch (state)
         {
             case playerState.IDLE:
                 {
+                    hidratationStates.SetActive(true);
                     hitting = false;
                     vel = rb.velocity;
                     if (!anim.GetCurrentAnimatorStateInfo(0).IsName("Sheathing Sword") && !anim.GetCurrentAnimatorStateInfo(0).IsName("Withdrawing Sword"))
@@ -132,6 +130,7 @@ public class movement : MonoBehaviour
                 }
             case playerState.HITTING:
                 hitting = true;
+                hidratationStates.SetActive(false);
                 anim.SetBool("Is_Running", false);
                 anim.SetBool("Is_Walking", false);
                 anim.SetBool("Is_Crouching", false);
@@ -149,6 +148,7 @@ public class movement : MonoBehaviour
                 }
             case playerState.LIQUID:
                 {
+                    hidratationStates.SetActive(true);
                     hitting = false;
                     movePlayer();
                     if (!LiquidState)

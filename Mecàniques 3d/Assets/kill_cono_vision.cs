@@ -182,6 +182,7 @@ public class kill_cono_vision : MonoBehaviour {
                             liquidKill.showLiquid();
                             actualState = killState.APROACHING;
                             killTargetPos = target.transform.position;
+                            return mesh;
                         }
                     }
                     else targetRenderer.material = textures[1];

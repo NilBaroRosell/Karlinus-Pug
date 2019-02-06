@@ -110,6 +110,8 @@ public class misions : MonoBehaviour {
                         case 2:
                             secundaryCamera.SetActive(false);
                             secundaryCameraDestination.SetActive(false);
+                            HUD_Script.showM1Objective(2);
+                            HUD_Script.showM1Helps(10, 45);
                             misionIndex = 12;
                             break;
                     }
@@ -228,6 +230,8 @@ public class misions : MonoBehaviour {
                     Player.transform.eulerAngles = new Vector3(0.0f, 147.341f, 0.0f);
                     playerMovement.state = movement.playerState.HITTING;
                     secundaryCamera.SetActive(true);
+                    loadRespawn.Mision_Objects[2].SetActive(true);
+                    loadRespawn.Mision_Objects[2].GetComponent<EnemyManager>().maxDist = 125;
                     loadRespawn.Mision_Objects[1].SetActive(true);
                     loadRespawn.Mision_Objects[1].GetComponent<csAreaVision>().speed = 10;
                     loadRespawn.Mision_Objects[1].GetComponent<csAreaVision>().actualState = csAreaVision.enemyState.PATROLLING;
@@ -318,17 +322,16 @@ public class misions : MonoBehaviour {
                 break;
             case 11:
                 if (loadRespawn.BoxTriggers[5].activeSelf == false)
-                {
-                    liquidState.hidratation = 10;
+                {                   
                     misionIndex++;
                     respawnIndex++;
+                    liquidState.hidratation = 10;
                     loadRespawn.Mision_Objects[0].SetActive(true);
                     for (int i = 0; i < loadRespawn.Mision_Objects[0].transform.childCount; i++) loadRespawn.Mision_Objects[0].transform.GetChild(i).gameObject.SetActive(true);
                     GameObject.Find("Zone_1").SetActive(false);
                     normalLight.SetActive(false);
                     sewerLight.SetActive(true);
-                    HUD_Script.showM1Objective(2);
-                    HUD_Script.showM1Helps(10, 45);
+                    loadScreen.Instancia.CargarEscena("sewer");
                 }
                 break;
             case 12:

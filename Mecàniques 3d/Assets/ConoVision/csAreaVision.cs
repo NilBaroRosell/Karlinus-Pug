@@ -170,6 +170,7 @@ public class csAreaVision : MonoBehaviour {
             Debug.LogError("Nav Mesh error");
         }
         else enemyAgent.SetDestination(destinationPoint);
+        enemyAgent.updateRotation = false;
         playerAnim = GameObject.Find("Jugador").GetComponent<Animator>();
     }
 
@@ -312,6 +313,11 @@ public class csAreaVision : MonoBehaviour {
             this.gameObject.SetActive(false);
         }
 
+        if (enemyAgent.velocity.normalized != Vector3.zero)
+            transform.rotation = Quaternion.LookRotation(enemyAgent.velocity.normalized);
+        else
+            rb.transform.LookAt(destinationPoint);
+
         discovered = false;
         vecEnemy1.Normalize();
         if (dead) speed = 0;
@@ -384,7 +390,6 @@ public class csAreaVision : MonoBehaviour {
         {
             enemyAgent.SetDestination(destinationPoint);
             enemyAgent.speed = speed / 10;
-            rb.transform.LookAt(destinationPoint);
         }
         else
         {
@@ -538,7 +543,6 @@ public class csAreaVision : MonoBehaviour {
                 break;
             case enemyState.LEAVING:
                 alertRend.material.SetColor("_Color", Color.blue);
-                // anar fins a destinationPoint
                 if (vecEnemy1.magnitude< 1 || scaredRef + 15.0f < Time.realtimeSinceStartup)
                 {
                     StopCoroutine(CheckStuck(1));
