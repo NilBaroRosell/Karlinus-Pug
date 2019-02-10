@@ -46,6 +46,8 @@ public class movement : MonoBehaviour
     public Vector3 vel;
     private Vector3 dashDistance;
     public float distanceDash;
+    public static bool startSM2 = false;
+    public bool startingSM2 = false;
 
     public GameObject hidratationStates;
 
@@ -164,7 +166,20 @@ public class movement : MonoBehaviour
                     break;
                 }
         }
-        
+        startingSM2 = startSM2;
+    }
+
+    private void OnTriggerEnter(Collider collision)
+    {
+        if (collision.gameObject.tag == "RatHood")
+        {
+            startSM2 = true;
+        }
+    }
+
+    private void OnTriggerExit(Collider collision)
+    {
+        startSM2 = false;
     }
 
     private void OnCollisionEnter(Collision collision)

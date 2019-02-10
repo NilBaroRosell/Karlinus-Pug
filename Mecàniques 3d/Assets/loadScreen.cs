@@ -69,13 +69,17 @@ public class loadScreen : MonoBehaviour
             yield return null;
         }
 
-        //Carga la escena
-        SceneManager.LoadScene(nombreEscena);
-        //Espera a que haya cargado la nueva escena
-        while (!nombreEscena.Equals(SceneManager.GetActiveScene().name))
+        if(GameObject.Find("Misiones").GetComponent<misions>().ActualMision != global::Misions.M1)
         {
-            yield return null;
+            //Carga la escena
+            SceneManager.LoadScene(nombreEscena);
+            //Espera a que haya cargado la nueva escena
+            while (!nombreEscena.Equals(SceneManager.GetActiveScene().name))
+            {
+                yield return null;
+            }
         }
+        
         //Mientras la imagen de carga siga visible va desvaneciéndola
         while (c.a > 0)
         {

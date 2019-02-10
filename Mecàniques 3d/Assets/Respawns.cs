@@ -12,6 +12,7 @@ public class Respawns : MonoBehaviour {
     public GameObject []Mision_Objects;
     public InitialRespawns initialRespawn;
     private int initialRespawnIndex;
+    public bool entra = false;
 
     private void Awake()
     {
@@ -54,11 +55,34 @@ public class Respawns : MonoBehaviour {
         Mision_Objects[2] = GameObject.Find("EnemyManager");
     }
 
+    private void LoadSM2()
+    {
+        //MISION 2 RESPAWN POINTS
+        RespawnPoints = new Vector3[1];
+        RespawnPoints[0] = new Vector3(30.765f, -27.523f, -38.321f);
+
+        //MISION 2 BOX TRIGGERS
+        All_Mision_Objects.transform.GetChild(5).gameObject.SetActive(true);
+        BoxTriggers = new GameObject[All_Mision_Objects.transform.GetChild(5).GetChild(0).transform.childCount];
+        for (int i = 0; i < BoxTriggers.Length; i++) BoxTriggers[i] = All_Mision_Objects.transform.GetChild(5).GetChild(0).GetChild(i).gameObject;
+        entra = true;
+
+        //MISION 2 ENEMIES
+        //Enemies = GameObject.FindGameObjectsWithTag("enemy");
+
+        //MISION 2 OTHER OBJECTS
+        Mision_Objects = new GameObject[3];
+        Mision_Objects[0] = GameObject.Find("Enemigos_SM2");
+        Mision_Objects[1] = GameObject.Find("Secundary Camera");
+        Mision_Objects[2] = GameObject.Find("Camera Destination");
+    }
+
     public Vector3 NONE()
     {
         LoadNONE();
         if (GameObject.Find("Zone_1") != null) GameObject.Find("Zone_1").SetActive(false);
         if (GameObject.Find("Enemies_Zone_2") != null) GameObject.Find("Enemies_Zone_2").SetActive(true);
+        if (GameObject.Find("Enemigos_SM2") != null) GameObject.Find("Enemigos_SM2").SetActive(false);
         if (initialRespawn == InitialRespawns.NONE) return RespawnPoints[(int)LoadScene.respawnToLoad];
         else
         {
@@ -91,6 +115,36 @@ public class Respawns : MonoBehaviour {
                 if (GameObject.Find("Zone_1") != null) GameObject.Find("Zone_1").SetActive(false);
                 for (int i = 6; i < BoxTriggers.Length; i++) BoxTriggers[i].SetActive(true);
                 Mision_Objects[0].SetActive(true);
+                break;
+            default:
+                break;
+        }
+        //PLAYER RESPAWN
+        return RespawnPoints[checkPoint];
+    }
+
+    public Vector3 SM2(int checkPoint)
+    {
+        //LOAD M2
+        LoadSM2();
+        //OBJECTS RESPAWN
+        switch (checkPoint)
+        {
+            case 0:
+                Mision_Objects[0].SetActive(false);
+                Mision_Objects[1].SetActive(true);
+                Mision_Objects[2].SetActive(true);
+                break;
+            case 1:
+                Mision_Objects[0].SetActive(false);
+                Mision_Objects[1].SetActive(true);
+                Mision_Objects[2].SetActive(true);
+                break;
+            case 2:
+                Mision_Objects[0].SetActive(false);
+                Mision_Objects[1].SetActive(false);
+                Mision_Objects[2].SetActive(false);
+                for (int i = 0; i < BoxTriggers.Length; i++) BoxTriggers[i].SetActive(true);
                 break;
             default:
                 break;

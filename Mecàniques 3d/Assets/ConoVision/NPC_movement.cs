@@ -185,6 +185,19 @@ public class NPC_movement : MonoBehaviour {
     // Update is called once per frame
     void FixedUpdate()
     {
+        AI_Controller();
+        Start();
+        
+        if (enemyAgent.velocity.normalized != Vector3.zero)
+            transform.rotation = Quaternion.LookRotation(enemyAgent.velocity.normalized);
+        else
+            rb.transform.LookAt(destinationPoint);
+
+        vecEnemy1.Normalize();
+    }
+
+    private void AI_Controller()
+    {
         destinationPoint.y = transform.position.y + 0.8f;
         if (GetComponent<NavMeshObstacle>().enabled == false)
         {
@@ -203,126 +216,15 @@ public class NPC_movement : MonoBehaviour {
             oldRotation = transform.rotation;
             oldScale = transform.localScale;
         }
-        /*switch (actualState)
+        if (vecEnemy1.magnitude < 1)
         {
-            case enemyState.PATROLLING:*/
-                if (vecEnemy1.magnitude < 1)
-                {
-                    patrollingIndex++;
-                    if (patrollingIndex >= Points.Length) patrollingIndex = 0;
-                    destinationPoint = Points[patrollingIndex];
-                }
-                /*break;
-            case enemyState.SEARCHING:
-                if (playerAnim.GetBool("Is_Damaging") && GetComponent<Collider>().enabled == false) speed = 0;
-                KarlinusEspectre.transform.position = destinationPoint;
-                if (discoveredRef + 0.25f < Time.realtimeSinceStartup && searchingState)
-                {
-                    alertRend.material.SetColor("_Color", Color.yellow);
-                    discoveredRef = Time.realtimeSinceStartup;
-                    searchingState = false;
-                }
-                else if (discoveredRef + 1.0f < Time.realtimeSinceStartup && searchingState == false)
-                {
-                    alertRend.material.SetColor("_Color", Color.white);
-                    discoveredRef = Time.realtimeSinceStartup;
-                    searchingState = true;
-                }
-                destinationPoint = lastSeenPosition;
-                if (vecEnemy1.magnitude < 1 && discovered == false)//Change to PATROLLING
-                {
-                    actualState = enemyState.PATROLLING;
-                    lastState = enemyState.SEARCHING;
-                    playerAnim.ResetTrigger("Is_Hitting");
-                    speed = 10;
-                    alertRend.material.SetColor("_Color", Color.green);
-                    KarlinusEspectre.transform.position = new Vector3(0.15f, 0.023f, -0.7f) * -1 + transform.position;
-                    KarlinusEspectre.SetActive(false);
-                    playerAnim.SetBool("Is_Detected", false);
-                    playerAnim.ResetTrigger("Is_Sheathing");
-                    playerAnim.SetTrigger("Is_Sheathing");
-                    playerAnim.ResetTrigger("Is_Hitting");
-                }
-                else if (playerDist.magnitude <= rango && discovered)//Change to DETECTING
-                {
-                    actualState = enemyState.DETECTING;
-                    searchingRef = Time.realtimeSinceStartup;
-                    lastState = enemyState.PATROLLING;
-                    //playerAnim.SetBool("Is_Detected", true);
-                    alertRend.material.SetColor("_Color", Color.yellow);
-                    destinationPoint = GameObject.Find("Jugador").transform.position;
-                    KarlinusEspectre.SetActive(false);
-                    playerAnim.SetBool("Is_Detected", false);
-                    playerAnim.ResetTrigger("Is_Sheathing");
-                    playerAnim.SetTrigger("Is_Sheathing");
-                    playerAnim.ResetTrigger("Is_Hitting");
-                }
-                break;
-            case enemyState.DETECTING:
-                destinationPoint = GameObject.Find("Jugador").transform.position;
-                if (((playerDist.magnitude <= rango / 2 || searchingRef + 5.0f < Time.realtimeSinceStartup) &&
-                    lastState == enemyState.PATROLLING) || lastState == enemyState.SEARCHING && speed == 45)//Change to FIGHTING
-                {
-                    canAtackRef = Time.realtimeSinceStartup;
-                    actualState = enemyState.FIGHTING;
-                    lastState = enemyState.DETECTING;
-                    speed = 0;
-                    //playerAnim.SetBool("Is_Detected", true);
-                    //playerAnim.SetTrigger("Is_Sheathing");//Tendrá dos segundos de margen
-                    alertRend.material.SetColor("_Color", Color.red);
-                }
-                else if (discovered == false)//Change to SEARCHING
-                {
-                    actualState = enemyState.SEARCHING;
-                    lastState = enemyState.DETECTING;
-                    discoveredRef = Time.realtimeSinceStartup;
-                    //playerAnim.SetBool("Is_Detected", true);
-                    lastSeenPosition = GameObject.Find("Jugador").transform.position;
-                    KarlinusEspectre.SetActive(true);
-                    KarlinusEspectre.transform.position = lastSeenPosition;
-                    playerAnim.SetBool("Is_Detected", true);
-                    playerAnim.ResetTrigger("Is_Withdrawing");
-                    playerAnim.SetTrigger("Is_Withdrawing");
-                }
-                break;
-            case enemyState.FIGHTING:
-                destinationPoint = GameObject.Find("Jugador").transform.position;
-                if (canBeKilled() == false)
-                {
-                    speed = 50;
-                    if (playerDist.magnitude < 1.5f)
-                    {
-                        speed = 0;
-                        playerMovement.state = movement.playerState.HITTING;
-                        if (atacking == false) playerDeath(3.0f);
-                        if (atackRefTaken == false)
-                        {
-                            atackRef = Time.realtimeSinceStartup;
-                            atackRefTaken = true;
-                        }
-                    }
-                    else if (playerDist.magnitude >= 1.5f) speed = 50;
-                    if (playerDist.magnitude > rango)//Change to SEARCHING
-                    {
-                        actualState = enemyState.SEARCHING;
-                        lastState = enemyState.FIGHTING;
-                        speed = 25;
-                        //playerAnim.SetBool("Is_Detected", true);
-                        lastSeenPosition = GameObject.Find("Jugador").transform.position;
-                        KarlinusEspectre.SetActive(true);
-                        KarlinusEspectre.transform.position = lastSeenPosition;
-                        playerAnim.SetBool("Is_Detected", true);
-                        playerAnim.ResetTrigger("Is_Withdrawing");
-                        playerAnim.SetTrigger("Is_Withdrawing");
-                    }
-                }
-                else if (playerAnim.GetBool("Is_Damaging") && GetComponent<Collider>().enabled == false) speed = 0;
-                break;
-            default:
-                break;
-        }*/
+            getDestination();
+        }
+    }
 
-        Start();
-        vecEnemy1.Normalize();
+    private void getDestination()
+    {
+        destinationPoint = this.gameObject.GetComponent<RandomDestination>().RandomNavmeshLocation(this.gameObject, 75);
+        speed = 50;
     }
 }

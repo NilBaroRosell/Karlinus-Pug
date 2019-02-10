@@ -37,7 +37,7 @@ public class csAreaVision : MonoBehaviour {
     public GameObject KarlinusEspectre;
     GameObject Pepino;
     public Vector3 lastSeenPosition;
-    private Vector3 destinationPoint;
+    public Vector3 destinationPoint;
     private Vector3 vecEnemy1;
     private Vector3 rbDirection;
     private Vector3 playerDist;
@@ -556,5 +556,3 @@ public class csAreaVision : MonoBehaviour {
         }
     }
 }
-
-
