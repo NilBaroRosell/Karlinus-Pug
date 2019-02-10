@@ -212,9 +212,10 @@ public class movement : MonoBehaviour
         else dist = 30;
         for (int i = 0; i < EnemyManager.Enemies.Length; i++)
         {
-            if (EnemyManager.Enemies[i].activeSelf && EnemyManager.Enemies[i].GetComponent<csAreaVision>().actualState != csAreaVision.enemyState.FIGHTING)
+            if (EnemyManager.Enemies[i].activeSelf && EnemyManager.Enemies[i].GetComponent<csAreaVision>().actualState != csAreaVision.enemyState.FIGHTING
+                && EnemyManager.Enemies[i].GetComponent<csAreaVision>().actualState != csAreaVision.enemyState.LEAVING)
             {
-                enemyDist = new Vector3(EnemyManager.Enemies[i].transform.position.x - rb.transform.position.x, 0.0f, EnemyManager.Enemies[i].transform.position.z - rb.transform.position.z);
+                enemyDist = EnemyManager.Enemies[i].GetComponent<csAreaVision>().playerDist;
                 if (enemyDist.magnitude <= dist)
                 {
                     EnemyManager.Enemies[i].GetComponent<csAreaVision>().actualState = csAreaVision.enemyState.SEARCHING;

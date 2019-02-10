@@ -40,7 +40,7 @@ public class csAreaVision : MonoBehaviour {
     private Vector3 destinationPoint;
     private Vector3 vecEnemy1;
     private Vector3 rbDirection;
-    private Vector3 playerDist;
+    public Vector3 playerDist;
     private Vector3 stuckPos;
     private bool discovered;
     private bool searchingState;
@@ -256,9 +256,9 @@ public class csAreaVision : MonoBehaviour {
                 {
                     scaredRef = Time.realtimeSinceStartup;
                     stuckPos = rb.transform.position;
+                    getPanicDestination();
                     StartCoroutine(CheckStuck(1));
                     scared = true;
-                    getPanicDestination();
                 }
                 if (hit.transform.gameObject.tag == "Player")
                 {
@@ -344,10 +344,13 @@ public class csAreaVision : MonoBehaviour {
     {
         yield return new WaitForSeconds(time);
  
-        stuckPos = new Vector3(stuckPos.x - rb.transform.position.x, 0.0f, stuckPos.z - rb.transform.position.z);
-        if (stuckPos.magnitude < 2) getPanicDestination();
-        stuckPos = transform.position;
-        if (actualState == enemyState.LEAVING) StartCoroutine(CheckStuck(1));
+        if (actualState == enemyState.LEAVING)
+        {
+            stuckPos = new Vector3(stuckPos.x - rb.transform.position.x, 0.0f, stuckPos.z - rb.transform.position.z);
+            if (stuckPos.magnitude < 2) destinationPoint = this.gameObject.GetComponent<RandomDestination>().RandomNavmeshLocation(this.gameObject, 75);
+            stuckPos = transform.position;
+            StartCoroutine(CheckStuck(1));
+        }
     }
 
     IEnumerator ExecuteAfterTime(float time)
@@ -543,7 +546,7 @@ public class csAreaVision : MonoBehaviour {
                 break;
             case enemyState.LEAVING:
                 alertRend.material.SetColor("_Color", Color.blue);
-                if (vecEnemy1.magnitude< 1 || scaredRef + 15.0f < Time.realtimeSinceStartup)
+                if ((vecEnemy1.magnitude< 1 || scaredRef + 15.0f < Time.realtimeSinceStartup) && scaredRef + 10.0f < Time.realtimeSinceStartup)
                 {
                     StopCoroutine(CheckStuck(1));
                     actualState = enemyState.PATROLLING;
