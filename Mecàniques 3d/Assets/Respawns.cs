@@ -28,7 +28,7 @@ public class Respawns : MonoBehaviour {
         RespawnPoints[0] = new Vector3(-63.28f, -9.1f, 89.17f);
         RespawnPoints[1] = new Vector3(85.8f, -9.1f, 321.1f);
         RespawnPoints[2] = new Vector3(-73.16f, -9.1f, 400.28f);
-        RespawnPoints[3] = new Vector3(-84.99f, -27.56327f, -41.88f);
+        RespawnPoints[3] = new Vector3(30.5f, -27.523f, -31.5f);
         RespawnPoints[4] = new Vector3(100.59f, -27.56327f, 257.55f);
     }
 
@@ -55,11 +55,13 @@ public class Respawns : MonoBehaviour {
         Mision_Objects[2] = GameObject.Find("EnemyManager");
     }
 
-    private void LoadSM2()
+    private void LoadSM1()
     {
         //MISION 2 RESPAWN POINTS
-        RespawnPoints = new Vector3[1];
+        RespawnPoints = new Vector3[2];
         RespawnPoints[0] = new Vector3(30.765f, -27.523f, -38.321f);
+        RespawnPoints[1] = new Vector3(32.44f, -27.523f, -43f);
+        RespawnPoints[2] = new Vector3(-63.28f, -9.1f, 89.17f);
 
         //MISION 2 BOX TRIGGERS
         All_Mision_Objects.transform.GetChild(5).gameObject.SetActive(true);
@@ -72,9 +74,9 @@ public class Respawns : MonoBehaviour {
 
         //MISION 2 OTHER OBJECTS
         Mision_Objects = new GameObject[3];
-        Mision_Objects[0] = GameObject.Find("Enemigos_SM2");
-        Mision_Objects[1] = GameObject.Find("Secundary Camera");
-        Mision_Objects[2] = GameObject.Find("Camera Destination");
+        if(GameObject.Find("Enemigos_SM2") != null) Mision_Objects[0] = GameObject.Find("Enemigos_SM2");
+        if (GameObject.Find("Secundary Camera") != null) Mision_Objects[1] = GameObject.Find("Secundary Camera");
+        if (GameObject.Find("Camera Destination") != null) Mision_Objects[2] = GameObject.Find("Camera Destination");
     }
 
     public Vector3 NONE()
@@ -123,15 +125,15 @@ public class Respawns : MonoBehaviour {
         return RespawnPoints[checkPoint];
     }
 
-    public Vector3 SM2(int checkPoint)
+    public Vector3 SM1(int checkPoint)
     {
         //LOAD M2
-        LoadSM2();
+        LoadSM1();
         //OBJECTS RESPAWN
         switch (checkPoint)
         {
             case 0:
-                Mision_Objects[0].SetActive(false);
+                Mision_Objects[0].SetActive(true);
                 Mision_Objects[1].SetActive(true);
                 Mision_Objects[2].SetActive(true);
                 break;

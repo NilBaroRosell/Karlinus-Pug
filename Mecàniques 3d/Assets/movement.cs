@@ -51,6 +51,8 @@ public class movement : MonoBehaviour
 
     public GameObject hidratationStates;
 
+    public static int dashCooldown;
+
 
     // Use this for initialization
     void Start()
@@ -97,7 +99,7 @@ public class movement : MonoBehaviour
                         }
                         else
                         {
-                            if ((finishDash - startDash) > 80) activateDash = true;
+                            if ((finishDash - startDash) > dashCooldown) activateDash = true;
                         }
                         //Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.forward) * hit.distance, Color.yellow);
                     }

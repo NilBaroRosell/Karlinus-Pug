@@ -36,6 +36,7 @@ public class misions : MonoBehaviour {
     public MisionPoint ScaryDog;
     public static bool pauseMenu;
     public bool entra = false;
+    public int indexMision;
 
     /*public enum Misions { M1, M2, M3, M4, SM_1, SM_2, SM_3, SM_4, SM_5, SM_6, NONE };
     public GameObject normalLight;
@@ -168,6 +169,7 @@ public class misions : MonoBehaviour {
                     mainCamera = GameObject.Find("Main Camera");
                     secundaryCamera = GameObject.Find("Secundary Camera");
                     secundaryCameraDestination = GameObject.Find("Camera Destination");
+                    movement.dashCooldown = 80;
                     switch (respawnIndex)
                     {
                         case 0:
@@ -191,12 +193,13 @@ public class misions : MonoBehaviour {
                     break;
                 case Misions.M2:
                     break;
-                case Misions.SM_2:
-                    Player.transform.position = loadRespawn.SM2(respawnIndex);
+                case Misions.SM_1:
+                    RatHood.pointObject.SetActive(true);
+                    Player.transform.position = loadRespawn.SM1(respawnIndex);
                     mainCamera = GameObject.Find("Main Camera");
                     secundaryCamera = GameObject.Find("Secundary Camera");
                     secundaryCameraDestination = GameObject.Find("Camera Destination");
-                    if (GameObject.Find("Enemigos_SM2") != null) GameObject.Find("Enemigos_SM2").SetActive(false);
+                    StartCoroutine(ExecuteAfterTime(5.0f));//14
                     break;
                 default:
                     break;
@@ -312,10 +315,11 @@ public class misions : MonoBehaviour {
             case Misions.M1:
                 M1();
                 break;
-            case Misions.SM_2:
-                SM2();
+            case Misions.SM_1:
+                SM1();
                 break;
         }
+        indexMision = misionIndex;
     }
 
     /*void FixedUpdate() {
@@ -547,22 +551,20 @@ public class misions : MonoBehaviour {
         }
     }
 
-    void SM2()
+    void SM1()
     {
         switch (misionIndex)
         {
             case 0: // primera camera (mirant als gats)
-                //enemiesSM2.SetActive(true);
                 playerMovement.state = movement.playerState.HITTING;
                 Player.transform.position = new Vector3(30.765f, -27.523f, -38.321f);
                 Player.transform.eulerAngles = new Vector3(0.0f, 90f, 0.0f);
                 /*reference.transform.position = Player.transform.position;
                 reference.transform.rotation = Player.transform.rotation;*/
-                StartCoroutine(ExecuteAfterTime(5.0f)); //14
+                
                 // si han passat els gats
                 if (nextEvent)
                 {
-                    entra = true;
                     misionIndex++;
                     nextEvent = false;
                     Player.transform.position = new Vector3(31.6725f, -27.523f, -38.321f);
@@ -574,7 +576,6 @@ public class misions : MonoBehaviour {
                     secundaryCamera.SetActive(false);
                     secundaryCameraDestination.SetActive(false);
                     playerMovement.state = movement.playerState.IDLE;
-                    //enemiesSM2.SetActive(false);
                 }
                 break;
             case 1: // anar fins al rat hood
@@ -587,10 +588,10 @@ public class misions : MonoBehaviour {
                     /*reference.transform.position = Player.transform.position;
                     reference.transform.rotation = Player.transform.rotation;*/
                     misionIndex++;
+                    StartCoroutine(ExecuteAfterTime(5.0f));// 10
                 }
                 break;
             case 2: // anar fins a l'entrada de les clavagueres
-                StartCoroutine(ExecuteAfterTime(1.0f));// 10
                 if(nextEvent)
                 {
                     nextEvent = false;
@@ -602,10 +603,12 @@ public class misions : MonoBehaviour {
                 if (loadRespawn.BoxTriggers[1].activeSelf == false)
                 {
                     misionIndex++;
-                    liquidState.hidratation = 10;
+                    LoadScene.respawnToLoad = LoadScene.Scenes.SEWER_1;
+                    loadScreen.Instancia.CargarEscena("sewer");
                 }
                 break;
             case 4:
+                movement.dashCooldown = 20;
                 break;
         }
     }
@@ -629,7 +632,7 @@ public class misions : MonoBehaviour {
             if (RatHood.MisionsCompleted[(int)Misions.SM_1 - 4] == false)
             {
                 RatHood.pointObject.SetActive(true);
-                RatHood.pointObject.transform.position = new Vector3(13.17202f, -31.81266f, -18.64425f) + transform.position;
+                RatHood.pointObject.transform.position = new Vector3(13.17202f, -31.81266f, -18.64425f) + transform.position - new Vector3 (1.6775f, 2.1f, -4.12f);
             }
             if (RebelCat.MisionsCompleted[(int)Misions.SM_2 - 5] == false)
             {
@@ -649,7 +652,7 @@ public class misions : MonoBehaviour {
             if (RatHood.MisionsCompleted[(int)Misions.SM_1 - 4] == false)
             {
                 RatHood.pointObject.SetActive(true);
-                RatHood.pointObject.transform.position = new Vector3(13.17202f, -31.81266f, -18.64425f) + transform.position;
+                RatHood.pointObject.transform.position = new Vector3(13.17202f, -31.81266f, -18.64425f) + transform.position - new Vector3 (1.6775f, 2.1f, -4.12f);
             }
             else if (RatHood.MisionsCompleted[(int)Misions.SM_4 - 6] == false)
             {
