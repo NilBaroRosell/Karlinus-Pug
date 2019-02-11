@@ -8,12 +8,11 @@ public class Menuctrl : MonoBehaviour {
 
     void Start()
     {
-
     }
 
     public void LoadScene(string sceneName)
     {
-        GameObject.Find("Misiones").GetComponent<misions>().ActualMision = global::Misions.M1;
+        GameObject.Find("Misiones").GetComponent<misions>().ActualMision =misions.Misions.M1;
         loadScreen.Instancia.CargarEscena(sceneName);
     }
 

@@ -69,7 +69,7 @@ public class loadScreen : MonoBehaviour
             yield return null;
         }
 
-        if(GameObject.Find("Misiones").GetComponent<misions>().ActualMision != global::Misions.M1)
+        if(GameObject.Find("Misiones").GetComponent<misions>().ActualMision != misions.Misions.M1)
         {
             //Carga la escena
             SceneManager.LoadScene(nombreEscena);

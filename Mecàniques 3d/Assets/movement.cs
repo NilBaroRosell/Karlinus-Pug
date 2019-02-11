@@ -227,7 +227,7 @@ public class movement : MonoBehaviour
         else dist = 30;
         for (int i = 0; i < EnemyManager.Enemies.Length; i++)
         {
-            if (EnemyManager.Enemies[i].activeSelf && EnemyManager.Enemies[i].GetComponent<csAreaVision>().actualState != csAreaVision.enemyState.FIGHTING)
+            if (EnemyManager.Enemies[i].activeSelf)
             {
                 enemyDist = new Vector3(EnemyManager.Enemies[i].transform.position.x - rb.transform.position.x, 0.0f, EnemyManager.Enemies[i].transform.position.z - rb.transform.position.z);
                 if (enemyDist.magnitude <= dist)

@@ -4,14 +4,15 @@ using UnityEngine;
 
 public class NPCActualizeScene : MonoBehaviour {
 
-    public Misions NPCMision;
     private bool startMision = false;
-    public GameObject misionsGO;
+    public misions misionsGO;
     public static bool actualizeScene = false;
 
     // Use this for initialization
     void Start () {
-	}
+        if (GameObject.Find("Misiones") != null) misionsGO = GameObject.Find("Misiones").GetComponent<misions>();
+
+    }
 	
 	// Update is called once per frame
 	void FixedUpdate () {
@@ -19,7 +20,8 @@ public class NPCActualizeScene : MonoBehaviour {
         {
             if (Input.GetKeyDown(KeyCode.E))
             {
-                actualizeScene = true;
+                misionsGO.ActualMision = misions.Misions.SM_2;
+                loadScreen.Instancia.CargarEscena("city");
             }
         }
 	}
