@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Respawns : MonoBehaviour {
 
-    public enum InitialRespawns { SEWER_1, SEWER_2, SEWER_3, CITY_1, CITY_2, PUB, HOUSE, PALACE, NONE };
+    public enum InitialRespawns { SEWER_1, SEWER_2, SEWER_3, CITY_1, CITY_2, PUB_INSIDE, PUB_OUTSIDE, HOUSE_INSIDE, HOUSE_OUTSIDE, PALACE_INSIDE, PALACE_OUTSIDE, NONE };
     private Vector3[] RespawnPoints;
     private GameObject All_Mision_Objects;
     public GameObject[] BoxTriggers;
@@ -23,12 +23,14 @@ public class Respawns : MonoBehaviour {
     private void LoadNONE()
     {
         //NONE Mision RESPAWNS
-        RespawnPoints = new Vector3[5];
+        RespawnPoints = new Vector3[7];
         RespawnPoints[0] = new Vector3(-63.28f, -9.1f, 89.17f);
         RespawnPoints[1] = new Vector3(85.8f, -9.1f, 321.1f);
         RespawnPoints[2] = new Vector3(-73.16f, -9.1f, 400.28f);
         RespawnPoints[3] = new Vector3(-84.99f, -27.56327f, -41.88f);
         RespawnPoints[4] = new Vector3(100.59f, -27.56327f, 257.55f);
+        RespawnPoints[5] = new Vector3(21.93f, 13.06f, -23.75f);
+        RespawnPoints[6] = new Vector3(100.59f, -27.56327f, 257.55f);
     }
 
     private void LoadM1()
