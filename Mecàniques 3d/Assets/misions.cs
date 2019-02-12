@@ -199,7 +199,23 @@ public class misions : MonoBehaviour {
                     mainCamera = GameObject.Find("Main Camera");
                     secundaryCamera = GameObject.Find("Secundary Camera");
                     secundaryCameraDestination = GameObject.Find("Camera Destination");
-                    StartCoroutine(ExecuteAfterTime(5.0f));//14
+                    switch (respawnIndex)
+                    {
+                        case 0:
+                            misionIndex = 0;
+                            StartCoroutine(ExecuteAfterTime(5.0f));//14
+                            break;
+                        case 1:
+                            secundaryCamera.SetActive(false);
+                            secundaryCameraDestination.SetActive(false);
+                            misionIndex = 3;
+                            break;
+                        case 2:
+                            secundaryCamera.SetActive(false);
+                            secundaryCameraDestination.SetActive(false);
+                            misionIndex = 4;
+                            break;
+                    }
                     break;
                 default:
                     break;
