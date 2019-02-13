@@ -18,7 +18,7 @@ public class LoadScene : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        if (changeScene && Input.GetKey(KeyCode.E))
+        if (changeScene && Input.GetKey(KeyCode.E) || misions.changeSceneSM1)
         {
             switch (SceneToLoad)
             {
@@ -27,11 +27,13 @@ public class LoadScene : MonoBehaviour {
                 case Scenes.SEWER_3:
                     respawnToLoad = SceneToLoad;
                     loadScreen.Instancia.CargarEscena("sewer");
+                    misions.changeSceneSM1 = false;
                     break;
                 case Scenes.CITY_1:
                 case Scenes.CITY_2:
                     respawnToLoad = SceneToLoad;
                     loadScreen.Instancia.CargarEscena("city");
+                    misions.changeSceneSM1 = false;
                     break;
                 default:                    
                     break;

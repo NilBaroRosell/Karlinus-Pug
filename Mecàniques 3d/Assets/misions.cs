@@ -35,8 +35,9 @@ public class misions : MonoBehaviour {
     public MisionPoint RebelCat;
     public MisionPoint ScaryDog;
     public static bool pauseMenu;
-    public bool entra = false;
+    public static bool changeSceneSM1 = false;
     public int indexMision;
+    public int indexRespawn;
 
     /*public enum Misions { M1, M2, M3, M4, SM_1, SM_2, SM_3, SM_4, SM_5, SM_6, NONE };
     public GameObject normalLight;
@@ -213,7 +214,13 @@ public class misions : MonoBehaviour {
                         case 2:
                             secundaryCamera.SetActive(false);
                             secundaryCameraDestination.SetActive(false);
+                            if (GameObject.Find("RatHood") != null) GameObject.Find("RatHood").transform.position = new Vector3 (5.28f,8.019f,56.86f);
                             misionIndex = 4;
+                            break;
+                        case 3:
+                            secundaryCamera.SetActive(false);
+                            secundaryCameraDestination.SetActive(false);
+                            misionIndex = 9;
                             break;
                     }
                     break;
@@ -336,6 +343,7 @@ public class misions : MonoBehaviour {
                 break;
         }
         indexMision = misionIndex;
+        indexRespawn = respawnIndex;
     }
 
     /*void FixedUpdate() {
@@ -613,18 +621,68 @@ public class misions : MonoBehaviour {
                     nextEvent = false;
                     playerMovement.state = movement.playerState.IDLE;
                     misionIndex++;
+                    respawnIndex++;
                 }
                 break;
             case 3:
                 if (loadRespawn.BoxTriggers[1].activeSelf == false)
                 {
                     misionIndex++;
+                    respawnIndex++;
+                    changeSceneSM1 = true;
                     LoadScene.respawnToLoad = LoadScene.Scenes.SEWER_1;
-                    loadScreen.Instancia.CargarEscena("sewer");
                 }
                 break;
             case 4:
                 movement.dashCooldown = 20;
+                if (loadRespawn.BoxTriggers[2].activeSelf == false)
+                {
+                    misionIndex++;
+                    playerMovement.state = movement.playerState.HITTING;
+                    StartCoroutine(ExecuteAfterTime(5.0f));// 10
+                }
+                break;
+            case 5:
+                if (nextEvent)
+                {
+                    misionIndex++;
+                    playerMovement.state = movement.playerState.HITTING;
+                    StartCoroutine(ExecuteAfterTime(5.0f));// 5 (deixar marxar a rat hood)
+                }
+                break;
+            case 6:
+                if(nextEvent)
+                {
+                    nextEvent = false;
+                    playerMovement.state = movement.playerState.IDLE;
+                    misionIndex++;
+                }
+                break;
+            case 7:
+                if(loadRespawn.BoxTriggers[3].activeSelf == false)
+                {
+                    misionIndex++;
+                    playerMovement.state = movement.playerState.HITTING;
+                    StartCoroutine(ExecuteAfterTime(5.0f));// 10
+                }
+                break;
+            case 8:
+                if (nextEvent)
+                {
+                    nextEvent = false;
+                    playerMovement.state = movement.playerState.IDLE;
+                    misionIndex++;
+                    respawnIndex++;
+                }
+                break;
+            case 9:
+                if(loadRespawn.BoxTriggers[4].activeSelf == false)
+                {
+                    ActualMision = Misions.NONE;
+                    RatHood.MisionsCompleted[(int)Misions.SM_1 - 4] = true;
+                    changeSceneSM1 = true;
+                    LoadScene.respawnToLoad = LoadScene.Scenes.CITY_1;
+                }
                 break;
         }
     }

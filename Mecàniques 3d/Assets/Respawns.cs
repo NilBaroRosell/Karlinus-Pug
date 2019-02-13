@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Respawns : MonoBehaviour {
 
@@ -28,7 +29,7 @@ public class Respawns : MonoBehaviour {
         RespawnPoints[0] = new Vector3(-63.28f, -9.1f, 89.17f);
         RespawnPoints[1] = new Vector3(85.8f, -9.1f, 321.1f);
         RespawnPoints[2] = new Vector3(-73.16f, -9.1f, 400.28f);
-        RespawnPoints[3] = new Vector3(30.5f, -27.523f, -31.5f);
+        RespawnPoints[3] = new Vector3(-79.1f, -27.523f, -42f);
         RespawnPoints[4] = new Vector3(100.59f, -27.56327f, 257.55f);
     }
 
@@ -132,6 +133,14 @@ public class Respawns : MonoBehaviour {
     {
         //LOAD M2
         LoadSM1();
+        if (GameObject.Find("Zone_1") != null) GameObject.Find("Zone_1").SetActive(false);
+        if (GameObject.Find("Enemies_Zone_2") != null) GameObject.Find("Enemies_Zone_2").SetActive(false);
+        if(SceneManager.GetActiveScene().name  == "sewer")
+        {
+            if (GameObject.Find("Directional Light") != null) GameObject.Find("Directional Light").SetActive(false);
+        }
+        if (GameObject.Find("") != null) GameObject.Find("Zone_1").SetActive(false);
+
         //OBJECTS RESPAWN
         switch (checkPoint)
         {
@@ -149,7 +158,11 @@ public class Respawns : MonoBehaviour {
                 Mision_Objects[1].SetActive(false);
                 Mision_Objects[2].SetActive(false);
                 Mision_Objects[3].SetActive(true);
-                //for (int i = 0; i < BoxTriggers.Length; i++) BoxTriggers[i].SetActive(true);
+                break;
+            case 3:
+                Mision_Objects[1].SetActive(false);
+                Mision_Objects[2].SetActive(false);
+                Mision_Objects[3].SetActive(true);
                 break;
             default:
                 break;
