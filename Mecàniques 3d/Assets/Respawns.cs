@@ -30,7 +30,7 @@ public class Respawns : MonoBehaviour {
         RespawnPoints[3] = new Vector3(-84.99f, -27.56327f, -41.88f);
         RespawnPoints[4] = new Vector3(100.59f, -27.56327f, 257.55f);
         RespawnPoints[5] = new Vector3(21.93f, 13.06f, -23.75f);
-        RespawnPoints[6] = new Vector3(100.59f, -27.56327f, 257.55f);
+        RespawnPoints[6] = new Vector3(83.48f, -27.52f, -34.6f);
     }
 
     private void LoadM1()
@@ -64,7 +64,7 @@ public class Respawns : MonoBehaviour {
         if (initialRespawn == InitialRespawns.NONE) return RespawnPoints[(int)LoadScene.respawnToLoad];
         else
         {
-            LoadScene.respawnToLoad = (LoadScene.Scenes)initialRespawn;
+            LoadScene.respawnToLoad = (InitialRespawns)initialRespawn;
             initialRespawnIndex = (int)initialRespawn;
             initialRespawn = InitialRespawns.NONE;
             return RespawnPoints[initialRespawnIndex];

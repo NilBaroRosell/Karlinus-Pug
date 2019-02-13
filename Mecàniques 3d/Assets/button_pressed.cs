@@ -14,13 +14,13 @@ public class button_pressed : MonoBehaviour {
 	public void sceneChange() {
         switch (LoadScene.respawnToLoad)
         {
-            case LoadScene.Scenes.SEWER_1:
-            case LoadScene.Scenes.SEWER_2:
-            case LoadScene.Scenes.SEWER_3:
+            case Respawns.InitialRespawns.SEWER_1:
+            case Respawns.InitialRespawns.SEWER_2:
+            case Respawns.InitialRespawns.SEWER_3:
                 loadScreen.Instancia.CargarEscena("sewer");
                 break;
-            case LoadScene.Scenes.CITY_1:
-            case LoadScene.Scenes.CITY_2:
+            case Respawns.InitialRespawns.CITY_1:
+            case Respawns.InitialRespawns.CITY_2:
                 loadScreen.Instancia.CargarEscena("city");
                 break;
             default:
