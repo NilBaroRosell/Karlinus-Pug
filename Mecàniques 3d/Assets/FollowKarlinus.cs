@@ -19,6 +19,7 @@ public class FollowKarlinus : MonoBehaviour {
     void Start () {
         if (GameObject.Find("Jugador") != null) karlinus = GameObject.Find("Jugador");
         if (GameObject.Find("Misiones") != null) misionsScript = GameObject.Find("Misiones").GetComponent<misions>();
+        ratHoodAgent = this.GetComponent<NavMeshAgent>();
         rb = GetComponent<Rigidbody>();
         anim = GetComponent<Animator>();
         anim.SetBool("Is_Walking", true);
@@ -26,19 +27,20 @@ public class FollowKarlinus : MonoBehaviour {
 	
 	// Update is called once per frame
 	void FixedUpdate () {
+        
         if(misionsScript.ActualMision == misions.Misions.SM_1)
         {
             switch(misionsScript.indexMision)
             {
                 case 3:
-                    destinationPoint = karlinus.transform.position - (gameObject.transform.forward * 3)
-                    if ((karlinus.transform.position - gameObject.transform.position).magnitude < 4)
+                    destinationPoint = karlinus.transform.position;
+                    if ((destinationPoint - gameObject.transform.position).magnitude > 2)
                     {
                         if (!anim.GetBool("Is_Running")) anim.SetBool("Is_Running", true);
                         if (GetComponent<NavMeshObstacle>().enabled == false)
                         {
                             ratHoodAgent.SetDestination(destinationPoint);
-                            ratHoodAgent.speed = 5;
+                            ratHoodAgent.speed = 7;
                         }
                         else
                         {
@@ -47,7 +49,7 @@ public class FollowKarlinus : MonoBehaviour {
                     }
                     break;
                 case 4:
-                    destinationPoint = karlinus.transform.position - (gameObject.transform.forward * 3);
+                    if (karlinus != null) destinationPoint = karlinus.transform.position - (gameObject.transform.forward * 3);
                     if (karlinus != null && (karlinus.transform.position - gameObject.transform.position).magnitude < 4)
                     {
                         if (!anim.GetBool("Is_Running")) anim.SetBool("Is_Running", true);
