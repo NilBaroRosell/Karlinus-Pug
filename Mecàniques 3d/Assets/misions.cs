@@ -198,8 +198,8 @@ public class misions : MonoBehaviour {
                     RatHood.pointObject.SetActive(true);
                     Player.transform.position = loadRespawn.SM1(respawnIndex);
                     mainCamera = GameObject.Find("Main Camera");
-                    secundaryCamera = GameObject.Find("Secundary Camera");
-                    secundaryCameraDestination = GameObject.Find("Camera Destination");
+                    if(GameObject.Find("Secundary Camera")!=null) secundaryCamera = GameObject.Find("Secundary Camera");
+                    if (GameObject.Find("Camera Destination") != null) secundaryCameraDestination = GameObject.Find("Camera Destination");
                     switch (respawnIndex)
                     {
                         case 0:
@@ -214,7 +214,7 @@ public class misions : MonoBehaviour {
                         case 2:
                             secundaryCamera.SetActive(false);
                             secundaryCameraDestination.SetActive(false);
-                            if (GameObject.Find("RatHood") != null) GameObject.Find("RatHood").transform.position = new Vector3 (5.28f,8.019f,56.86f);
+                            RatHood.pointObject.transform.position = new Vector3(-64.28f, -9.1f, 89.17f);
                             misionIndex = 4;
                             break;
                         case 3:
@@ -325,7 +325,6 @@ public class misions : MonoBehaviour {
             }
             else
             {
-                ActualMision = Misions.NONE;
                 pauseMenu = true;
                 Cursor.visible = true;
                 Cursor.lockState = CursorLockMode.None;
@@ -631,6 +630,8 @@ public class misions : MonoBehaviour {
                     respawnIndex++;
                     changeSceneSM1 = true;
                     LoadScene.respawnToLoad = LoadScene.Scenes.SEWER_1;
+                    /*if (GameObject.Find("RatHood") != null) GameObject.Find("RatHood")*/
+
                 }
                 break;
             case 4:

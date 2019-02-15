@@ -50,7 +50,7 @@ public class FollowKarlinus : MonoBehaviour {
                     break;
                 case 4:
                     if (karlinus != null) destinationPoint = karlinus.transform.position - (gameObject.transform.forward * 3);
-                    if (karlinus != null && (karlinus.transform.position - gameObject.transform.position).magnitude < 4)
+                    if (karlinus != null && (karlinus.transform.position - gameObject.transform.position).magnitude > 2)
                     {
                         if (!anim.GetBool("Is_Running")) anim.SetBool("Is_Running", true);
                         if (GetComponent<NavMeshObstacle>().enabled == false)
@@ -98,4 +98,9 @@ public class FollowKarlinus : MonoBehaviour {
         }
         
 	}
+
+    void OnLevelWasLoaded()
+    {
+            Start();
+    }
 }

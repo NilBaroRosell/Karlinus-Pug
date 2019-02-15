@@ -125,6 +125,7 @@
     <Compile Include="Assets\EnemyManager.cs" />
     <Compile Include="Assets\Fantasy Skybox FREE\Demo\Scripts\GE_FantasySkyboxFREE_Demo.cs" />
     <Compile Include="Assets\Fantasy Skybox FREE\Demo\Scripts\GE_FantasySkyboxFREE_UIs.cs" />
+    <Compile Include="Assets\FollowKarlinus.cs" />
     <Compile Include="Assets\fountain.cs" />
     <Compile Include="Assets\GE Common Assets\GE Toggle Full Screen\Scripts\GE_ToggleFullScreenUI.cs" />
     <Compile Include="Assets\GE Common Assets\Scripts\GE_UIResponder.cs" />
@@ -135,6 +136,7 @@
     <Compile Include="Assets\loadScreen.cs" />
     <Compile Include="Assets\MainMenu.cs" />
     <Compile Include="Assets\Menuctrl.cs" />
+    <Compile Include="Assets\MisionFailed.cs" />
     <Compile Include="Assets\misions.cs" />
     <Compile Include="Assets\movement.cs" />
     <Compile Include="Assets\NPC.cs" />

@@ -155,8 +155,6 @@ public class Respawns : MonoBehaviour {
                 Mision_Objects[2].SetActive(true);
                 break;
             case 2:
-                Mision_Objects[1].SetActive(false);
-                Mision_Objects[2].SetActive(false);
                 Mision_Objects[3].SetActive(true);
                 break;
             case 3:
