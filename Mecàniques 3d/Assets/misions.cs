@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEngine;
-
+using UnityEngine.AI;
 
 public class misions : MonoBehaviour {
 
@@ -170,7 +170,6 @@ public class misions : MonoBehaviour {
                     mainCamera = GameObject.Find("Main Camera");
                     secundaryCamera = GameObject.Find("Secundary Camera");
                     secundaryCameraDestination = GameObject.Find("Camera Destination");
-                    movement.dashCooldown = 80;
                     switch (respawnIndex)
                     {
                         case 0:
@@ -214,7 +213,7 @@ public class misions : MonoBehaviour {
                         case 2:
                             secundaryCamera.SetActive(false);
                             secundaryCameraDestination.SetActive(false);
-                            RatHood.pointObject.transform.position = new Vector3(-64.28f, -9.1f, 89.17f);
+                            RatHood.pointObject.GetComponent<NavMeshAgent>().Warp(new Vector3(-64.28f, -9.1f, 89.17f));
                             misionIndex = 4;
                             break;
                         case 3:
@@ -333,6 +332,11 @@ public class misions : MonoBehaviour {
         switch (ActualMision)
         {
             case Misions.NONE:
+                if (movement.startSM2)
+                {
+                    ActualMision = Misions.SM_1;
+                    loadScreen.Instancia.CargarEscena("city");
+                }
                 break;
             case Misions.M1:
                 M1();
@@ -594,8 +598,8 @@ public class misions : MonoBehaviour {
                     //reference.transform.position = Player.transform.position;
                     Player.transform.eulerAngles = new Vector3(0.0f, 180.0f, 0.0f);
                     //reference.transform.rotation = Player.transform.rotation;
-                    secundaryCamera.transform.position = Vector3.Lerp(secundaryCamera.transform.position, secundaryCameraDestination.transform.position, 0.25f * Time.deltaTime);
-                    secundaryCamera.transform.rotation = Quaternion.Lerp(secundaryCamera.transform.rotation, secundaryCameraDestination.transform.rotation, 0.25f * Time.deltaTime);
+                    /*secundaryCamera.transform.position = Vector3.Lerp(secundaryCamera.transform.position, secundaryCameraDestination.transform.position, 0.25f * Time.deltaTime);
+                    secundaryCamera.transform.rotation = Quaternion.Lerp(secundaryCamera.transform.rotation, secundaryCameraDestination.transform.rotation, 0.25f * Time.deltaTime);*/
                     secundaryCamera.SetActive(false);
                     secundaryCameraDestination.SetActive(false);
                     playerMovement.state = movement.playerState.IDLE;
@@ -635,7 +639,6 @@ public class misions : MonoBehaviour {
                 }
                 break;
             case 4:
-                movement.dashCooldown = 20;
                 if (loadRespawn.BoxTriggers[2].activeSelf == false)
                 {
                     misionIndex++;
@@ -648,18 +651,28 @@ public class misions : MonoBehaviour {
                 {
                     misionIndex++;
                     playerMovement.state = movement.playerState.HITTING;
-                    StartCoroutine(ExecuteAfterTime(5.0f));// 5 (deixar marxar a rat hood)
+                    StartCoroutine(ExecuteAfterTime(5.0f));// 5 (parlar amb rat hood)
+                    nextEvent = false;
                 }
                 break;
             case 6:
+                if (nextEvent)
+                {
+                    misionIndex++;
+                    StartCoroutine(ExecuteAfterTime(5.0f));// 5 (deixar marxar a rat hood)
+                    nextEvent = false;
+                }
+                break;
+            case 7:
                 if(nextEvent)
                 {
                     nextEvent = false;
                     playerMovement.state = movement.playerState.IDLE;
+                    RatHood.pointObject.GetComponent<NavMeshAgent>().Warp(new Vector3(14.32f, -9.1f, 150.9f));
                     misionIndex++;
                 }
                 break;
-            case 7:
+            case 8:
                 if(loadRespawn.BoxTriggers[3].activeSelf == false)
                 {
                     misionIndex++;
@@ -667,7 +680,7 @@ public class misions : MonoBehaviour {
                     StartCoroutine(ExecuteAfterTime(5.0f));// 10
                 }
                 break;
-            case 8:
+            case 9:
                 if (nextEvent)
                 {
                     nextEvent = false;
@@ -676,7 +689,7 @@ public class misions : MonoBehaviour {
                     respawnIndex++;
                 }
                 break;
-            case 9:
+            case 10:
                 if(loadRespawn.BoxTriggers[4].activeSelf == false)
                 {
                     ActualMision = Misions.NONE;

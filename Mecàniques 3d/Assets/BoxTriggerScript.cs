@@ -15,6 +15,10 @@ public class BoxTriggerScript : MonoBehaviour {
         if (collision.gameObject.tag == "Player")
         {
             if (gameObject.tag == "CheckPoint_Trigger") gameObject.SetActive(false);
+            /*else if(gameObject.tag == "RatHood")
+            {
+
+            }*/
         }
     }
 }

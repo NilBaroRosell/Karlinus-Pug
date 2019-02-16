@@ -51,7 +51,7 @@ public class movement : MonoBehaviour
 
     public GameObject hidratationStates;
 
-    public static int dashCooldown;
+    public static int dashCooldown = 80;
 
 
     // Use this for initialization
@@ -99,7 +99,8 @@ public class movement : MonoBehaviour
                         }
                         else
                         {
-                            if ((finishDash - startDash) > dashCooldown) activateDash = true;
+                            if ((finishDash - startDash) > 80 && !GameObject.Find("Misiones").GetComponent<misions>().RatHood.MisionsCompleted[(int)misions.Misions.SM_1 - 4]) activateDash = true;
+                            else if ((finishDash - startDash) > 20 && GameObject.Find("Misiones").GetComponent<misions>().RatHood.MisionsCompleted[(int)misions.Misions.SM_1 - 4]) activateDash = true;
                         }
                         //Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.forward) * hit.distance, Color.yellow);
                     }
@@ -173,16 +174,19 @@ public class movement : MonoBehaviour
 
     private void OnTriggerEnter(Collider collision)
     {
-        if (collision.gameObject.tag == "RatHood")
+        if (collision.gameObject.tag == "RatHood" && !startSM2)//GameObject.Find("Misiones").GetComponent<misions>().ActualMision == misions.Misions.NONE)
         {
-            startSM2 = true;
+            if (Input.GetKeyDown(KeyCode.E)) startSM2 = true;
         }
     }
 
-    private void OnTriggerExit(Collider collision)
+    /*private void OnTriggerExit(Collider collision)
     {
-        startSM2 = false;
-    }
+        if (collision.gameObject.tag == "RatHood")
+        {
+            startSM2 = false;
+        }
+    }*/
 
     private void OnCollisionEnter(Collision collision)
     {

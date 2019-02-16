@@ -6,6 +6,7 @@ using System;
 public class FollowKarlinus : MonoBehaviour {
 
     private GameObject karlinus;
+    private Transform ratHoodTransform;
     private misions misionsScript;
     private Rigidbody rb;
 
@@ -14,15 +15,21 @@ public class FollowKarlinus : MonoBehaviour {
 
     NavMeshAgent ratHoodAgent;
     private Animator anim;
+    public bool entra = false;
+
+    private void Awake()
+    {
+        ratHoodAgent = this.GetComponent<NavMeshAgent>();
+        ratHoodTransform = this.GetComponent<Transform>();
+        rb = GetComponent<Rigidbody>();
+        anim = GetComponent<Animator>();
+        anim.SetBool("Is_Walking", true);
+    }
 
     // Use this for initialization
     void Start () {
         if (GameObject.Find("Jugador") != null) karlinus = GameObject.Find("Jugador");
         if (GameObject.Find("Misiones") != null) misionsScript = GameObject.Find("Misiones").GetComponent<misions>();
-        ratHoodAgent = this.GetComponent<NavMeshAgent>();
-        rb = GetComponent<Rigidbody>();
-        anim = GetComponent<Animator>();
-        anim.SetBool("Is_Walking", true);
     }
 	
 	// Update is called once per frame
@@ -49,8 +56,9 @@ public class FollowKarlinus : MonoBehaviour {
                     }
                     break;
                 case 4:
-                    if (karlinus != null) destinationPoint = karlinus.transform.position - (gameObject.transform.forward * 3);
-                    if (karlinus != null && (karlinus.transform.position - gameObject.transform.position).magnitude > 2)
+                    destinationPoint = new Vector3 (-58.87f,-9.1f,112.47f);
+                    vecToDestination = new Vector3(destinationPoint.x - ratHoodTransform.position.x, 0.0f, destinationPoint.z - ratHoodTransform.transform.position.z);
+                    if (vecToDestination.magnitude > 2)
                     {
                         if (!anim.GetBool("Is_Running")) anim.SetBool("Is_Running", true);
                         if (GetComponent<NavMeshObstacle>().enabled == false)
@@ -63,11 +71,13 @@ public class FollowKarlinus : MonoBehaviour {
                             anim.SetBool("Is_Running", false);
                         }
                     }
+                    else entra = true;
                     break;
-                case 5:
-                    destinationPoint = new Vector3(21.55f, 8.019f, 62.6f);
+                case 6:
+                    entra = false;
+                    destinationPoint = new Vector3(-37f, -9.1f, 95);
                     vecToDestination = new Vector3(destinationPoint.x - gameObject.transform.position.x, 0.0f, destinationPoint.z - gameObject.transform.position.z);
-                    if ((gameObject.transform.position - new Vector3(44.4f, 8.019f, 89.496f)).magnitude > 1) // posicio font
+                    if ((gameObject.transform.position - new Vector3(14.32f, -9.1f, 150.9f)).magnitude > 1) // posicio font
                     {
                         if (vecToDestination.magnitude > 1) // posicio en la que el jugador no vegi a Rat hood
                         {
@@ -81,15 +91,8 @@ public class FollowKarlinus : MonoBehaviour {
                             {
                                 anim.SetBool("Is_Running", false);
                             }
-                            //correr cap a (21.55f, 8.019f, 62.6f)
-                        }
-                        else
-                        {
-                            gameObject.transform.position = new Vector3(44.4f, 8.019f, 89.496f);// posicio font
-                            gameObject.transform.eulerAngles = new Vector3(0.0f, 90.0f, 0.0f);  //rotacio font
                         }
                     }
-                    
                     break;
                 default:
                     break;

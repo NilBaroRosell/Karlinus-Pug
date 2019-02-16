@@ -31,6 +31,8 @@ public class Respawns : MonoBehaviour {
         RespawnPoints[2] = new Vector3(-73.16f, -9.1f, 400.28f);
         RespawnPoints[3] = new Vector3(-79.1f, -27.523f, -42f);
         RespawnPoints[4] = new Vector3(100.59f, -27.56327f, 257.55f);
+
+        if (GameObject.Find("Enemigos_SM1") != null) GameObject.Find("Enemigos_SM1").SetActive(false);
     }
 
     private void LoadM1()
