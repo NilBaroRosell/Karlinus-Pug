@@ -39,7 +39,7 @@ public class FollowKarlinus : MonoBehaviour {
         {
             switch(misionsScript.indexMision)
             {
-                case 3:
+                case 6:
                     destinationPoint = karlinus.transform.position;
                     if ((destinationPoint - gameObject.transform.position).magnitude > 2)
                     {
@@ -55,7 +55,7 @@ public class FollowKarlinus : MonoBehaviour {
                         }
                     }
                     break;
-                case 4:
+                case 8:
                     destinationPoint = new Vector3 (-58.87f,-9.1f,112.47f);
                     vecToDestination = new Vector3(destinationPoint.x - ratHoodTransform.position.x, 0.0f, destinationPoint.z - ratHoodTransform.transform.position.z);
                     if (vecToDestination.magnitude > 2)
@@ -73,7 +73,7 @@ public class FollowKarlinus : MonoBehaviour {
                     }
                     else entra = true;
                     break;
-                case 6:
+                case 11:
                     entra = false;
                     destinationPoint = new Vector3(-37f, -9.1f, 95);
                     vecToDestination = new Vector3(destinationPoint.x - gameObject.transform.position.x, 0.0f, destinationPoint.z - gameObject.transform.position.z);

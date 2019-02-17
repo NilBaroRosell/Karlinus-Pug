@@ -203,23 +203,23 @@ public class misions : MonoBehaviour {
                     {
                         case 0:
                             misionIndex = 0;
-                            StartCoroutine(ExecuteAfterTime(5.0f));//14
+                            StartCoroutine(ExecuteAfterTime(14.0f));
                             break;
                         case 1:
                             secundaryCamera.SetActive(false);
                             secundaryCameraDestination.SetActive(false);
-                            misionIndex = 3;
+                            misionIndex = 6;
                             break;
                         case 2:
                             secundaryCamera.SetActive(false);
                             secundaryCameraDestination.SetActive(false);
                             RatHood.pointObject.GetComponent<NavMeshAgent>().Warp(new Vector3(-64.28f, -9.1f, 89.17f));
-                            misionIndex = 4;
+                            misionIndex = 8;
                             break;
                         case 3:
                             secundaryCamera.SetActive(false);
                             secundaryCameraDestination.SetActive(false);
-                            misionIndex = 9;
+                            misionIndex = 14;
                             break;
                     }
                     break;
@@ -582,88 +582,118 @@ public class misions : MonoBehaviour {
     {
         switch (misionIndex)
         {
-            case 0: // primera camera (mirant als gats)
+            case 0:
                 playerMovement.state = movement.playerState.HITTING;
                 Player.transform.position = new Vector3(30.765f, -27.523f, -38.321f);
                 Player.transform.eulerAngles = new Vector3(0.0f, 90f, 0.0f);
-                /*reference.transform.position = Player.transform.position;
-                reference.transform.rotation = Player.transform.rotation;*/
-                
-                // si han passat els gats
                 if (nextEvent)
                 {
                     misionIndex++;
                     nextEvent = false;
                     Player.transform.position = new Vector3(31.6725f, -27.523f, -38.321f);
-                    //reference.transform.position = Player.transform.position;
                     Player.transform.eulerAngles = new Vector3(0.0f, 180.0f, 0.0f);
-                    //reference.transform.rotation = Player.transform.rotation;
-                    /*secundaryCamera.transform.position = Vector3.Lerp(secundaryCamera.transform.position, secundaryCameraDestination.transform.position, 0.25f * Time.deltaTime);
-                    secundaryCamera.transform.rotation = Quaternion.Lerp(secundaryCamera.transform.rotation, secundaryCameraDestination.transform.rotation, 0.25f * Time.deltaTime);*/
                     secundaryCamera.SetActive(false);
-                    secundaryCameraDestination.SetActive(false);
                     playerMovement.state = movement.playerState.IDLE;
+                    HUD_Script.showSM_1Dialog(0, 38);
                 }
                 break;
-            case 1: // anar fins al rat hood
-                
+            case 1: 
                 if (loadRespawn.BoxTriggers[0].activeSelf == false)
                 {
                     playerMovement.state = movement.playerState.HITTING;
                     Player.transform.position = new Vector3(32.44f, -27.523f, -43f);
                     Player.transform.eulerAngles = new Vector3(0.0f, 180.0f, 0.0f);
-                    /*reference.transform.position = Player.transform.position;
-                    reference.transform.rotation = Player.transform.rotation;*/
                     misionIndex++;
-                    StartCoroutine(ExecuteAfterTime(5.0f));// 10
+                    HUD_Script.showSM_1Dialog(1, 38);
+                    secundaryCamera.SetActive(true);
+                    secundaryCamera.transform.position = new Vector3(33.09f, -23.33f, -38.72f);
+                    secundaryCamera.transform.eulerAngles = new Vector3(30.0f, 180.0f, 0.0f);
                 }
                 break;
-            case 2: // anar fins a l'entrada de les clavagueres
-                if(nextEvent)
+            case 2:
+                if (HUD.finalTime - HUD.startTime > 300)
                 {
-                    nextEvent = false;
+                    HUD_Script.showSM_1Dialog(2, 38);
+                    misionIndex++;
+                }
+                break;
+            case 3:
+                if(HUD.finalTime - HUD.startTime > 300)
+                {
+                    HUD_Script.showSM_1Dialog(3, 38);
+                    misionIndex++;
+                }
+                break;
+            case 4:
+                if(HUD.finalTime - HUD.startTime > 300)
+                {
+                    HUD_Script.showSM_1Dialog(4, 38);
+                    misionIndex++;
+                }
+                break;
+            case 5:
+                if (HUD.finalTime - HUD.startTime > 300)
+                {
                     playerMovement.state = movement.playerState.IDLE;
+                    HUD_Script.showSM_1Objective(0);
+                    HUD_Script.showSM_1Helps(0, 38);
+                    secundaryCamera.SetActive(false);
                     misionIndex++;
                     respawnIndex++;
                 }
                 break;
-            case 3:
+            case 6:
                 if (loadRespawn.BoxTriggers[1].activeSelf == false)
                 {
                     misionIndex++;
                     respawnIndex++;
                     changeSceneSM1 = true;
                     LoadScene.respawnToLoad = LoadScene.Scenes.SEWER_1;
-                    /*if (GameObject.Find("RatHood") != null) GameObject.Find("RatHood")*/
-
-                }
-                break;
-            case 4:
-                if (loadRespawn.BoxTriggers[2].activeSelf == false)
-                {
-                    misionIndex++;
-                    playerMovement.state = movement.playerState.HITTING;
-                    StartCoroutine(ExecuteAfterTime(5.0f));// 10
-                }
-                break;
-            case 5:
-                if (nextEvent)
-                {
-                    misionIndex++;
-                    playerMovement.state = movement.playerState.HITTING;
-                    StartCoroutine(ExecuteAfterTime(5.0f));// 5 (parlar amb rat hood)
-                    nextEvent = false;
-                }
-                break;
-            case 6:
-                if (nextEvent)
-                {
-                    misionIndex++;
-                    StartCoroutine(ExecuteAfterTime(5.0f));// 5 (deixar marxar a rat hood)
-                    nextEvent = false;
                 }
                 break;
             case 7:
+                if(SceneManager.GetActiveScene().name == "sewer")
+                {
+                    HUD_Script.showSM_1Dialog(5, 38);
+                    misionIndex++;
+                }
+                break;
+            case 8:
+                if (loadRespawn.BoxTriggers[2].activeSelf == false)
+                {
+                    misionIndex++;
+                    secundaryCamera.SetActive(true);
+                    secundaryCamera.transform.position = new Vector3(-62.32f, -4.6f, 106.72f);
+                    secundaryCamera.transform.eulerAngles = new Vector3(30.0f, 50.0f, 0.0f);
+                    playerMovement.state = movement.playerState.HITTING;
+                    HUD_Script.showSM_1Dialog(6, 38);
+                }
+                break;
+            case 9:
+                if (HUD.finalTime - HUD.startTime > 300)
+                {
+                    HUD_Script.showSM_1Dialog(7, 38);
+                    misionIndex++;
+                }
+                break;
+            case 10:
+                if (HUD.finalTime - HUD.startTime > 300)
+                {
+                    HUD_Script.showSM_1Dialog(8, 38);
+                    misionIndex++;
+                }
+                break;
+            case 11:
+                if (HUD.finalTime - HUD.startTime > 300)
+                {
+                    HUD_Script.showSM_1Objective(1);
+                    HUD_Script.showSM_1Helps(1, 38);
+                    secundaryCamera.SetActive(false);
+                    misionIndex++;
+                    StartCoroutine(ExecuteAfterTime(5.0f));
+                }
+                break;
+            case 12:
                 if(nextEvent)
                 {
                     nextEvent = false;
@@ -672,24 +702,30 @@ public class misions : MonoBehaviour {
                     misionIndex++;
                 }
                 break;
-            case 8:
+            case 13:
                 if(loadRespawn.BoxTriggers[3].activeSelf == false)
                 {
                     misionIndex++;
-                    playerMovement.state = movement.playerState.HITTING;
-                    StartCoroutine(ExecuteAfterTime(5.0f));// 10
-                }
-                break;
-            case 9:
-                if (nextEvent)
-                {
-                    nextEvent = false;
-                    playerMovement.state = movement.playerState.IDLE;
-                    misionIndex++;
                     respawnIndex++;
+                    playerMovement.state = movement.playerState.HITTING;
+                    HUD_Script.showSM_1Dialog(9, 38);
                 }
                 break;
-            case 10:
+            case 14:
+                if (HUD.finalTime - HUD.startTime > 300)
+                {
+                    HUD_Script.showSM_1Dialog(10, 38);
+                    misionIndex++;
+                }
+                break;
+            case 15:
+                if (HUD.finalTime - HUD.startTime > 300)
+                {
+                    HUD_Script.showSM_1Objective(2);
+                    misionIndex++;
+                }
+                break;
+            case 16:
                 if(loadRespawn.BoxTriggers[4].activeSelf == false)
                 {
                     ActualMision = Misions.NONE;
