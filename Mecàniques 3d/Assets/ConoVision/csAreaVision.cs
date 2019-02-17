@@ -130,6 +130,7 @@ public class csAreaVision : MonoBehaviour {
         canAtackRef = 0.0f;
         stuckPos = Vector3.zero;
         Physics.IgnoreLayerCollision(9, 8);
+        if (GetComponent<AudioListener>() == null) gameObject.AddComponent<AudioSource>();
         meshFilter = transform.GetChild(2).GetChild(2).GetChild(0).GetChild(0).GetChild(1).GetChild(0).GetComponent<MeshFilter>();
         meshFilter.mesh = Cono();
         initialPosition = meshFilter.mesh.vertices;
