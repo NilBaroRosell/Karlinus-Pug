@@ -145,6 +145,7 @@
     <Compile Include="Assets\SoundCucumber.cs" />
     <Compile Include="Assets\SoundEnemy.cs" />
     <Compile Include="Assets\SoundPlayer.cs" />
+    <Compile Include="Assets\torchManager.cs" />
     <None Include="Assets\Fantasy Skybox FREE\Readme.txt" />
     <None Include="Assets\2Ginge\GritBuildupShader\Shaders\GritBuildupShader.shader" />
     <None Include="Assets\read me.txt" />
