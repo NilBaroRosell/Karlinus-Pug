@@ -307,27 +307,6 @@ public class kill_cono_vision : MonoBehaviour {
         if(targets[targetI].target != null && targets[targetI].ghostRef + 0.1f < Time.realtimeSinceStartup)
             targets[targetI].target.transform.GetChild(4).gameObject.SetActive(false);
     }
-   /* public void finishAnim(int message)
-    {
-        if (message == 1)
-        {
-            targetI++;
-            anim.SetBool("Is_Damaging", false);
-            stuckReference = Time.realtimeSinceStartup;
-            liquidKill.showLiquid();
-            liquidAgent.enabled = true;
-            if (targetI < targets.Length && targets[targetI].seen)
-            {
-                liquidAgent.SetDestination(playerPos);
-            }
-            else
-            {
-                actualState = killState.RETURNING;
-                liquidAgent.SetDestination(playerPos);
-            }
-        }
-
-    }*/
 
     private void draw_Weapon()
     {

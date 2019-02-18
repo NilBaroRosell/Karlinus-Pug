@@ -207,6 +207,16 @@ public class csAreaVision : MonoBehaviour {
                         atacking = true;
                         playerAnim.SetBool("Is_Dying", true);
                     }
+                    else if (Input.GetKeyDown(KeyCode.Q) && liquidState.hidratation >= 0 && !GameObject.Find("Jugador").GetComponent<liquidState>().cooldown)
+                    {
+                        StartCoroutine(CheckStuck(10.0f));
+                        playerScaped();
+                        GameObject.Find("Jugador").GetComponent<movement>().liquidTransformation();
+                        for (int i = 0; i < EnemyManager.Enemies.Length; i++)
+                        {
+                            if (EnemyManager.Enemies[i].GetComponent<csAreaVision>().actualState == enemyState.FIGHTING) EnemyManager.Enemies[i].GetComponent<csAreaVision>().playerScaped();
+                        }
+                    }
                 }
                 break;
             case 10:
@@ -352,6 +362,15 @@ public class csAreaVision : MonoBehaviour {
             stuckPos = transform.position;
             StartCoroutine(CheckStuck(1));
         }
+        else if(actualState == enemyState.SEARCHING)
+        {
+            actualState = enemyState.PATROLLING;
+            lastState = enemyState.SEARCHING;
+            speed = 10;
+            alertRend.material.SetColor("_Color", Color.green);
+            KarlinusEspectre.transform.position = new Vector3(0.15f, 0.023f, -0.7f) * -1 + transform.position;
+            KarlinusEspectre.SetActive(false);
+        }
     }
 
     IEnumerator ExecuteAfterTime(float time)
@@ -385,6 +404,16 @@ public class csAreaVision : MonoBehaviour {
         yield return new WaitForSeconds(time);
 
         loadScreen.Instancia.CargarEscena("DEAD");
+    }
+
+    public void playerScaped()
+    {
+        StartCoroutine(CheckStuck(10.0f));
+        destinationPoint = this.gameObject.GetComponent<RandomDestination>().RandomNavmeshLocation(this.gameObject, 75);
+        patrollingPosition = transform.position;
+        speed = 50;
+        actualState = enemyState.SEARCHING;
+        lastState = enemyState.DETECTING;
     }
 
     void IA_Controller()
@@ -437,7 +466,7 @@ public class csAreaVision : MonoBehaviour {
                 actualString = "P";
                 break;
             case enemyState.SEARCHING:
-                if (lastState == enemyState.PATROLLING) lastSeenPosition = GameObject.Find("Jugador").transform.position;
+                //if (lastState == enemyState.PATROLLING) lastSeenPosition = GameObject.Find("Jugador").transform.position;
                 if (playerAnim.GetBool("Is_Damaging") && GetComponent<Collider>().enabled == false) speed = 0;
                 KarlinusEspectre.transform.position = destinationPoint;
                 if (discoveredRef + 0.25f < Time.realtimeSinceStartup && searchingState)

@@ -113,10 +113,7 @@ public class movement : MonoBehaviour
                     cooldown = checkCooldown.cooldown;
                     if (Input.GetKeyDown(KeyCode.Q) && !cooldown && liquidState.hidratation >= 0)
                     {
-                        rb.useGravity = false;
-                        GetComponent<Collider>().enabled = false;
-                        LiquidState = true;
-                        state = playerState.LIQUID;
+                        liquidTransformation();
                     }
 
 
@@ -225,6 +222,14 @@ public class movement : MonoBehaviour
                 }
             }
         }
+    }
+
+    public void liquidTransformation()
+    {
+        rb.useGravity = false;
+        GetComponent<Collider>().enabled = false;
+        LiquidState = true;
+        state = playerState.LIQUID;
     }
 
     public void movePlayer()
