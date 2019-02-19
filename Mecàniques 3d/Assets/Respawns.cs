@@ -56,6 +56,31 @@ public class Respawns : MonoBehaviour {
         Mision_Objects[2] = GameObject.Find("EnemyManager");
     }
 
+    private void LoadM2()
+    {
+        //MISION 2 RESPAWN POINTS
+        RespawnPoints = new Vector3[3];
+        RespawnPoints[0] = new Vector3(5.85f, -27.52068f, -41.88f);
+        RespawnPoints[1] = new Vector3(36.38f, -27.52068f, -34.99f);
+        RespawnPoints[2] = new Vector3(21.93f, 13.06f, -23.75f);
+
+        //MISION 2 BOX TRIGGERS
+        All_Mision_Objects.transform.GetChild(1).gameObject.SetActive(true);
+        BoxTriggers = new GameObject[All_Mision_Objects.transform.GetChild(1).GetChild(0).transform.childCount];
+        for (int i = 0; i < BoxTriggers.Length; i++) BoxTriggers[i] = All_Mision_Objects.transform.GetChild(1).GetChild(0).GetChild(i).gameObject;
+
+        //MISION 2 ENEMIES
+        Enemies = GameObject.FindGameObjectsWithTag("enemy");
+
+        //MISION 2 OTHER OBJECTS
+        Mision_Objects = new GameObject[3];
+        if (GameObject.Find("dfk_doorframe") != null) Mision_Objects[0] = GameObject.Find("dfk_doorframe"); //PUB door trigger
+        Mision_Objects[1] = All_Mision_Objects.transform.GetChild(1).GetChild(1).GetChild(0).gameObject; //Servant
+        Mision_Objects[Mision_Objects.Length-1] = 
+            All_Mision_Objects.transform.GetChild(1).GetChild(1).GetChild(All_Mision_Objects.transform.GetChild(1).GetChild(1).transform.childCount-1).gameObject;//Zone Controll
+
+    }
+
     public Vector3 NONE()
     {
         LoadNONE();
@@ -79,20 +104,48 @@ public class Respawns : MonoBehaviour {
         switch(checkPoint)
         {
             case 0:
+                LoadScene.respawnToLoad = InitialRespawns.SEWER_1;
                 Mision_Objects[1].SetActive(false);
                 Enemies[2].SetActive(false);
                 Mision_Objects[0].SetActive(false);
                 Mision_Objects[2].SetActive(false);
                 break;
             case 1:
+                LoadScene.respawnToLoad = InitialRespawns.SEWER_1;
                 if (GameObject.Find("Enemigo (3)") != null) GameObject.Find("Enemigo (3)").SetActive(false);
                 for (int i = 3; i < BoxTriggers.Length; i++) BoxTriggers[i].SetActive(true);
                 Mision_Objects[2].GetComponent<EnemyManager>().maxDist = 125;
                 break;
             case 2:
+                LoadScene.respawnToLoad = InitialRespawns.SEWER_1;
                 if (GameObject.Find("Zone_1") != null) GameObject.Find("Zone_1").SetActive(false);
                 for (int i = 6; i < BoxTriggers.Length; i++) BoxTriggers[i].SetActive(true);
                 Mision_Objects[0].SetActive(true);
+                break;
+            default:
+                break;
+        }
+        //PLAYER RESPAWN
+        return RespawnPoints[checkPoint];
+    }
+
+    public Vector3 M2(int checkPoint)
+    {
+        //LOAD M2
+        LoadM2();
+        //OBJECTS RESPAWN
+        switch (checkPoint)
+        {
+            case 0:
+            case 1:
+                LoadScene.respawnToLoad = InitialRespawns.CITY_1;
+                Mision_Objects[1].SetActive(false);
+                break;
+            case 2:
+                LoadScene.respawnToLoad = InitialRespawns.PUB_INSIDE;
+                Mision_Objects[0].SetActive(false);
+                Mision_Objects[1].SetActive(false);
+                Mision_Objects[Mision_Objects.Length - 1].SetActive(false);
                 break;
             default:
                 break;

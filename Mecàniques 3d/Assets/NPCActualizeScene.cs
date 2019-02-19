@@ -16,7 +16,7 @@ public class NPCActualizeScene : MonoBehaviour {
 
     private void OnTriggerStay(Collider collision)
     {
-        if (Input.GetKeyDown(KeyCode.E))
+        if (collision.gameObject.tag == "Player" && Input.GetKeyDown(KeyCode.E))
         {
             misionsScript.ActualMision = misionGO;
             loadScreen.Instancia.CargarEscena(sceneToLoad);

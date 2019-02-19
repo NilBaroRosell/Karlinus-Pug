@@ -16,7 +16,7 @@ public class misions : MonoBehaviour {
     private HUD HUD_Script;
     private GameObject Player;
     private movement playerMovement;
-    private bool nextEvent;
+    public static bool nextEvent;
     private GameObject mainCamera;
     private GameObject secundaryCamera;
     private GameObject secundaryCameraDestination;
@@ -118,8 +118,27 @@ public class misions : MonoBehaviour {
 
                     break;
                 case Misions.M2:
-                    break;
-                default:
+                    Player.transform.position = loadRespawn.M2(respawnIndex);
+                    mainCamera = GameObject.Find("Main Camera");
+                    secundaryCamera = GameObject.Find("Secundary Camera");
+                    secundaryCameraDestination = GameObject.Find("Camera Destination");
+                    switch (respawnIndex)
+                    {
+                        case 0:
+                            secundaryCamera.SetActive(false);
+                            misionIndex = 0;
+                            break;
+                        case 1:
+                            secundaryCamera.SetActive(false);
+                            misionIndex = 4;
+                            break;
+                        case 2:
+                            secundaryCamera.SetActive(false);
+                            misionIndex = 5;
+                            break;
+                        default:
+                            break;
+                    }
                     break;
             }
         }
@@ -156,6 +175,9 @@ public class misions : MonoBehaviour {
                 break;
             case Misions.M1:
                 M1();
+                break;
+            case Misions.M2:
+                M2();
                 break;
 
         }
@@ -355,7 +377,82 @@ public class misions : MonoBehaviour {
         }
     }
 
-    void showMisionPoints()
+    void M2()
+    {
+        //MISION EVENTS
+        switch (misionIndex)
+        {
+            case 0:
+                if (loadRespawn.BoxTriggers[0].activeSelf == false)
+                {
+                    misionIndex++;
+                    playerMovement.state = movement.playerState.HITTING;
+                    secundaryCamera.SetActive(true);
+                    secundaryCamera.transform.position = new Vector3(66.5f, -13.7f, -29.8f);
+                    secundaryCamera.transform.eulerAngles = new Vector3(14.901f, 448.579f, -0.9480001f);
+                    Player.transform.position = new Vector3(36.38f, -27.52068f, -34.99f);
+                    StartCoroutine(ExecuteAfterTime(2.5f));
+                }
+                break;
+            case 1:
+                if(nextEvent)
+                {
+                    misionIndex++;
+                    secundaryCameraDestination.transform.position = mainCamera.transform.position + new Vector3( 0.0f, 7.0f, 0.0f);
+                    secundaryCameraDestination.transform.rotation = mainCamera.transform.rotation;
+                    StartCoroutine(ExecuteAfterTime(3.25f));
+                    nextEvent = false;
+                }
+                break;
+            case 2:
+                secundaryCamera.transform.position = Vector3.Lerp(secundaryCamera.transform.position, secundaryCameraDestination.transform.position, 0.75f * Time.deltaTime);
+                secundaryCamera.transform.rotation = Quaternion.Lerp(secundaryCamera.transform.rotation, secundaryCameraDestination.transform.rotation, 0.75f * Time.deltaTime);
+                if (nextEvent)
+                {
+                    misionIndex++;
+                    secundaryCameraDestination.transform.position = mainCamera.transform.position;
+                    secundaryCameraDestination.transform.rotation = mainCamera.transform.rotation;
+                    StartCoroutine(ExecuteAfterTime(3.0f));
+                    nextEvent = false;
+                }
+                break;
+            case 3:
+                secundaryCamera.transform.position = Vector3.Lerp(secundaryCamera.transform.position, secundaryCameraDestination.transform.position, 1.25f * Time.deltaTime);
+                secundaryCamera.transform.rotation = Quaternion.Lerp(secundaryCamera.transform.rotation, secundaryCameraDestination.transform.rotation, 1.25f * Time.deltaTime);
+                if (nextEvent)
+                {
+                    playerMovement.state = movement.playerState.IDLE;
+                    secundaryCamera.SetActive(false);
+                    nextEvent = false;
+                    misionIndex++;
+                    respawnIndex++;
+                }
+                break;
+            case 4:
+                if (loadRespawn.BoxTriggers[1].activeSelf == false)
+                {
+                    respawnIndex++;
+                    misionIndex++;
+                    loadRespawn.initialRespawn = Respawns.InitialRespawns.PUB_INSIDE;
+                    loadScreen.Instancia.CargarEscena("PUB");
+                }
+                break;
+            case 5:
+                servantUnlock_NPC.canTalk = true;
+                if(nextEvent)
+                {
+                    loadRespawn.Mision_Objects[1].SetActive(true);
+                    nextEvent = false;
+                    misionIndex++;
+                }
+                break;
+            case 6:
+                Debug.Log("6");
+                break;
+        }
+    }
+
+                void showMisionPoints()
     {
         if (PrincipalMision.MisionsCompleted[(int)Misions.M3] == false)
         {

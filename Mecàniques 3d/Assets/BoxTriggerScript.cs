@@ -4,12 +4,6 @@ using UnityEngine;
 
 public class BoxTriggerScript : MonoBehaviour {
 
-
-    // Update is called once per frame
-    void FixedUpdate () {
-		
-	}
-
     private void OnTriggerEnter(Collider collision)
     {
         if (collision.gameObject.tag == "Player")

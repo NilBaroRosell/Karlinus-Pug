@@ -57,23 +57,42 @@ public class HUD : MonoBehaviour {
 
     public void showM1Objective(int text_to_show)
     {
-        M1.SetActive(true);
-        Objective.SetActive(true);       
-        Objective_text.GetComponent<Text>().text = M1.transform.GetChild(0).GetChild(text_to_show).gameObject.GetComponent<Text>().text;
-        M1.SetActive(false);
-        Objective.GetComponent<RectTransform>().position = 
-            new Vector3(Objective.GetComponent<RectTransform>().position.x, -381.4f/10, Objective.GetComponent<RectTransform>().position.z);
-        startTime = Time.frameCount;
+        if (!Objective.activeSelf)
+        {
+            M1.SetActive(true);
+            Objective.SetActive(true);
+            Objective_text.GetComponent<Text>().text = M1.transform.GetChild(0).GetChild(text_to_show).gameObject.GetComponent<Text>().text;
+            M1.SetActive(false);
+            Objective.GetComponent<RectTransform>().position =
+                new Vector3(Objective.GetComponent<RectTransform>().position.x, -381.4f / 10, Objective.GetComponent<RectTransform>().position.z);
+            startTime = Time.frameCount;
+        }
     }
     public void showM1Helps(int text_to_show, int font_to_set)
     {
-        M1.SetActive(true);
-        Helps.SetActive(true);
-        Helps_text.GetComponent<Text>().text = M1.transform.GetChild(1).GetChild(text_to_show).gameObject.GetComponent<Text>().text;
-        Helps_text.GetComponent<Text>().fontSize = font_to_set;
-        M1.SetActive(false);
-        Helps.GetComponent<RectTransform>().position =
-                    new Vector3(Helps.GetComponent<RectTransform>().position.x, -426.0f/10, Helps.GetComponent<RectTransform>().position.z);
+        if (!Helps.activeSelf)
+        {
+            M1.SetActive(true);
+            Helps.SetActive(true);
+            Helps_text.GetComponent<Text>().text = M1.transform.GetChild(1).GetChild(text_to_show).gameObject.GetComponent<Text>().text;
+            Helps_text.GetComponent<Text>().fontSize = font_to_set;
+            M1.SetActive(false);
+            Helps.GetComponent<RectTransform>().position =
+                        new Vector3(Helps.GetComponent<RectTransform>().position.x, -426.0f / 10, Helps.GetComponent<RectTransform>().position.z);
+        }
         startTime = Time.frameCount;
+    }
+
+    public void showZoneWarning()
+    {
+        if (!Helps.activeSelf)
+        {
+            Helps.SetActive(true);
+            Helps_text.GetComponent<Text>().text = "Warning, you're moving away from the mission area";
+            Helps_text.GetComponent<Text>().fontSize = 50;
+            Helps.GetComponent<RectTransform>().position =
+                        new Vector3(Helps.GetComponent<RectTransform>().position.x, -426.0f / 10, Helps.GetComponent<RectTransform>().position.z);
+            startTime = Time.frameCount;
+        }
     }
 }
