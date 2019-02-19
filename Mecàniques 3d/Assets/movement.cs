@@ -100,7 +100,7 @@ public class movement : MonoBehaviour
                         else
                         {
                             if ((finishDash - startDash) > 80 && !GameObject.Find("Misiones").GetComponent<misions>().RatHood.MisionsCompleted[(int)misions.Misions.SM_1 - 4]) activateDash = true;
-                            else if ((finishDash - startDash) > 20 && GameObject.Find("Misiones").GetComponent<misions>().RatHood.MisionsCompleted[(int)misions.Misions.SM_1 - 4]) activateDash = true;
+                            else if ((finishDash - startDash) > 20 && GameObject.Find("Misiones").GetComponent<misions>().ActualMision == misions.Misions.SM_1 && SceneManager.GetActiveScene().name == "sewer") activateDash = true;
                         }
                         //Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.forward) * hit.distance, Color.yellow);
                     }

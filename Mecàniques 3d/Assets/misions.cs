@@ -175,6 +175,7 @@ public class misions : MonoBehaviour {
                         case 0:
                             misionIndex = 0;
                             StartCoroutine(ExecuteAfterTime(5.0f));
+                            movement.startSM2 = false;
                             break;
                         case 1:
                             secundaryCamera.SetActive(false);
@@ -203,7 +204,7 @@ public class misions : MonoBehaviour {
                     {
                         case 0:
                             misionIndex = 0;
-                            StartCoroutine(ExecuteAfterTime(14.0f));
+                            StartCoroutine(ExecuteAfterTime(1.0f));//14
                             break;
                         case 1:
                             secundaryCamera.SetActive(false);
@@ -213,7 +214,7 @@ public class misions : MonoBehaviour {
                         case 2:
                             secundaryCamera.SetActive(false);
                             secundaryCameraDestination.SetActive(false);
-                            RatHood.pointObject.GetComponent<NavMeshAgent>().Warp(new Vector3(-64.28f, -9.1f, 89.17f));
+                            RatHood.pointObject.GetComponentInChildren<NavMeshAgent>().Warp(new Vector3(-64.28f, -9.1f, 89.17f));
                             misionIndex = 8;
                             break;
                         case 3:
@@ -663,8 +664,8 @@ public class misions : MonoBehaviour {
                 {
                     misionIndex++;
                     secundaryCamera.SetActive(true);
-                    secundaryCamera.transform.position = new Vector3(-62.32f, -4.6f, 106.72f);
-                    secundaryCamera.transform.eulerAngles = new Vector3(30.0f, 50.0f, 0.0f);
+                    secundaryCamera.transform.position = new Vector3(-63.08f, -3.9f, 105.13f);
+                    secundaryCamera.transform.eulerAngles = new Vector3(30.0f, 40.0f, 0.0f);
                     playerMovement.state = movement.playerState.HITTING;
                     HUD_Script.showSM_1Dialog(6, 38);
                 }
@@ -691,6 +692,7 @@ public class misions : MonoBehaviour {
                     secundaryCamera.SetActive(false);
                     misionIndex++;
                     StartCoroutine(ExecuteAfterTime(5.0f));
+                    RatHood.pointObject.GetComponentInChildren<NavMeshAgent>().Warp(new Vector3(14.32f, -9.1f, 150.9f));
                 }
                 break;
             case 12:
@@ -698,7 +700,6 @@ public class misions : MonoBehaviour {
                 {
                     nextEvent = false;
                     playerMovement.state = movement.playerState.IDLE;
-                    RatHood.pointObject.GetComponent<NavMeshAgent>().Warp(new Vector3(14.32f, -9.1f, 150.9f));
                     misionIndex++;
                 }
                 break;
@@ -722,6 +723,7 @@ public class misions : MonoBehaviour {
                 if (HUD.finalTime - HUD.startTime > 300)
                 {
                     HUD_Script.showSM_1Objective(2);
+                    playerMovement.state = movement.playerState.IDLE;
                     misionIndex++;
                 }
                 break;
@@ -756,7 +758,7 @@ public class misions : MonoBehaviour {
             if (RatHood.MisionsCompleted[(int)Misions.SM_1 - 4] == false)
             {
                 RatHood.pointObject.SetActive(true);
-                RatHood.pointObject.transform.position = new Vector3(13.17202f, -31.81266f, -18.64425f) + transform.position - new Vector3 (1.6775f, 2.1f, -4.12f);
+                RatHood.pointObject.transform.position = new Vector3(13.17202f, -31.81266f, -18.64425f) + transform.position;
             }
             if (RebelCat.MisionsCompleted[(int)Misions.SM_2 - 5] == false)
             {
@@ -776,7 +778,7 @@ public class misions : MonoBehaviour {
             if (RatHood.MisionsCompleted[(int)Misions.SM_1 - 4] == false)
             {
                 RatHood.pointObject.SetActive(true);
-                RatHood.pointObject.transform.position = new Vector3(13.17202f, -31.81266f, -18.64425f) + transform.position - new Vector3 (1.6775f, 2.1f, -4.12f);
+                RatHood.pointObject.transform.position = new Vector3(13.17202f, -31.81266f, -18.64425f) + transform.position;
             }
             else if (RatHood.MisionsCompleted[(int)Misions.SM_4 - 6] == false)
             {

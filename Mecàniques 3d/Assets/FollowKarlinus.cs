@@ -40,6 +40,7 @@ public class FollowKarlinus : MonoBehaviour {
             switch(misionsScript.indexMision)
             {
                 case 6:
+                    anim.SetBool("Is_Idle", false);
                     destinationPoint = karlinus.transform.position;
                     if ((destinationPoint - gameObject.transform.position).magnitude > 2)
                     {
@@ -47,6 +48,7 @@ public class FollowKarlinus : MonoBehaviour {
                         if (GetComponent<NavMeshObstacle>().enabled == false)
                         {
                             ratHoodAgent.SetDestination(destinationPoint);
+                            gameObject.transform.LookAt(destinationPoint);
                             ratHoodAgent.speed = 7;
                         }
                         else
@@ -56,6 +58,7 @@ public class FollowKarlinus : MonoBehaviour {
                     }
                     break;
                 case 8:
+                    anim.SetBool("Is_Idle", false);
                     destinationPoint = new Vector3 (-58.87f,-9.1f,112.47f);
                     vecToDestination = new Vector3(destinationPoint.x - ratHoodTransform.position.x, 0.0f, destinationPoint.z - ratHoodTransform.transform.position.z);
                     if (vecToDestination.magnitude > 2)
@@ -64,6 +67,7 @@ public class FollowKarlinus : MonoBehaviour {
                         if (GetComponent<NavMeshObstacle>().enabled == false)
                         {
                             ratHoodAgent.SetDestination(destinationPoint);
+                            gameObject.transform.LookAt(destinationPoint);
                             ratHoodAgent.speed = 5;
                         }
                         else
@@ -73,7 +77,13 @@ public class FollowKarlinus : MonoBehaviour {
                     }
                     else entra = true;
                     break;
+                case 9:
+                    anim.SetBool("Is_Running", false);
+                    anim.SetBool("Is_Idle", true);
+                    gameObject.transform.LookAt(karlinus.transform.position);
+                    break;
                 case 11:
+                    anim.SetBool("Is_Idle", false);
                     entra = false;
                     destinationPoint = new Vector3(-37f, -9.1f, 95);
                     vecToDestination = new Vector3(destinationPoint.x - gameObject.transform.position.x, 0.0f, destinationPoint.z - gameObject.transform.position.z);
@@ -85,6 +95,7 @@ public class FollowKarlinus : MonoBehaviour {
                             if (GetComponent<NavMeshObstacle>().enabled == false)
                             {
                                 ratHoodAgent.SetDestination(destinationPoint);
+                                gameObject.transform.LookAt(destinationPoint);
                                 ratHoodAgent.speed = 5;
                             }
                             else
@@ -93,6 +104,21 @@ public class FollowKarlinus : MonoBehaviour {
                             }
                         }
                     }
+                    break;
+                case 12:
+                    anim.SetBool("Is_Running", false);
+                    anim.SetBool("Is_Idle", true);
+                    gameObject.transform.LookAt(karlinus.transform.position);
+                    break;
+                case 13:
+                    anim.SetBool("Is_Running", false);
+                    anim.SetBool("Is_Idle", true);
+                    gameObject.transform.LookAt(karlinus.transform.position);
+                    break;
+                case 14:
+                    anim.SetBool("Is_Running", false);
+                    anim.SetBool("Is_Idle", true);
+                    gameObject.transform.LookAt(karlinus.transform.position);
                     break;
                 default:
                     break;
