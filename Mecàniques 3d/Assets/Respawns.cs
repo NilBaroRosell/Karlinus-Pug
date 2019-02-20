@@ -59,10 +59,11 @@ public class Respawns : MonoBehaviour {
     private void LoadM2()
     {
         //MISION 2 RESPAWN POINTS
-        RespawnPoints = new Vector3[3];
+        RespawnPoints = new Vector3[4];
         RespawnPoints[0] = new Vector3(5.85f, -27.52068f, -41.88f);
         RespawnPoints[1] = new Vector3(36.38f, -27.52068f, -34.99f);
         RespawnPoints[2] = new Vector3(21.93f, 13.06f, -23.75f);
+        RespawnPoints[3] = new Vector3(83.48f, -27.52f, -34.6f);
 
         //MISION 2 BOX TRIGGERS
         All_Mision_Objects.transform.GetChild(1).gameObject.SetActive(true);
@@ -146,6 +147,12 @@ public class Respawns : MonoBehaviour {
                 Mision_Objects[0].SetActive(false);
                 Mision_Objects[1].SetActive(false);
                 Mision_Objects[Mision_Objects.Length - 1].SetActive(false);
+                break;
+            case 3:
+                LoadScene.respawnToLoad = InitialRespawns.PUB_OUTSIDE;
+                Mision_Objects[1].SetActive(true);
+                Mision_Objects[1].transform.position = new Vector3(74.3f, -27.52f, -34.519f);
+                Servant.patrollingIndex = 3;
                 break;
             default:
                 break;

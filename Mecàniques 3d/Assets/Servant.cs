@@ -18,7 +18,7 @@ public class Servant : MonoBehaviour {
     Vector3 patrollingPosition;
 
     private Rigidbody rb;
-    private Animator anim;
+    static Animator anim;
     static Animator playerAnim;
     private movement playerMovement;
     private float maxDist;
@@ -29,7 +29,7 @@ public class Servant : MonoBehaviour {
     public GameObject[] objectPoint;
     private Vector3[] Points;
     public float[] StopTime;
-    private int patrollingIndex;
+    public static int patrollingIndex;
     private bool stoped;
     GameObject Pepino;
     public Vector3 lastSeenPosition;
@@ -125,7 +125,6 @@ public class Servant : MonoBehaviour {
     // Use this for initialization
     void Awake()
     {
-        GetComponent<NavMeshObstacle>().enabled = false;
         disabler = GetComponent<csAreaVision>();
         if (GameObject.Find("EnemyManager") != null) maxDist = GameObject.Find("EnemyManager").GetComponent<EnemyManager>().maxDist;
         else maxDist = 100;
@@ -133,13 +132,12 @@ public class Servant : MonoBehaviour {
         stuckPos = Vector3.zero;
         Physics.IgnoreLayerCollision(9, 8);
         if (GetComponent<AudioListener>() == null) gameObject.AddComponent<AudioSource>();
-        meshFilter = transform.GetChild(2).GetChild(2).GetChild(0).GetChild(0).GetChild(1).GetChild(0).GetComponent<MeshFilter>();
+        meshFilter = transform.GetChild(1).GetChild(2).GetChild(0).GetChild(0).GetChild(1).GetChild(0).GetComponent<MeshFilter>();
         meshFilter.mesh = Cono();
         initialPosition = meshFilter.mesh.vertices;
         initialUV = meshFilter.mesh.uv;
         rb = GetComponent<Rigidbody>();
         anim = GetComponent<Animator>();
-        anim.SetBool("Is_Walking", true);
         atackRefTaken = false;
         atacking = false;
         searchingState = true;
@@ -154,7 +152,6 @@ public class Servant : MonoBehaviour {
         transform.GetChild(4).gameObject.transform.position = new Vector3(0.15f, 0.023f, -0.7f) * -1 + transform.position;
         transform.GetChild(4).gameObject.SetActive(false);
         stoped = true;
-        Pepino = GameObject.Find("Pepino");
         playerMovement = GameObject.Find("Jugador").GetComponent<movement>();
         playerDist = new Vector3(GameObject.Find("Jugador").transform.position.x - rb.transform.position.x, 0.0f, GameObject.Find("Jugador").transform.position.z - rb.transform.position.z);
         discovered = false;
@@ -164,8 +161,6 @@ public class Servant : MonoBehaviour {
         atackRef = Time.realtimeSinceStartup;
         lastSeenPosition = new Vector3(0.0f, 0.0f, 0.0f);
         alertRend = transform.GetChild(3).GetComponent<Renderer>();
-        // alertRend.material.shader = Shader.Find("_Color");
-        alertRend.material.SetColor("_Color", Color.green);
         enemyAgent = this.GetComponent<NavMeshAgent>();
         if (enemyAgent == null)
         {
@@ -241,6 +236,7 @@ public class Servant : MonoBehaviour {
     // Update is called once per frame
     void FixedUpdate()
     {
+        if (anim == null) Start();
         IA_Controller();
         AnimController();
     }
@@ -249,19 +245,16 @@ public class Servant : MonoBehaviour {
     {
         destinationPoint.y = transform.position.y + 0.8f;
         vecEnemy1 = new Vector3(destinationPoint.x - rb.transform.position.x, 0.0f, destinationPoint.z - rb.transform.position.z);
-        if (oldPosition != transform.position || oldRotation != transform.rotation || oldScale != transform.localScale)
-        {
-
-            oldPosition = transform.position;
-            oldRotation = transform.rotation;
-            oldScale = transform.localScale;
-        }
         meshFilter.mesh = areaMesh(meshFilter.mesh);
-        if (vecEnemy1.magnitude < 1)
+
+            if (vecEnemy1.magnitude < 1)
         {
             patrollingIndex++;
             if (patrollingIndex >= Points.Length) patrollingIndex = 0;
+            else if (patrollingIndex == 3) misions.nextEvent = true;
             destinationPoint = Points[patrollingIndex];
+            Debug.Log(patrollingIndex);
+            stoped = true;
             StartCoroutine(ExecuteAfterTime(StopTime[patrollingIndex]));
         }
     }
@@ -270,6 +263,7 @@ public class Servant : MonoBehaviour {
     {
         if (stoped)
         {
+            enemyAgent.speed = 0;
             anim.SetBool("Walk", false);
             anim.SetBool("Backward", false);
             anim.SetBool("Idle", true);
@@ -279,6 +273,28 @@ public class Servant : MonoBehaviour {
             switch (patrollingIndex)
             {
                 case 0:
+                case 1:
+                case 2:
+                default:
+                    enemyAgent.speed = 1;
+                    anim.SetBool("Walk", true);
+                    anim.SetBool("Backward", false);
+                    anim.SetBool("Idle", false);
+                    rb.transform.LookAt(destinationPoint);
+                    enemyAgent.SetDestination(destinationPoint);
+                    break;
+                case 9:
+                case 14:
+                case 18:
+                case 21:
+                case 22:
+                    enemyAgent.speed = 2;
+                    anim.SetBool("Walk", false);
+                    anim.SetBool("Backward", true);
+                    anim.SetBool("Idle", false);
+                    rb.transform.LookAt(destinationPoint);
+                    enemyAgent.SetDestination(destinationPoint);
+                    transform.eulerAngles = transform.eulerAngles + new Vector3(0.0f, 180.0f, 0.0f);
                     break;
             }
         }
@@ -289,5 +305,10 @@ public class Servant : MonoBehaviour {
         yield return new WaitForSeconds(time);
 
         stoped = false;
+    }
+
+    void OnLevelWasLoaded()
+    {
+        Start();
     }
 }

@@ -138,6 +138,10 @@ public class misions : MonoBehaviour {
                             break;
                         default:
                             break;
+                        case 3:
+                            secundaryCamera.SetActive(false);
+                            misionIndex = 8;
+                            break;
                     }
                     break;
             }
@@ -447,7 +451,24 @@ public class misions : MonoBehaviour {
                 }
                 break;
             case 6:
-                Debug.Log("6");
+                if(nextEvent)
+                {
+                    nextEvent = false;
+                    misionIndex++;
+                    loadRespawn.Mision_Objects[1].SetActive(false);
+                    loadRespawn.BoxTriggers[2].SetActive(true);
+                }
+                break;
+            case 7:
+                if(loadRespawn.BoxTriggers[2].activeSelf == false)
+                {
+                    misionIndex++;
+                    respawnIndex++;
+                    loadRespawn.initialRespawn = Respawns.InitialRespawns.PUB_OUTSIDE;
+                    loadScreen.Instancia.CargarEscena("city");
+                }
+                break;
+            case 8:
                 break;
         }
     }
