@@ -27,13 +27,13 @@ public class Servant : MonoBehaviour {
 
     //Patrol points and variables
     public GameObject[] objectPoint;
-    private Vector3[] Points;
+    public static Vector3[] Points;
     public float[] StopTime;
     public static int patrollingIndex;
     private bool stoped;
     GameObject Pepino;
     public Vector3 lastSeenPosition;
-    private Vector3 destinationPoint;
+    public static Vector3 destinationPoint;
     private Vector3 vecEnemy1;
     private Vector3 rbDirection;
     public Vector3 playerDist;
@@ -173,9 +173,9 @@ public class Servant : MonoBehaviour {
 
     void Start()
     {
+        anim = GetComponent<Animator>();
         anim.enabled = true;
         source = GetComponent<AudioSource>();
-        anim = GetComponent<Animator>();
         StartCoroutine(ExecuteAfterTime(StopTime[patrollingIndex]));
     }
 
@@ -245,12 +245,15 @@ public class Servant : MonoBehaviour {
     {
         destinationPoint.y = transform.position.y + 0.8f;
         vecEnemy1 = new Vector3(destinationPoint.x - rb.transform.position.x, 0.0f, destinationPoint.z - rb.transform.position.z);
-        meshFilter.mesh = areaMesh(meshFilter.mesh);
 
             if (vecEnemy1.magnitude < 1)
         {
             patrollingIndex++;
-            if (patrollingIndex >= Points.Length) patrollingIndex = 0;
+            if (patrollingIndex >= Points.Length)
+            {
+                misions.nextEvent = true;
+                Destroy(this.gameObject);
+            }
             else if (patrollingIndex == 3) misions.nextEvent = true;
             destinationPoint = Points[patrollingIndex];
             Debug.Log(patrollingIndex);

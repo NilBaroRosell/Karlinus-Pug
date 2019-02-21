@@ -378,6 +378,19 @@ public class csAreaVision : MonoBehaviour {
         yield return new WaitForSeconds(time);
 
         playerMovement.state = movement.playerState.IDLE;
+
+        DestroyEnemy();
+    }
+
+    IEnumerator playerDeath(float time)
+    {
+        yield return new WaitForSeconds(time);
+
+        loadScreen.Instancia.CargarEscena("DEAD");
+    }
+
+    public void DestroyEnemy()
+    {
         if (GameObject.Find("EnemyManager") != null)
         {
             GameObject[] aux = new GameObject[EnemyManager.Enemies.Length - 1];
@@ -397,13 +410,6 @@ public class csAreaVision : MonoBehaviour {
         }
         Debug.Log(EnemyManager.Enemies.Length);
         transform.gameObject.SetActive(false);
-    }
-
-    IEnumerator playerDeath(float time)
-    {
-        yield return new WaitForSeconds(time);
-
-        loadScreen.Instancia.CargarEscena("DEAD");
     }
 
     public void playerScaped()

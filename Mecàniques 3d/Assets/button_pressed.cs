@@ -21,6 +21,7 @@ public class button_pressed : MonoBehaviour {
                 break;
             case Respawns.InitialRespawns.CITY_1:
             case Respawns.InitialRespawns.CITY_2:
+            case Respawns.InitialRespawns.PUB_OUTSIDE:
                 loadScreen.Instancia.CargarEscena("city");
                 break;
             default:

@@ -59,11 +59,13 @@ public class Respawns : MonoBehaviour {
     private void LoadM2()
     {
         //MISION 2 RESPAWN POINTS
-        RespawnPoints = new Vector3[4];
+        RespawnPoints = new Vector3[6];
         RespawnPoints[0] = new Vector3(5.85f, -27.52068f, -41.88f);
         RespawnPoints[1] = new Vector3(36.38f, -27.52068f, -34.99f);
         RespawnPoints[2] = new Vector3(21.93f, 13.06f, -23.75f);
         RespawnPoints[3] = new Vector3(83.48f, -27.52f, -34.6f);
+        RespawnPoints[4] = new Vector3(80.1f, -27.52f, 35.57f);
+        RespawnPoints[5] = new Vector3(-7.7f, -27.52f, 151.8f);
 
         //MISION 2 BOX TRIGGERS
         All_Mision_Objects.transform.GetChild(1).gameObject.SetActive(true);
@@ -74,9 +76,10 @@ public class Respawns : MonoBehaviour {
         Enemies = GameObject.FindGameObjectsWithTag("enemy");
 
         //MISION 2 OTHER OBJECTS
-        Mision_Objects = new GameObject[3];
+        Mision_Objects = new GameObject[4];
         if (GameObject.Find("dfk_doorframe") != null) Mision_Objects[0] = GameObject.Find("dfk_doorframe"); //PUB door trigger
         Mision_Objects[1] = All_Mision_Objects.transform.GetChild(1).GetChild(1).GetChild(0).gameObject; //Servant
+        if (GameObject.Find("Enemigos M2") != null) Mision_Objects[2] = GameObject.Find("Enemigos M2"); //Enemigos
         Mision_Objects[Mision_Objects.Length-1] = 
             All_Mision_Objects.transform.GetChild(1).GetChild(1).GetChild(All_Mision_Objects.transform.GetChild(1).GetChild(1).transform.childCount-1).gameObject;//Zone Controll
 
@@ -141,18 +144,51 @@ public class Respawns : MonoBehaviour {
             case 1:
                 LoadScene.respawnToLoad = InitialRespawns.CITY_1;
                 Mision_Objects[1].SetActive(false);
+                Mision_Objects[2].SetActive(false);
+                for (int i = 1; i < BoxTriggers.Length; i++) BoxTriggers[i].SetActive(true);
                 break;
             case 2:
                 LoadScene.respawnToLoad = InitialRespawns.PUB_INSIDE;
                 Mision_Objects[0].SetActive(false);
                 Mision_Objects[1].SetActive(false);
+                Mision_Objects[2].SetActive(false);
                 Mision_Objects[Mision_Objects.Length - 1].SetActive(false);
+                for (int i = 2; i < BoxTriggers.Length; i++) BoxTriggers[i].SetActive(true);
                 break;
             case 3:
                 LoadScene.respawnToLoad = InitialRespawns.PUB_OUTSIDE;
+                Mision_Objects[0].SetActive(false);
                 Mision_Objects[1].SetActive(true);
                 Mision_Objects[1].transform.position = new Vector3(74.3f, -27.52f, -34.519f);
+                Mision_Objects[2].SetActive(true);
+                Mision_Objects[Mision_Objects.Length - 1].SetActive(false);
                 Servant.patrollingIndex = 3;
+                Servant.destinationPoint = Servant.Points[Servant.patrollingIndex];
+                for (int i = 3; i < BoxTriggers.Length; i++) BoxTriggers[i].SetActive(true);
+                break;
+            case 4:
+                LoadScene.respawnToLoad = InitialRespawns.PUB_OUTSIDE;
+                Mision_Objects[0].SetActive(false);
+                Mision_Objects[1].SetActive(true);
+                Mision_Objects[1].transform.position = new Vector3(75.1f, -27.52f, 35.57f);
+                Mision_Objects[2].SetActive(true);
+                Mision_Objects[Mision_Objects.Length - 1].SetActive(false);
+                Servant.patrollingIndex = 7;
+                Servant.destinationPoint = Servant.Points[Servant.patrollingIndex];
+                for (int i = 4; i < BoxTriggers.Length; i++) BoxTriggers[i].SetActive(true);
+                for (int i = 2; i >= 0; i--) Mision_Objects[2].transform.GetChild(i).gameObject.GetComponent<csAreaVision>().DestroyEnemy();
+                break;
+            case 5:
+                LoadScene.respawnToLoad = InitialRespawns.PUB_OUTSIDE;
+                Mision_Objects[0].SetActive(false);
+                Mision_Objects[1].SetActive(true);
+                Mision_Objects[1].transform.position = new Vector3(-13.7f, -27.52f, 151.8f);
+                Mision_Objects[2].SetActive(true);
+                Mision_Objects[Mision_Objects.Length - 1].SetActive(false);
+                Servant.patrollingIndex = 16;
+                Servant.destinationPoint = Servant.Points[Servant.patrollingIndex];
+                for (int i = 5; i < BoxTriggers.Length; i++) BoxTriggers[i].SetActive(true);
+                for (int i = 6; i >= 0; i--) Mision_Objects[2].transform.GetChild(i).gameObject.GetComponent<csAreaVision>().DestroyEnemy();
                 break;
             default:
                 break;

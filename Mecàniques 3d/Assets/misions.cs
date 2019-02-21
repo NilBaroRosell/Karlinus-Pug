@@ -6,10 +6,12 @@ using UnityEngine;
 
 public class misions : MonoBehaviour {
 
-    public GameObject normalLight;
-    public GameObject sewerLight;
+    private GameObject normalLight;
+    private GameObject sewerLight;
     public enum Misions { M1, M2, M3, M4, SM_1 = 0, SM_2 = 0, SM_3 = 0, SM_4 = 1, SM_5 = 1, SM_6 = 1, NONE = 10 };
     public  Misions ActualMision;
+    public bool editorRespawn;
+    public int editorRespawnNum;
     public static int respawnIndex;
     public static int misionIndex;
     private Respawns loadRespawn;
@@ -52,13 +54,15 @@ public class misions : MonoBehaviour {
         loadRespawn = GetComponent<Respawns>();
         misionIndex = 0;
         nextEvent = false;
-            respawnIndex = 0;
+            if (editorRespawn)
+                respawnIndex = editorRespawnNum;
+            else respawnIndex = 0;
             pauseMenu = false;
             Instance = this;
         }
         else
         {
-            DestroyObject(gameObject);
+            Destroy(gameObject);
         }
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
@@ -75,6 +79,11 @@ public class misions : MonoBehaviour {
             Cursor.lockState = CursorLockMode.Locked;
             hideMisionPoints();
             nextEvent = false;
+            if (SceneManager.GetActiveScene().name == "sewer")
+            {
+                sewerLight = GameObject.Find("Torchs Sewer");
+                normalLight = GameObject.Find("Directional Light");
+            }
             switch (ActualMision)
             {
                 case Misions.NONE:
@@ -88,7 +97,16 @@ public class misions : MonoBehaviour {
                         secundaryCameraDestination = GameObject.Find("Camera Destination");
                         secundaryCameraDestination.SetActive(false);
                     }
-                    Player.transform.position = loadRespawn.NONE();
+                    if (GameObject.Find("Torchs Sewer") != null)
+                    {
+                        sewerLight.SetActive(true);
+                        normalLight.SetActive(false);
+                    }
+                    if (GameObject.Find("Enemigos M2") != null)
+                    {
+                        GameObject.Find("Enemigos M2").SetActive(false);
+                    }
+                        Player.transform.position = loadRespawn.NONE();
                     showMisionPoints();
                     break;
                 case Misions.M1:
@@ -99,15 +117,21 @@ public class misions : MonoBehaviour {
                     switch (respawnIndex)
                     {
                         case 0:
+                            normalLight.SetActive(true);
+                            sewerLight.SetActive(false);
                             misionIndex = 0;
                             StartCoroutine(ExecuteAfterTime(5.0f));
                             break;
                         case 1:
                             secundaryCamera.SetActive(false);
                             secundaryCameraDestination.SetActive(false);
+                            sewerLight.SetActive(false);
+                            normalLight.SetActive(true);
                             misionIndex = 9;
                             break;
                         case 2:
+                            sewerLight.SetActive(true);
+                            normalLight.SetActive(false);
                             secundaryCamera.SetActive(false);
                             secundaryCameraDestination.SetActive(false);
                             HUD_Script.showM1Objective(2);
@@ -142,6 +166,14 @@ public class misions : MonoBehaviour {
                             secundaryCamera.SetActive(false);
                             misionIndex = 8;
                             break;
+                        case 4:
+                            secundaryCamera.SetActive(false);
+                            misionIndex = 9;
+                            break;
+                        case 5:
+                            secundaryCamera.SetActive(false);
+                            misionIndex = 10;
+                            break;
                     }
                     break;
             }
@@ -167,7 +199,6 @@ public class misions : MonoBehaviour {
             }
             else
             {
-                ActualMision = Misions.NONE;
                 pauseMenu = true;
                 Cursor.visible = true;
                 Cursor.lockState = CursorLockMode.None;
@@ -193,8 +224,6 @@ public class misions : MonoBehaviour {
         switch (misionIndex)
         {
             case 0:
-                normalLight.SetActive(true);
-                sewerLight.SetActive(false);
                 Color c = GameObject.Find("Logo_M1").transform.GetChild(0).GetComponent<Image>().color;
                 if (c.a < 1)
                 {
@@ -355,7 +384,6 @@ public class misions : MonoBehaviour {
                     loadRespawn.Mision_Objects[0].SetActive(true);
                     for (int i = 0; i < loadRespawn.Mision_Objects[0].transform.childCount; i++) loadRespawn.Mision_Objects[0].transform.GetChild(i).gameObject.SetActive(true);
                     GameObject.Find("Zone_1").SetActive(false);
-                    normalLight.SetActive(false);
                     sewerLight.SetActive(true);
                     loadScreen.Instancia.CargarEscena("sewer");
                 }
@@ -469,6 +497,30 @@ public class misions : MonoBehaviour {
                 }
                 break;
             case 8:
+                if (loadRespawn.BoxTriggers[3].activeSelf == false)
+                {
+                    misionIndex++;
+                    respawnIndex++;
+                }
+                break;
+             case 9:
+                if (loadRespawn.BoxTriggers[4].activeSelf == false)
+                {
+                    misionIndex++;
+                    respawnIndex++;
+                }
+                break;
+            case 10:
+                if (loadRespawn.BoxTriggers[5].activeSelf == false && nextEvent)
+                {
+                    misionIndex++;
+                    respawnIndex++;
+                    nextEvent = false;
+                    ActualMision = Misions.NONE;
+                    PrincipalMision.MisionsCompleted[1] = true;
+                    loadRespawn.initialRespawn = Respawns.InitialRespawns.PUB_OUTSIDE;
+                    loadScreen.Instancia.CargarEscena("city");
+                }
                 break;
         }
     }
@@ -559,10 +611,10 @@ public class misions : MonoBehaviour {
 
     void OnLevelWasLoaded()
     {
+        Debug.Log("LOADED");
+        loadRespawn.setAllFalse();
         if (SceneManager.GetActiveScene().name != "DEAD")
         {
-            Debug.Log("LOADED");
-            loadRespawn.setAllFalse();
             if (SceneManager.GetActiveScene().name == "Menu_1") respawnIndex = 0;
             Start();
         }
