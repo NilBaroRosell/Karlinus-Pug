@@ -7,6 +7,7 @@ public class HUD : MonoBehaviour {
 
     public static float startTime;
     public static float finalTime;
+    public static int timeUntilDisapear;
     public bool started;
     public GameObject Objective;
     private GameObject Objective_text;
@@ -23,6 +24,7 @@ public class HUD : MonoBehaviour {
     private float objectiveY = Screen.height / 5;
     private float HelpsY = Screen.height/4;
     private float DialogY = Screen.height / 4; //canviar valor(/4)
+    public Vector3 DialogPos;
 
     // Use this for initialization
     void Awake () {
@@ -43,7 +45,7 @@ public class HUD : MonoBehaviour {
     void Update()
     {
         finalTime = Time.frameCount;
-        if (finalTime - startTime > 300)
+        if (finalTime - startTime > timeUntilDisapear)
         {
             if (Objective.activeSelf && Objective.GetComponent<RectTransform>().position.y > -381.4f / 10) Objective.GetComponent<RectTransform>().position =
                     new Vector3(Objective.GetComponent<RectTransform>().position.x, Objective.GetComponent<RectTransform>().position.y - 40, Objective.GetComponent<RectTransform>().position.z);
@@ -51,8 +53,8 @@ public class HUD : MonoBehaviour {
             if (Helps.activeSelf && Helps.GetComponent<RectTransform>().position.y > -426.0f / 10) Helps.GetComponent<RectTransform>().position =
                     new Vector3(Helps.GetComponent<RectTransform>().position.x, Helps.GetComponent<RectTransform>().position.y - 40, Helps.GetComponent<RectTransform>().position.z);
             else Helps.SetActive(false);
-            if (Dialog.activeSelf && Dialog.GetComponent<RectTransform>().position.y > -403.0f / 10) Dialog.GetComponent<RectTransform>().position = // canviar valors (-426.0f)
-                       new Vector3(Dialog.GetComponent<RectTransform>().position.x, Dialog.GetComponent<RectTransform>().position.y - 40, Dialog.GetComponent<RectTransform>().position.z); // canviar valors (40)
+            if (Dialog.activeSelf && Dialog.GetComponent<RectTransform>().position.y > -700 / 10) Dialog.GetComponent<RectTransform>().position = //DialogPos;// canviar valors (-426.0f)
+                      new Vector3(Dialog.GetComponent<RectTransform>().position.x, -700/10, Dialog.GetComponent<RectTransform>().position.z); // canviar valors (40)
             else Dialog.SetActive(false);
         }
         else
@@ -64,7 +66,7 @@ public class HUD : MonoBehaviour {
                     new Vector3(Objective.GetComponent<RectTransform>().position.x, Objective.GetComponent<RectTransform>().position.y + 40, Objective.GetComponent<RectTransform>().position.z);
             if (Helps.activeSelf && Helps.GetComponent<RectTransform>().position.y < HelpsY) Helps.GetComponent<RectTransform>().position =
                     new Vector3(Helps.GetComponent<RectTransform>().position.x, Helps.GetComponent<RectTransform>().position.y + 40, Helps.GetComponent<RectTransform>().position.z);
-            if (Dialog.activeSelf && Dialog.GetComponent<RectTransform>().position.y < DialogY) Dialog.GetComponent<RectTransform>().position =
+           if (Dialog.activeSelf && Dialog.GetComponent<RectTransform>().position.y < DialogY) Dialog.GetComponent<RectTransform>().position = //new Vector3(DialogPos.x, //DialogPos.y + 40, DialogPos.z);
                     new Vector3(Dialog.GetComponent<RectTransform>().position.x, Dialog.GetComponent<RectTransform>().position.y + 40, Dialog.GetComponent<RectTransform>().position.z);
         }
     }
@@ -78,6 +80,7 @@ public class HUD : MonoBehaviour {
         Objective.GetComponent<RectTransform>().position = 
             new Vector3(Objective.GetComponent<RectTransform>().position.x, -381.4f/10, Objective.GetComponent<RectTransform>().position.z);
         startTime = Time.frameCount;
+        timeUntilDisapear = 300;
     }
     public void showM1Helps(int text_to_show, int font_to_set)
     {
@@ -89,6 +92,7 @@ public class HUD : MonoBehaviour {
         Helps.GetComponent<RectTransform>().position =
                     new Vector3(Helps.GetComponent<RectTransform>().position.x, -426.0f/10, Helps.GetComponent<RectTransform>().position.z);
         startTime = Time.frameCount;
+        timeUntilDisapear = 300;
     }
 
     public void showSM_1Objective(int text_to_show)
@@ -100,6 +104,7 @@ public class HUD : MonoBehaviour {
         Objective.GetComponent<RectTransform>().position =
             new Vector3(Objective.GetComponent<RectTransform>().position.x, -381.4f / 10, Objective.GetComponent<RectTransform>().position.z);
         startTime = Time.frameCount;
+        timeUntilDisapear = 300;
     }
     public void showSM_1Helps(int text_to_show, int font_to_set)
     {
@@ -111,16 +116,19 @@ public class HUD : MonoBehaviour {
         Helps.GetComponent<RectTransform>().position =
                     new Vector3(Helps.GetComponent<RectTransform>().position.x, -426.0f / 10, Helps.GetComponent<RectTransform>().position.z);
         startTime = Time.frameCount;
+        timeUntilDisapear = 300;
     }
-    public void showSM_1Dialog(int text_to_show, int font_to_set)
+    public void showSM_1Dialog(int text_to_show, int font_to_set, float posX, float posY, int time)
     {
         SM_1.SetActive(true);
         Dialog.SetActive(true);
         Dialog_text.GetComponent<Text>().text = SM_1.transform.GetChild(2).GetChild(text_to_show).gameObject.GetComponent<Text>().text;
         Dialog_text.GetComponent<Text>().fontSize = font_to_set;
         SM_1.SetActive(false);
-        Dialog.GetComponent<RectTransform>().position =
-                    new Vector3(Dialog.GetComponent<RectTransform>().position.x, -403.0f / 10, Dialog.GetComponent<RectTransform>().position.z); // canviar valors (-426.0f)
+        DialogPos = new Vector3(posX, posY, Dialog.GetComponent<RectTransform>().position.z);
+        Dialog.GetComponent<RectTransform>().position = DialogPos;
+                    //new Vector3(Dialog.GetComponent<RectTransform>().position.x, -403.0f / 10, Dialog.GetComponent<RectTransform>().position.z); // canviar valors (-426.0f)
         startTime = Time.frameCount;
+        timeUntilDisapear = 300;
     }
 }

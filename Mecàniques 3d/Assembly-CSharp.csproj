@@ -140,7 +140,6 @@
     <Compile Include="Assets\misions.cs" />
     <Compile Include="Assets\movement.cs" />
     <Compile Include="Assets\NPC.cs" />
-    <Compile Include="Assets\NPCActualizeScene.cs" />
     <Compile Include="Assets\PauseMenu.cs" />
     <Compile Include="Assets\referenceMovement.cs" />
     <Compile Include="Assets\Respawns.cs" />

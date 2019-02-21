@@ -595,7 +595,7 @@ public class misions : MonoBehaviour {
                     Player.transform.eulerAngles = new Vector3(0.0f, 180.0f, 0.0f);
                     secundaryCamera.SetActive(false);
                     playerMovement.state = movement.playerState.IDLE;
-                    HUD_Script.showSM_1Dialog(0, 38);
+                    HUD_Script.showSM_1Dialog(0, 60, 500, 80, 300);
                 }
                 break;
             case 1: 
@@ -605,35 +605,35 @@ public class misions : MonoBehaviour {
                     Player.transform.position = new Vector3(32.44f, -27.523f, -43f);
                     Player.transform.eulerAngles = new Vector3(0.0f, 180.0f, 0.0f);
                     misionIndex++;
-                    HUD_Script.showSM_1Dialog(1, 38);
+                    HUD_Script.showSM_1Dialog(1, 45, 465, 310, 300);
                     secundaryCamera.SetActive(true);
                     secundaryCamera.transform.position = new Vector3(33.09f, -23.33f, -38.72f);
                     secundaryCamera.transform.eulerAngles = new Vector3(30.0f, 180.0f, 0.0f);
                 }
                 break;
             case 2:
-                if (HUD.finalTime - HUD.startTime > 300)
+                if (HUD.finalTime - HUD.startTime > HUD.timeUntilDisapear)
                 {
-                    HUD_Script.showSM_1Dialog(2, 38);
+                    HUD_Script.showSM_1Dialog(2, 50, 465, 310, 300);
                     misionIndex++;
                 }
                 break;
             case 3:
-                if(HUD.finalTime - HUD.startTime > 300)
+                if(HUD.finalTime - HUD.startTime > HUD.timeUntilDisapear)
                 {
-                    HUD_Script.showSM_1Dialog(3, 38);
+                    HUD_Script.showSM_1Dialog(3, 50, 505, 265, 300);
                     misionIndex++;
                 }
                 break;
             case 4:
-                if(HUD.finalTime - HUD.startTime > 300)
+                if(HUD.finalTime - HUD.startTime > HUD.timeUntilDisapear)
                 {
-                    HUD_Script.showSM_1Dialog(4, 38);
+                    HUD_Script.showSM_1Dialog(4, 40, 465, 310, 150);
                     misionIndex++;
                 }
                 break;
             case 5:
-                if (HUD.finalTime - HUD.startTime > 300)
+                if (HUD.finalTime - HUD.startTime > HUD.timeUntilDisapear + 10)
                 {
                     playerMovement.state = movement.playerState.IDLE;
                     HUD_Script.showSM_1Objective(0);
@@ -655,7 +655,7 @@ public class misions : MonoBehaviour {
             case 7:
                 if(SceneManager.GetActiveScene().name == "sewer")
                 {
-                    HUD_Script.showSM_1Dialog(5, 38);
+                    HUD_Script.showSM_1Dialog(5, 50, 450, 275, 300);
                     misionIndex++;
                 }
                 break;
@@ -664,35 +664,36 @@ public class misions : MonoBehaviour {
                 {
                     misionIndex++;
                     secundaryCamera.SetActive(true);
+                    Player.transform.position = new Vector3(-59.11f, -9.3985f, 108.4447f);
+                    Player.transform.eulerAngles = new Vector3(0f,10f,0f);
                     secundaryCamera.transform.position = new Vector3(-63.08f, -3.9f, 105.13f);
                     secundaryCamera.transform.eulerAngles = new Vector3(30.0f, 40.0f, 0.0f);
                     playerMovement.state = movement.playerState.HITTING;
-                    HUD_Script.showSM_1Dialog(6, 38);
+                    HUD_Script.showSM_1Dialog(6, 35, 410, 285, 300);
                 }
                 break;
             case 9:
-                if (HUD.finalTime - HUD.startTime > 300)
+                if (HUD.finalTime - HUD.startTime > HUD.timeUntilDisapear)
                 {
-                    HUD_Script.showSM_1Dialog(7, 38);
+                    HUD_Script.showSM_1Dialog(7, 35, 410, 285, 300);
                     misionIndex++;
                 }
                 break;
             case 10:
-                if (HUD.finalTime - HUD.startTime > 300)
+                if (HUD.finalTime - HUD.startTime > HUD.timeUntilDisapear)
                 {
-                    HUD_Script.showSM_1Dialog(8, 38);
+                    HUD_Script.showSM_1Dialog(8, 50, 410, 285, 150);
                     misionIndex++;
                 }
                 break;
             case 11:
-                if (HUD.finalTime - HUD.startTime > 300)
+                if (HUD.finalTime - HUD.startTime > HUD.timeUntilDisapear + 10)
                 {
                     HUD_Script.showSM_1Objective(1);
                     HUD_Script.showSM_1Helps(1, 38);
                     secundaryCamera.SetActive(false);
                     misionIndex++;
                     StartCoroutine(ExecuteAfterTime(5.0f));
-                    RatHood.pointObject.GetComponentInChildren<NavMeshAgent>().Warp(new Vector3(14.32f, -9.1f, 150.9f));
                 }
                 break;
             case 12:
@@ -700,6 +701,7 @@ public class misions : MonoBehaviour {
                 {
                     nextEvent = false;
                     playerMovement.state = movement.playerState.IDLE;
+                    RatHood.pointObject.GetComponentInChildren<NavMeshAgent>().Warp(new Vector3(14.32f, -9.1f, 150.9f));
                     misionIndex++;
                 }
                 break;
@@ -708,19 +710,23 @@ public class misions : MonoBehaviour {
                 {
                     misionIndex++;
                     respawnIndex++;
+                    Player.transform.position = new Vector3(14.25f, -9.3985f, 143.88f);
+                    Player.transform.eulerAngles = new Vector3(0f, 0f, 0f);
+                    secundaryCamera.transform.position = new Vector3(14.27f, -3.9f, 138.89f);
+                    secundaryCamera.transform.eulerAngles = new Vector3(30.0f, 0.0f, 0.0f);
                     playerMovement.state = movement.playerState.HITTING;
-                    HUD_Script.showSM_1Dialog(9, 38);
+                    HUD_Script.showSM_1Dialog(9, 50, 112, 330, 300);
                 }
                 break;
             case 14:
-                if (HUD.finalTime - HUD.startTime > 300)
+                if (HUD.finalTime - HUD.startTime > HUD.timeUntilDisapear)
                 {
-                    HUD_Script.showSM_1Dialog(10, 38);
+                    HUD_Script.showSM_1Dialog(10, 50, 112, 330, 400);
                     misionIndex++;
                 }
                 break;
             case 15:
-                if (HUD.finalTime - HUD.startTime > 300)
+                if (HUD.finalTime - HUD.startTime > HUD.timeUntilDisapear)
                 {
                     HUD_Script.showSM_1Objective(2);
                     playerMovement.state = movement.playerState.IDLE;

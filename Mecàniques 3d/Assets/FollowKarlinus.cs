@@ -8,20 +8,17 @@ public class FollowKarlinus : MonoBehaviour {
     private GameObject karlinus;
     private Transform ratHoodTransform;
     private misions misionsScript;
-    private Rigidbody rb;
 
     private Vector3 destinationPoint;
     private Vector3 vecToDestination;
 
     NavMeshAgent ratHoodAgent;
     private Animator anim;
-    public bool entra = false;
 
     private void Awake()
     {
         ratHoodAgent = this.GetComponent<NavMeshAgent>();
         ratHoodTransform = this.GetComponent<Transform>();
-        rb = GetComponent<Rigidbody>();
         anim = GetComponent<Animator>();
         anim.SetBool("Is_Walking", true);
     }
@@ -75,16 +72,20 @@ public class FollowKarlinus : MonoBehaviour {
                             anim.SetBool("Is_Running", false);
                         }
                     }
-                    else entra = true;
+                    else
+                    {
+                        anim.SetBool("Is_Running", false);
+                        anim.SetBool("Is_Idle", true);
+                        gameObject.transform.LookAt(destinationPoint);
+                    }
                     break;
                 case 9:
                     anim.SetBool("Is_Running", false);
                     anim.SetBool("Is_Idle", true);
                     gameObject.transform.LookAt(karlinus.transform.position);
                     break;
-                case 11:
+                case 12:
                     anim.SetBool("Is_Idle", false);
-                    entra = false;
                     destinationPoint = new Vector3(-37f, -9.1f, 95);
                     vecToDestination = new Vector3(destinationPoint.x - gameObject.transform.position.x, 0.0f, destinationPoint.z - gameObject.transform.position.z);
                     if ((gameObject.transform.position - new Vector3(14.32f, -9.1f, 150.9f)).magnitude > 1) // posicio font
@@ -105,17 +106,17 @@ public class FollowKarlinus : MonoBehaviour {
                         }
                     }
                     break;
-                case 12:
-                    anim.SetBool("Is_Running", false);
-                    anim.SetBool("Is_Idle", true);
-                    gameObject.transform.LookAt(karlinus.transform.position);
-                    break;
                 case 13:
                     anim.SetBool("Is_Running", false);
                     anim.SetBool("Is_Idle", true);
                     gameObject.transform.LookAt(karlinus.transform.position);
                     break;
                 case 14:
+                    anim.SetBool("Is_Running", false);
+                    anim.SetBool("Is_Idle", true);
+                    gameObject.transform.LookAt(karlinus.transform.position);
+                    break;
+                case 15:
                     anim.SetBool("Is_Running", false);
                     anim.SetBool("Is_Idle", true);
                     gameObject.transform.LookAt(karlinus.transform.position);

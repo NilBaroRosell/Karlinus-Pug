@@ -8,7 +8,13 @@ using System;
 public class NPC : MonoBehaviour
 {
 
-    private int angulo = 140;
+    private Transform npcTransform;
+    public Vector3 destinationPoint;
+    private Vector3 vecToDestination;
+    NavMeshAgent npcAgent;
+    private Animator anim;
+
+    /*private int angulo = 140;
     private int w_ref = 40;
     private int rango = 30;
 
@@ -65,12 +71,19 @@ public class NPC : MonoBehaviour
     NavMeshAgent enemyAgent;
 
     Vector3[] initialPosition;
-    Vector2[] initialUV;
+    Vector2[] initialUV;*/
 
     // Use this for initialization
     void Awake()
     {
-        GetComponent<NavMeshObstacle>().enabled = false;
+        npcAgent = this.GetComponent<NavMeshAgent>();
+        npcTransform = this.GetComponent<Transform>();
+        anim = GetComponent<Animator>();
+        anim.SetBool("Is_Walking", true);
+        destinationPoint = new Vector3(0, 0, 0);
+        getDestination();
+
+        /*GetComponent<NavMeshObstacle>().enabled = false;
         disabler = GetComponent<csAreaVision>();
         if (GameObject.Find("EnemyManager") != null) maxDist = GameObject.Find("EnemyManager").GetComponent<EnemyManager>().maxDist;
         else maxDist = 100;
@@ -117,12 +130,12 @@ public class NPC : MonoBehaviour
         }
         else enemyAgent.SetDestination(destinationPoint);
         enemyAgent.updateRotation = false;
-        playerAnim = GameObject.Find("Jugador").GetComponent<Animator>();
+        playerAnim = GameObject.Find("Jugador").GetComponent<Animator>();*/
     }
 
     void Start()
     {
-        anim.enabled = true;
+        /*anim.enabled = true;
         source = GetComponent<AudioSource>();
         anim = GetComponent<Animator>();
         switch (speed)
@@ -176,10 +189,10 @@ public class NPC : MonoBehaviour
                 atackRefTaken = false;
                 atacking = false;
                 break;
-        }
+        }*/
     }
 
-    Mesh areaMesh(Mesh mesh)
+    /*Mesh areaMesh(Mesh mesh)
     {
 
         Mesh _mesh = new Mesh();
@@ -239,12 +252,29 @@ public class NPC : MonoBehaviour
 
 
 
-    }
+    }*/
 
     // Update is called once per frame
     void FixedUpdate()
     {
-        playerDist = new Vector3(GameObject.Find("Jugador").transform.position.x - rb.transform.position.x, 0.0f, GameObject.Find("Jugador").transform.position.z - rb.transform.position.z);
+        vecToDestination = new Vector3(destinationPoint.x - npcTransform.position.x, 0.0f, destinationPoint.z - npcTransform.transform.position.z);
+        if (vecToDestination.magnitude < 1)
+        {
+            anim.SetBool("Is_Walking", false);
+            anim.SetBool("Is_Idle", true);
+            getDestination();
+        }
+        else
+        {
+            npcAgent.SetDestination(destinationPoint);
+            gameObject.transform.LookAt(gameObject.transform.forward);
+            npcAgent.speed = 1;
+            anim.SetBool("Is_Walking", true);
+            anim.SetBool("Is_Idle", false);
+        }
+
+
+        /*playerDist = new Vector3(GameObject.Find("Jugador").transform.position.x - rb.transform.position.x, 0.0f, GameObject.Find("Jugador").transform.position.z - rb.transform.position.z);
 
         if (playerDist.magnitude <= maxDist)
         {
@@ -268,10 +298,10 @@ public class NPC : MonoBehaviour
 
         discovered = false;
         vecEnemy1.Normalize();
-        if (dead) speed = 0;
+        if (dead) speed = 0;*/
     }
 
-    public bool canBeKilled()
+    /*public bool canBeKilled()
     {
         if (actualState == enemyState.FIGHTING && canAtackRef + 2.0f > Time.realtimeSinceStartup && !playerAnim.GetBool("Is_Running"))
             return true;
@@ -287,14 +317,15 @@ public class NPC : MonoBehaviour
         actualState = enemyState.LEAVING;
         lastState = enemyState.PATROLLING;
         alertRend.material.SetColor("_Color", Color.blue);
-    }
+    }*/
 
     private void getDestination()
     {
         destinationPoint = this.gameObject.GetComponent<RandomDestination>().RandomNavmeshLocation(this.gameObject, 75);
+        destinationPoint = new Vector3(destinationPoint.x, gameObject.transform.position.y, destinationPoint.z);
     }
 
-    IEnumerator CheckStuck(float time)
+    /*IEnumerator CheckStuck(float time)
     {
         yield return new WaitForSeconds(time);
 
@@ -372,5 +403,5 @@ public class NPC : MonoBehaviour
                 }
                 break;
         }
-    }
+    }*/
 }
