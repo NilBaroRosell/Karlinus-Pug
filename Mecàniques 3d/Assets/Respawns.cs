@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Respawns : MonoBehaviour {
 
@@ -12,6 +13,7 @@ public class Respawns : MonoBehaviour {
     public GameObject []Mision_Objects;
     public InitialRespawns initialRespawn;
     private int initialRespawnIndex;
+    public bool entra = false;
 
     private void Awake()
     {
@@ -31,6 +33,8 @@ public class Respawns : MonoBehaviour {
         RespawnPoints[4] = new Vector3(100.59f, -27.56327f, 257.55f);
         RespawnPoints[5] = new Vector3(21.93f, 13.06f, -23.75f);
         RespawnPoints[6] = new Vector3(83.48f, -27.52f, -34.6f);
+
+        if (GameObject.Find("Enemigos_SM1") != null) GameObject.Find("Enemigos_SM1").SetActive(false);
     }
 
     private void LoadM1()
@@ -56,15 +60,40 @@ public class Respawns : MonoBehaviour {
         Mision_Objects[2] = GameObject.Find("EnemyManager");
     }
 
+    private void LoadSM1()
+    {
+        entra = true;
+        //RESPAWN POINTS
+        RespawnPoints = new Vector3[3];
+        RespawnPoints[0] = new Vector3(30.765f, -27.523f, -38.321f);
+        RespawnPoints[1] = new Vector3(32.44f, -27.523f, -43f);
+        RespawnPoints[2] = new Vector3(-63.28f, -9.1f, 89.17f);
+
+        //BOX TRIGGERS
+        All_Mision_Objects.transform.GetChild(4).gameObject.SetActive(true);
+        BoxTriggers = new GameObject[All_Mision_Objects.transform.GetChild(4).GetChild(0).transform.childCount];
+        for (int i = 0; i < BoxTriggers.Length; i++) BoxTriggers[i] = All_Mision_Objects.transform.GetChild(4).GetChild(0).GetChild(i).gameObject;
+
+
+        //OTHER OBJECTS
+        Mision_Objects = new GameObject[4];
+        if (GameObject.Find("Enemigos_SM1") != null) Mision_Objects[0] = GameObject.Find("Enemigos_SM1");
+        if (GameObject.Find("Secundary Camera") != null) Mision_Objects[1] = GameObject.Find("Secundary Camera");
+        if (GameObject.Find("Camera Destination") != null) Mision_Objects[2] = GameObject.Find("Camera Destination");
+        if (GameObject.Find("Enemies_SM1(1)") != null) Mision_Objects[3] = GameObject.Find("Enemies_SM1(1)");
+    }
+
     public Vector3 NONE()
     {
         LoadNONE();
         if (GameObject.Find("Zone_1") != null) GameObject.Find("Zone_1").SetActive(false);
         if (GameObject.Find("Enemies_Zone_2") != null) GameObject.Find("Enemies_Zone_2").SetActive(true);
+        if (GameObject.Find("Enemigos_SM2") != null) GameObject.Find("Enemigos_SM2").SetActive(false);
+        if (GameObject.Find("Enemies_SM1") != null) GameObject.Find("Enemies_SM1").SetActive(false);
         if (initialRespawn == InitialRespawns.NONE) return RespawnPoints[(int)LoadScene.respawnToLoad];
         else
         {
-            LoadScene.respawnToLoad = (InitialRespawns)initialRespawn;
+            LoadScene.respawnToLoad = (LoadScene.Scenes)initialRespawn;
             initialRespawnIndex = (int)initialRespawn;
             initialRespawn = InitialRespawns.NONE;
             return RespawnPoints[initialRespawnIndex];
@@ -76,7 +105,8 @@ public class Respawns : MonoBehaviour {
         //LOAD M1
         LoadM1();
         //OBJECTS RESPAWN
-        switch(checkPoint)
+        if (GameObject.Find("Enemies_SM1") != null) GameObject.Find("Enemies_SM1").SetActive(false);
+        switch (checkPoint)
         {
             case 0:
                 Mision_Objects[1].SetActive(false);
@@ -93,6 +123,48 @@ public class Respawns : MonoBehaviour {
                 if (GameObject.Find("Zone_1") != null) GameObject.Find("Zone_1").SetActive(false);
                 for (int i = 6; i < BoxTriggers.Length; i++) BoxTriggers[i].SetActive(true);
                 Mision_Objects[0].SetActive(true);
+                break;
+            default:
+                break;
+        }
+        //PLAYER RESPAWN
+        return RespawnPoints[checkPoint];
+    }
+
+    public Vector3 SM1(int checkPoint)
+    {
+        //LOAD
+        LoadSM1();
+        if (GameObject.Find("Zone_1") != null) GameObject.Find("Zone_1").SetActive(false);
+        if (GameObject.Find("Enemies_Zone_2") != null) GameObject.Find("Enemies_Zone_2").SetActive(false);
+        if (SceneManager.GetActiveScene().name == "sewer")
+        {
+            if (GameObject.Find("Directional Light") != null) GameObject.Find("Directional Light").SetActive(false);
+        }
+        if (GameObject.Find("") != null) GameObject.Find("Zone_1").SetActive(false);
+
+        //OBJECTS RESPAWN
+        switch (checkPoint)
+        {
+            case 0:
+                Mision_Objects[0].SetActive(true);
+                Mision_Objects[1].SetActive(true);
+                Mision_Objects[2].SetActive(true);
+                break;
+            case 1:
+                Mision_Objects[0].SetActive(false);
+                Mision_Objects[1].SetActive(true);
+                Mision_Objects[2].SetActive(true);
+                break;
+            case 2:
+                Mision_Objects[0].SetActive(false);
+                Mision_Objects[2].SetActive(false);
+                Mision_Objects[3].SetActive(true);
+                break;
+            case 3:
+                Mision_Objects[1].SetActive(false);
+                Mision_Objects[2].SetActive(false);
+                Mision_Objects[3].SetActive(true);
                 break;
             default:
                 break;

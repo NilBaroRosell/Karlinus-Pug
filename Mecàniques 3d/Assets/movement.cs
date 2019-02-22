@@ -29,14 +29,14 @@ public class movement : MonoBehaviour
     public float finishHit = 0;
     public float startDash;
     public float finishDash;
-    
+
     public float startDie;
     public float finishDie;
     public bool activateDash = true;
     public enum playerState { IDLE, HITTING, DYING, LIQUID };
     public playerState state;
     Collider w_collider;
-    
+
     public static bool LiquidState = false;
     private bool cooldown = false;
     private liquidState checkCooldown;
@@ -46,8 +46,12 @@ public class movement : MonoBehaviour
     public Vector3 vel;
     private Vector3 dashDistance;
     public float distanceDash;
+    public static bool startSM2 = false;
+    public bool startingSM2 = false;
 
     public GameObject hidratationStates;
+
+    public static int dashCooldown = 80;
 
 
     // Use this for initialization
@@ -95,7 +99,8 @@ public class movement : MonoBehaviour
                         }
                         else
                         {
-                            if ((finishDash - startDash) > 80) activateDash = true;
+                            if ((finishDash - startDash) > 80 && !GameObject.Find("Misiones").GetComponent<misions>().RatHood.MisionsCompleted[(int)misions.Misions.SM_1 - 4]) activateDash = true;
+                            else if ((finishDash - startDash) > 20 && GameObject.Find("Misiones").GetComponent<misions>().ActualMision == misions.Misions.SM_1 && SceneManager.GetActiveScene().name == "sewer") activateDash = true;
                         }
                         //Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.forward) * hit.distance, Color.yellow);
                     }
@@ -113,7 +118,10 @@ public class movement : MonoBehaviour
                     cooldown = checkCooldown.cooldown;
                     if (Input.GetKeyDown(KeyCode.Q) && !cooldown && liquidState.hidratation >= 0)
                     {
-                        liquidTransformation();
+                        rb.useGravity = false;
+                        GetComponent<Collider>().enabled = false;
+                        LiquidState = true;
+                        state = playerState.LIQUID;
                     }
 
 
@@ -161,8 +169,24 @@ public class movement : MonoBehaviour
                     break;
                 }
         }
-        
+        startingSM2 = startSM2;
     }
+
+    private void OnTriggerEnter(Collider collision)
+    {
+        if (collision.gameObject.tag == "RatHood" && GameObject.Find("Misiones").GetComponent<misions>().ActualMision == misions.Misions.NONE)
+        {
+            if (Input.GetKey(KeyCode.E)) startSM2 = true;
+        }
+    }
+
+    /*private void OnTriggerExit(Collider collision)
+    {
+        if (collision.gameObject.tag == "RatHood")
+        {
+            startSM2 = false;
+        }
+    }*/
 
     private void OnCollisionEnter(Collision collision)
     {
