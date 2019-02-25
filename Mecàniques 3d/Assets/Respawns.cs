@@ -151,7 +151,6 @@ public class Respawns : MonoBehaviour {
                 LoadScene.respawnToLoad = InitialRespawns.PUB_INSIDE;
                 Mision_Objects[0].SetActive(false);
                 Mision_Objects[1].SetActive(false);
-                Mision_Objects[2].SetActive(false);
                 Mision_Objects[Mision_Objects.Length - 1].SetActive(false);
                 for (int i = 2; i < BoxTriggers.Length; i++) BoxTriggers[i].SetActive(true);
                 break;

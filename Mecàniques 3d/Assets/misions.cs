@@ -22,7 +22,7 @@ public class misions : MonoBehaviour {
     private GameObject mainCamera;
     private GameObject secundaryCamera;
     private GameObject secundaryCameraDestination;
-    private static misions Instance;
+    public static misions Instance;
     [System.Serializable]
     public struct MisionPoint
     {
@@ -41,9 +41,16 @@ public class misions : MonoBehaviour {
     {
         DontDestroyOnLoad(this);
 
-        if (Instance == null)
+        if (Instance == null || Instance.ActualMision == Misions.NONE)
         {
-             MisionPoint PrincipalMision = new MisionPoint();
+            if (Instance != null)
+            {
+                Destroy(Instance.gameObject);
+                ActualMision = Misions.NONE;
+                editorRespawn = false;
+            }
+            Instance = this;
+            MisionPoint PrincipalMision = new MisionPoint();
         PrincipalMision.MisionsCompleted = new bool[4];
         MisionPoint RatHood = new MisionPoint();
         RatHood.MisionsCompleted = new bool[2];
@@ -58,7 +65,6 @@ public class misions : MonoBehaviour {
                 respawnIndex = editorRespawnNum;
             else respawnIndex = 0;
             pauseMenu = false;
-            Instance = this;
         }
         else
         {
@@ -127,6 +133,8 @@ public class misions : MonoBehaviour {
                             secundaryCameraDestination.SetActive(false);
                             sewerLight.SetActive(false);
                             normalLight.SetActive(true);
+                            HUD_Script.showM1Objective(1);
+                            HUD_Script.showM1Helps(7, 38);
                             misionIndex = 9;
                             break;
                         case 2:
@@ -150,29 +158,41 @@ public class misions : MonoBehaviour {
                     {
                         case 0:
                             secundaryCamera.SetActive(false);
+                            HUD_Script.showM2Objective(0, 40);
+                            HUD_Script.showM2Helps(0, 70);
                             misionIndex = 0;
                             break;
                         case 1:
                             secundaryCamera.SetActive(false);
+                            HUD_Script.showM2Objective(1);
+                            HUD_Script.showM2Helps(0, 70);
                             misionIndex = 4;
                             break;
                         case 2:
                             secundaryCamera.SetActive(false);
+                            HUD_Script.showM2Objective(2);
+                            HUD_Script.showM2Helps(1, 70);
                             misionIndex = 5;
                             break;
                         default:
                             break;
                         case 3:
                             secundaryCamera.SetActive(false);
-                            misionIndex = 8;
+                            HUD_Script.showM2Objective(4);
+                            HUD_Script.showM2Helps(2, 45);
+                            misionIndex = 9;
                             break;
                         case 4:
                             secundaryCamera.SetActive(false);
-                            misionIndex = 9;
+                            HUD_Script.showM2Objective(4);
+                            HUD_Script.showM2Helps(2, 45);
+                            misionIndex = 10;
                             break;
                         case 5:
                             secundaryCamera.SetActive(false);
-                            misionIndex = 10;
+                            HUD_Script.showM2Objective(4);
+                            HUD_Script.showM2Helps(2, 45);
+                            misionIndex = 11;
                             break;
                     }
                     break;
@@ -454,6 +474,8 @@ public class misions : MonoBehaviour {
                 if (nextEvent)
                 {
                     playerMovement.state = movement.playerState.IDLE;
+                    HUD_Script.showM2Objective(1);
+                    HUD_Script.showM2Helps(0, 70);
                     secundaryCamera.SetActive(false);
                     nextEvent = false;
                     misionIndex++;
@@ -476,18 +498,37 @@ public class misions : MonoBehaviour {
                     loadRespawn.Mision_Objects[1].SetActive(true);
                     nextEvent = false;
                     misionIndex++;
+                    playerMovement.state = movement.playerState.HITTING;
+                    secundaryCamera.SetActive(true);
+                    secundaryCamera.transform.position = mainCamera.transform.position;
+                    secundaryCamera.transform.rotation = mainCamera.transform.rotation;
+                    secundaryCameraDestination.transform.position = new Vector3(9.91f, 14.42f, -18.64f);
+                    secundaryCameraDestination.transform.eulerAngles = new Vector3(14.901f, 665.441f, -0.9480001f);
                 }
                 break;
             case 6:
-                if(nextEvent)
+                secundaryCamera.transform.position = Vector3.Lerp(secundaryCamera.transform.position, secundaryCameraDestination.transform.position, 0.75f * Time.deltaTime);
+                secundaryCamera.transform.rotation = Quaternion.Lerp(secundaryCamera.transform.rotation, secundaryCameraDestination.transform.rotation, 0.75f * Time.deltaTime);
+                if (nextEvent)
+                {
+                    misionIndex++;
+                    nextEvent = false;
+                }
+                break;
+            case 7:
+                secundaryCamera.transform.position = loadRespawn.Mision_Objects[1].transform.position + new Vector3(1.0f, 2.0f, -1.0f);
+                if (nextEvent)
                 {
                     nextEvent = false;
+                    playerMovement.state = movement.playerState.IDLE;
+                    HUD_Script.showM2Objective(3);
+                    secundaryCamera.SetActive(false);
                     misionIndex++;
                     loadRespawn.Mision_Objects[1].SetActive(false);
                     loadRespawn.BoxTriggers[2].SetActive(true);
                 }
                 break;
-            case 7:
+            case 8:
                 if(loadRespawn.BoxTriggers[2].activeSelf == false)
                 {
                     misionIndex++;
@@ -496,22 +537,31 @@ public class misions : MonoBehaviour {
                     loadScreen.Instancia.CargarEscena("city");
                 }
                 break;
-            case 8:
+            case 9:
                 if (loadRespawn.BoxTriggers[3].activeSelf == false)
                 {
                     misionIndex++;
                     respawnIndex++;
                 }
                 break;
-             case 9:
+             case 10:
                 if (loadRespawn.BoxTriggers[4].activeSelf == false)
                 {
                     misionIndex++;
                     respawnIndex++;
                 }
                 break;
-            case 10:
-                if (loadRespawn.BoxTriggers[5].activeSelf == false && nextEvent)
+            case 11:
+                if(nextEvent)
+                {
+                    misionIndex++;
+                    HUD_Script.showM2Objective(5);
+                    HUD_Script.showM2Helps(0, 70);
+                    nextEvent = false;
+                }
+                break;
+            case 12:
+                if (loadRespawn.BoxTriggers[5].activeSelf == false)
                 {
                     misionIndex++;
                     respawnIndex++;

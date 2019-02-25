@@ -18,7 +18,7 @@ public class NPCActualizeScene : MonoBehaviour {
     {
         if (collision.gameObject.tag == "Player" && Input.GetKeyDown(KeyCode.E))
         {
-            misionsScript.ActualMision = misionGO;
+            misions.Instance.ActualMision = misionGO;
             loadScreen.Instancia.CargarEscena(sceneToLoad);
         }
     }

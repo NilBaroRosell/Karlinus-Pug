@@ -12,6 +12,7 @@ public class HUD : MonoBehaviour {
     private GameObject Objective_text;
     public GameObject Helps;
     public GameObject M1;
+    public GameObject M2;
     private GameObject Helps_text;
     public static GameObject canvasHUD;
     //private const float objectiveY = 120.0f;
@@ -55,32 +56,62 @@ public class HUD : MonoBehaviour {
         }
     }
 
-    public void showM1Objective(int text_to_show)
+    public void showM1Objective(int text_to_show, int font_to_set = 50)
     {
-        if (!Objective.activeSelf)
+        M1.SetActive(true);
+        Objective.SetActive(true);
+        if (Objective_text.GetComponent<Text>().text != M1.transform.GetChild(0).GetChild(text_to_show).gameObject.GetComponent<Text>().text)
         {
-            M1.SetActive(true);
-            Objective.SetActive(true);
             Objective_text.GetComponent<Text>().text = M1.transform.GetChild(0).GetChild(text_to_show).gameObject.GetComponent<Text>().text;
-            M1.SetActive(false);
+            Objective_text.GetComponent<Text>().fontSize = font_to_set;
+            Objective.GetComponent<RectTransform>().position =
+            new Vector3(Objective.GetComponent<RectTransform>().position.x, -381.4f / 10, Objective.GetComponent<RectTransform>().position.z);
+        startTime = Time.frameCount;
+    }
+        M1.SetActive(false);
+    }
+    public void showM1Helps(int text_to_show, int font_to_set = 50)
+    {
+            M1.SetActive(true);
+            Helps.SetActive(true);
+        if (Helps_text.GetComponent<Text>().text != M1.transform.GetChild(1).GetChild(text_to_show).gameObject.GetComponent<Text>().text)
+        {
+            Helps_text.GetComponent<Text>().text = M1.transform.GetChild(1).GetChild(text_to_show).gameObject.GetComponent<Text>().text;
+            Helps_text.GetComponent<Text>().fontSize = font_to_set;
+            Helps.GetComponent<RectTransform>().position =
+                        new Vector3(Helps.GetComponent<RectTransform>().position.x, -426.0f / 10, Helps.GetComponent<RectTransform>().position.z);
+            startTime = Time.frameCount;
+        }
+        M1.SetActive(false);
+    }
+
+    public void showM2Objective(int text_to_show, int font_to_set = 50)
+    {
+        M2.SetActive(true);
+        Objective.SetActive(true);
+        if (Objective_text.GetComponent<Text>().text != M2.transform.GetChild(0).GetChild(text_to_show).gameObject.GetComponent<Text>().text)
+        {
+            Objective_text.GetComponent<Text>().text = M2.transform.GetChild(0).GetChild(text_to_show).gameObject.GetComponent<Text>().text;
+            Objective_text.GetComponent<Text>().fontSize = font_to_set;
             Objective.GetComponent<RectTransform>().position =
                 new Vector3(Objective.GetComponent<RectTransform>().position.x, -381.4f / 10, Objective.GetComponent<RectTransform>().position.z);
             startTime = Time.frameCount;
         }
+        M2.SetActive(false);
     }
-    public void showM1Helps(int text_to_show, int font_to_set)
+    public void showM2Helps(int text_to_show, int font_to_set = 50)
     {
-        if (!Helps.activeSelf)
+        M2.SetActive(true);
+        Helps.SetActive(true);
+        if (Helps_text.GetComponent<Text>().text != M2.transform.GetChild(1).GetChild(text_to_show).gameObject.GetComponent<Text>().text)
         {
-            M1.SetActive(true);
-            Helps.SetActive(true);
-            Helps_text.GetComponent<Text>().text = M1.transform.GetChild(1).GetChild(text_to_show).gameObject.GetComponent<Text>().text;
+            Helps_text.GetComponent<Text>().text = M2.transform.GetChild(1).GetChild(text_to_show).gameObject.GetComponent<Text>().text;
             Helps_text.GetComponent<Text>().fontSize = font_to_set;
-            M1.SetActive(false);
             Helps.GetComponent<RectTransform>().position =
                         new Vector3(Helps.GetComponent<RectTransform>().position.x, -426.0f / 10, Helps.GetComponent<RectTransform>().position.z);
+            startTime = Time.frameCount;
         }
-        startTime = Time.frameCount;
+        M2.SetActive(false);
     }
 
     public void showZoneWarning()

@@ -152,23 +152,26 @@ public class Servant : MonoBehaviour {
         transform.GetChild(4).gameObject.transform.position = new Vector3(0.15f, 0.023f, -0.7f) * -1 + transform.position;
         transform.GetChild(4).gameObject.SetActive(false);
         stoped = true;
-        playerMovement = GameObject.Find("Jugador").GetComponent<movement>();
-        playerDist = new Vector3(GameObject.Find("Jugador").transform.position.x - rb.transform.position.x, 0.0f, GameObject.Find("Jugador").transform.position.z - rb.transform.position.z);
-        discovered = false;
-        discoveredRef = Time.realtimeSinceStartup;
-        scaredRef = Time.realtimeSinceStartup;
-        searchingRef = Time.realtimeSinceStartup;
-        atackRef = Time.realtimeSinceStartup;
-        lastSeenPosition = new Vector3(0.0f, 0.0f, 0.0f);
-        alertRend = transform.GetChild(3).GetComponent<Renderer>();
-        enemyAgent = this.GetComponent<NavMeshAgent>();
-        if (enemyAgent == null)
+        if (GameObject.Find("Jugador") != null)
         {
-            Debug.LogError("Nav Mesh error");
+            playerMovement = GameObject.Find("Jugador").GetComponent<movement>();
+            playerDist = new Vector3(GameObject.Find("Jugador").transform.position.x - rb.transform.position.x, 0.0f, GameObject.Find("Jugador").transform.position.z - rb.transform.position.z);
+            discovered = false;
+            discoveredRef = Time.realtimeSinceStartup;
+            scaredRef = Time.realtimeSinceStartup;
+            searchingRef = Time.realtimeSinceStartup;
+            atackRef = Time.realtimeSinceStartup;
+            lastSeenPosition = new Vector3(0.0f, 0.0f, 0.0f);
+            alertRend = transform.GetChild(3).GetComponent<Renderer>();
+            enemyAgent = this.GetComponent<NavMeshAgent>();
+            if (enemyAgent == null)
+            {
+                Debug.LogError("Nav Mesh error");
+            }
+            else enemyAgent.SetDestination(destinationPoint);
+            enemyAgent.updateRotation = false;
+            playerAnim = GameObject.Find("Jugador").GetComponent<Animator>();
         }
-        else enemyAgent.SetDestination(destinationPoint);
-        enemyAgent.updateRotation = false;
-        playerAnim = GameObject.Find("Jugador").GetComponent<Animator>();
     }
 
     void Start()
@@ -254,7 +257,7 @@ public class Servant : MonoBehaviour {
                 misions.nextEvent = true;
                 Destroy(this.gameObject);
             }
-            else if (patrollingIndex == 3) misions.nextEvent = true;
+            else if (patrollingIndex == 3 || patrollingIndex == 1) misions.nextEvent = true;
             destinationPoint = Points[patrollingIndex];
             Debug.Log(patrollingIndex);
             stoped = true;
@@ -310,7 +313,7 @@ public class Servant : MonoBehaviour {
         stoped = false;
     }
 
-    void OnLevelWasLoaded()
+    public void OnLevelWasLoaded()
     {
         Start();
     }
