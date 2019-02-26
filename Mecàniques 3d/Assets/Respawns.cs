@@ -85,11 +85,34 @@ public class Respawns : MonoBehaviour {
 
     }
 
+    private void LoadSM1()
+    {
+        //RESPAWN POINTS
+        RespawnPoints = new Vector3[3];
+        RespawnPoints[0] = new Vector3(30.765f, -27.523f, -38.321f);
+        RespawnPoints[1] = new Vector3(32.44f, -27.523f, -43f);
+        RespawnPoints[2] = new Vector3(-63.28f, -9.1f, 89.17f);
+
+        //BOX TRIGGERS
+        All_Mision_Objects.transform.GetChild(4).gameObject.SetActive(true);
+        BoxTriggers = new GameObject[All_Mision_Objects.transform.GetChild(4).GetChild(0).transform.childCount];
+        for (int i = 0; i < BoxTriggers.Length; i++) BoxTriggers[i] = All_Mision_Objects.transform.GetChild(4).GetChild(0).GetChild(i).gameObject;
+
+
+        //OTHER OBJECTS
+        Mision_Objects = new GameObject[3];
+        if (GameObject.Find("Enemigos_SM1") != null) Mision_Objects[0] = GameObject.Find("Enemigos_SM1");
+        if (GameObject.Find("Secundary Camera") != null) Mision_Objects[1] = GameObject.Find("Secundary Camera");
+        if (GameObject.Find("Camera Destination") != null) Mision_Objects[2] = GameObject.Find("Camera Destination");
+    }
+
     public Vector3 NONE()
     {
         LoadNONE();
         if (GameObject.Find("Zone_1") != null) GameObject.Find("Zone_1").SetActive(false);
         if (GameObject.Find("Enemies_Zone_2") != null) GameObject.Find("Enemies_Zone_2").SetActive(true);
+        if (GameObject.Find("Enemigos_SM1(1)") != null) GameObject.Find("Enemigos_SM1(1)").SetActive(false);
+        if (GameObject.Find("Enemies_SM1") != null) GameObject.Find("Enemies_SM1").SetActive(false);
         if (initialRespawn == InitialRespawns.NONE) return RespawnPoints[(int)LoadScene.respawnToLoad];
         else
         {
@@ -104,8 +127,9 @@ public class Respawns : MonoBehaviour {
     {
         //LOAD M1
         LoadM1();
+        if (GameObject.Find("Enemies_SM1(1)") != null) GameObject.Find("Enemies_SM1").SetActive(false);
         //OBJECTS RESPAWN
-        switch(checkPoint)
+        switch (checkPoint)
         {
             case 0:
                 LoadScene.respawnToLoad = InitialRespawns.SEWER_1;
@@ -137,6 +161,7 @@ public class Respawns : MonoBehaviour {
     {
         //LOAD M2
         LoadM2();
+        if (GameObject.Find("Enemies_SM1") != null) GameObject.Find("Enemies_SM1").SetActive(false);
         //OBJECTS RESPAWN
         switch (checkPoint)
         {
@@ -188,6 +213,42 @@ public class Respawns : MonoBehaviour {
                 Servant.destinationPoint = Servant.Points[Servant.patrollingIndex];
                 for (int i = 5; i < BoxTriggers.Length; i++) BoxTriggers[i].SetActive(true);
                 for (int i = 6; i >= 0; i--) Mision_Objects[2].transform.GetChild(i).gameObject.GetComponent<csAreaVision>().DestroyEnemy();
+                break;
+            default:
+                break;
+        }
+        //PLAYER RESPAWN
+        return RespawnPoints[checkPoint];
+    }
+
+    public Vector3 SM1(int checkPoint)
+    {
+        //LOAD
+        LoadSM1();
+        if (GameObject.Find("Zone_1") != null) GameObject.Find("Zone_1").SetActive(false);
+        if (GameObject.Find("Enemies_Zone_2") != null) GameObject.Find("Enemies_Zone_2").SetActive(false);
+        if (GameObject.Find("") != null) GameObject.Find("Zone_1").SetActive(false);
+
+        //OBJECTS RESPAWN
+        switch (checkPoint)
+        {
+            case 0:
+                Mision_Objects[0].SetActive(true);
+                Mision_Objects[1].SetActive(true);
+                Mision_Objects[2].SetActive(true);
+                break;
+            case 1:
+                Mision_Objects[0].SetActive(false);
+                Mision_Objects[1].SetActive(true);
+                Mision_Objects[2].SetActive(true);
+                break;
+            case 2:
+                Mision_Objects[0].SetActive(true);
+                Mision_Objects[2].SetActive(false);
+                break;
+            case 3:
+                Mision_Objects[1].SetActive(false);
+                Mision_Objects[2].SetActive(false);
                 break;
             default:
                 break;

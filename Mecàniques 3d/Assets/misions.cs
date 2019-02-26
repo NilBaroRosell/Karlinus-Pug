@@ -8,7 +8,7 @@ public class misions : MonoBehaviour {
 
     private GameObject normalLight;
     private GameObject sewerLight;
-    public enum Misions { M1, M2, M3, M4, SM_1 = 0, SM_2 = 0, SM_3 = 0, SM_4 = 1, SM_5 = 1, SM_6 = 1, NONE = 10 };
+    public enum Misions { M1, M2, M3, M4, SM_1, SM_2, SM_3, SM_4, SM_5, SM_6, NONE };
     public  Misions ActualMision;
     public bool editorRespawn;
     public int editorRespawnNum;
@@ -93,6 +93,7 @@ public class misions : MonoBehaviour {
             switch (ActualMision)
             {
                 case Misions.NONE:
+                    if (GameObject.Find("RatHood") != null) GameObject.Find("RatHood").SetActive(false);
                     if (GameObject.Find("Secundary Camera") != null)
                     {
                         secundaryCamera = GameObject.Find("Secundary Camera");
@@ -154,6 +155,8 @@ public class misions : MonoBehaviour {
                     mainCamera = GameObject.Find("Main Camera");
                     secundaryCamera = GameObject.Find("Secundary Camera");
                     secundaryCameraDestination = GameObject.Find("Camera Destination");
+                    if (GameObject.Find("Enemigos_SM1") != null) GameObject.Find("Enemigos_SM1").transform.GetChild(0).gameObject.GetComponent<csAreaVision>().DestroyEnemy();
+                    if (GameObject.Find("Enemigos_SM1") != null) GameObject.Find("Enemigos_SM1").transform.GetChild(1).gameObject.GetComponent<csAreaVision>().DestroyEnemy();
                     switch (respawnIndex)
                     {
                         case 0:
@@ -196,6 +199,40 @@ public class misions : MonoBehaviour {
                             break;
                     }
                     break;
+                case Misions.SM_1:
+                    RatHood.pointObject.SetActive(true);
+                    Player.transform.position = loadRespawn.SM1(respawnIndex);
+                    mainCamera = GameObject.Find("Main Camera");
+                    if (GameObject.Find("Secundary Camera") != null) secundaryCamera = GameObject.Find("Secundary Camera");
+                    if (GameObject.Find("Camera Destination") != null) secundaryCameraDestination = GameObject.Find("Camera Destination");
+                    if(GameObject.Find("Enemigos M2") != null)  GameObject.Find("Enemigos M2").transform.GetChild(0).gameObject.GetComponent<csAreaVision>().DestroyEnemy();
+                    switch (respawnIndex)
+                    {
+                        case 0:
+                            misionIndex = 0;
+                            StartCoroutine(ExecuteAfterTime(14.0f));
+                            secundaryCamera.transform.position = new Vector3(31.6f, -22.98f, -42.68f);
+                            secundaryCamera.transform.eulerAngles = new Vector3(30, 10, 0);
+                            break;
+                        case 1:
+                            secundaryCamera.SetActive(false);
+                            secundaryCameraDestination.SetActive(false);
+                            misionIndex = 6;
+                            break;
+                        case 2:
+                            Player.transform.position = new Vector3(-63.28f, -9.1f, 89.17f);
+                            secundaryCamera.SetActive(false);
+                            if (GameObject.Find("Directional Light") != null) GameObject.Find("Directional Light").SetActive(false);
+                            RatHood.pointObject.GetComponentInChildren<UnityEngine.AI.NavMeshAgent>().Warp(new Vector3(-64.28f, -9.1f, 89.17f));
+                            misionIndex = 8;
+                            break;
+                        case 3:
+                            secundaryCamera.SetActive(false);
+                            secundaryCameraDestination.SetActive(false);
+                            misionIndex = 14;
+                            break;
+                    }
+                    break;
             }
         }
         else
@@ -234,7 +271,9 @@ public class misions : MonoBehaviour {
             case Misions.M2:
                 M2();
                 break;
-
+            case Misions.SM_1:
+                SM1();
+                break;
         }
     }
 
@@ -575,7 +614,177 @@ public class misions : MonoBehaviour {
         }
     }
 
-                void showMisionPoints()
+    void SM1()
+    {
+        switch (misionIndex)
+        {
+            case 0:
+                playerMovement.state = movement.playerState.HITTING;
+                Player.transform.position = new Vector3(30.765f, -27.523f, -38.321f);
+                Player.transform.eulerAngles = new Vector3(0.0f, 90f, 0.0f);
+                if (nextEvent)
+                {
+                    misionIndex++;
+                    nextEvent = false;
+                    Player.transform.position = new Vector3(31.6725f, -27.523f, -38.321f);
+                    Player.transform.eulerAngles = new Vector3(0.0f, 180.0f, 0.0f);
+                    secundaryCamera.SetActive(false);
+                    playerMovement.state = movement.playerState.IDLE;
+                    HUD_Script.showSM_1Dialog(0, 60, (Screen.width * 5) / 9, (Screen.height) / 9, 300);
+                    if (GameObject.Find("Enemigos_SM1") != null) GameObject.Find("Enemigos_SM1").transform.GetChild(0).gameObject.GetComponent<csAreaVision>().DestroyEnemy();
+                    if (GameObject.Find("Enemigos_SM1") != null) GameObject.Find("Enemigos_SM1").transform.GetChild(1).gameObject.GetComponent<csAreaVision>().DestroyEnemy();
+                }
+                break;
+            case 1:
+                if (loadRespawn.BoxTriggers[0].activeSelf == false)
+                {
+                    playerMovement.state = movement.playerState.HITTING;
+                    Player.transform.position = new Vector3(32.44f, -27.523f, -43f);
+                    Player.transform.eulerAngles = new Vector3(0.0f, 180.0f, 0.0f);
+                    misionIndex++;
+                    HUD_Script.showSM_1Dialog(1, 40, (Screen.width * 8) / 13, (Screen.height * 10) / 12, 300);
+                    secundaryCamera.SetActive(true);
+                    secundaryCamera.transform.position = new Vector3(33.09f, -23.33f, -38.72f);
+                    secundaryCamera.transform.eulerAngles = new Vector3(30.0f, 180.0f, 0.0f);
+                }
+                break;
+            case 2:
+                if (HUD.finalTime - HUD.startTime > HUD.timeUntilDisapear)
+                {
+                    HUD_Script.showSM_1Dialog(2, 50, (Screen.width * 8) / 13, (Screen.height * 10) / 12, 300);
+                    misionIndex++;
+                }
+                break;
+            case 3:
+                if (HUD.finalTime - HUD.startTime > HUD.timeUntilDisapear)
+                {
+                    HUD_Script.showSM_1Dialog(3, 50, (Screen.width * 7) / 11, (Screen.height * 9) / 12, 300);
+                    misionIndex++;
+                }
+                break;
+            case 4:
+                if (HUD.finalTime - HUD.startTime > HUD.timeUntilDisapear)
+                {
+                    HUD_Script.showSM_1Dialog(4, 40, (Screen.width * 8) / 13, (Screen.height * 10) / 12, 150);
+                    misionIndex++;
+                }
+                break;
+            case 5:
+                if (HUD.finalTime - HUD.startTime > HUD.timeUntilDisapear + 10)
+                {
+                    playerMovement.state = movement.playerState.IDLE;
+                    HUD_Script.showSM_1Objective(0);
+                    HUD_Script.showSM_1Helps(0, 38);
+                    secundaryCamera.SetActive(false);
+                    misionIndex++;
+                    respawnIndex++;
+                }
+                break;
+            case 6:
+                if (loadRespawn.BoxTriggers[1].activeSelf == false)
+                {
+                    misionIndex++;
+                    respawnIndex++;
+                    loadRespawn.initialRespawn = Respawns.InitialRespawns.SEWER_1;
+                    loadScreen.Instancia.CargarEscena("sewer");
+                }
+                break;
+            case 7:
+                if (SceneManager.GetActiveScene().name == "sewer")
+                {
+                    HUD_Script.showSM_1Dialog(5, 50, (Screen.width * 8) / 13, (Screen.height * 10) / 12, 300);
+                    misionIndex++;
+                }
+                break;
+            case 8:
+                if (loadRespawn.BoxTriggers[2].activeSelf == false)
+                {
+                    misionIndex++;
+                    secundaryCamera.SetActive(true);
+                    Player.transform.position = new Vector3(-59.11f, -9.3985f, 108.4447f);
+                    Player.transform.eulerAngles = new Vector3(0f, 10f, 0f);
+                    secundaryCamera.transform.position = new Vector3(-63.08f, -3.9f, 105.13f);
+                    secundaryCamera.transform.eulerAngles = new Vector3(30.0f, 40.0f, 0.0f);
+                    playerMovement.state = movement.playerState.HITTING;
+                    HUD_Script.showSM_1Dialog(6, 35, (Screen.width * 7) / 13, (Screen.height * 10) / 13, 300);
+                }
+                break;
+            case 9:
+                if (HUD.finalTime - HUD.startTime > HUD.timeUntilDisapear)
+                {
+                    HUD_Script.showSM_1Dialog(7, 35, (Screen.width * 7) / 13, (Screen.height * 10) / 13, 300);
+                    misionIndex++;
+                }
+                break;
+            case 10:
+                if (HUD.finalTime - HUD.startTime > HUD.timeUntilDisapear)
+                {
+                    HUD_Script.showSM_1Dialog(8, 50, (Screen.width * 7) / 13, (Screen.height * 10) / 13, 150);
+                    misionIndex++;
+                }
+                break;
+            case 11:
+                if (HUD.finalTime - HUD.startTime > HUD.timeUntilDisapear + 10)
+                {
+                    misionIndex++;
+                    StartCoroutine(ExecuteAfterTime(5.0f));
+                }
+                break;
+            case 12:
+                if (nextEvent)
+                {
+                    secundaryCamera.SetActive(false);
+                    HUD_Script.showSM_1Objective(1);
+                    HUD_Script.showSM_1Helps(1, 38);
+                    nextEvent = false;
+                    playerMovement.state = movement.playerState.IDLE;
+                    RatHood.pointObject.GetComponentInChildren<UnityEngine.AI.NavMeshAgent>().Warp(new Vector3(14.32f, -9.1f, 150.9f));
+                    misionIndex++;
+                }
+                break;
+            case 13:
+                if (loadRespawn.BoxTriggers[3].activeSelf == false)
+                {
+                    misionIndex++;
+                    respawnIndex++;
+                    Player.transform.position = new Vector3(14.25f, -9.3985f, 143.88f);
+                    Player.transform.eulerAngles = new Vector3(0f, 0f, 0f);
+                    secundaryCamera.SetActive(true);
+                    secundaryCamera.transform.position = new Vector3(14.27f, -4.5f, 140.0f);
+                    secundaryCamera.transform.eulerAngles = new Vector3(20.0f, 0.0f, 0.0f);
+                    playerMovement.state = movement.playerState.HITTING;
+                    HUD_Script.showSM_1Dialog(9, 50, (Screen.width * 8) / 13, (Screen.height * 10) / 12, 300);
+                }
+                break;
+            case 14:
+                if (HUD.finalTime - HUD.startTime > HUD.timeUntilDisapear)
+                {
+                    HUD_Script.showSM_1Dialog(10, 50, (Screen.width * 8) / 13, (Screen.height * 10) / 12, 400);
+                    misionIndex++;
+                }
+                break;
+            case 15:
+                if (HUD.finalTime - HUD.startTime > HUD.timeUntilDisapear)
+                {
+                    HUD_Script.showSM_1Objective(2);
+                    secundaryCamera.SetActive(false);
+                    playerMovement.state = movement.playerState.IDLE;
+                    misionIndex++;
+                }
+                break;
+            case 16:
+                if (loadRespawn.BoxTriggers[4].activeSelf == false)
+                {
+                    ActualMision = Misions.NONE;
+                    RatHood.MisionsCompleted[(int)Misions.SM_1 - 4] = true;
+                    loadRespawn.initialRespawn = Respawns.InitialRespawns.CITY_1;
+                    loadScreen.Instancia.CargarEscena("city");
+                }
+                break;
+        }
+    }
+
+    void showMisionPoints()
     {
         if (PrincipalMision.MisionsCompleted[(int)Misions.M3] == false)
         {
@@ -591,17 +800,17 @@ public class misions : MonoBehaviour {
                     PrincipalMision.pointObject.transform.position = new Vector3(-14.1f, -31.81266f, -12.6f) + transform.position;
                 }
             }
-            if (RatHood.MisionsCompleted[(int)Misions.SM_1] == false)
+            if (RatHood.MisionsCompleted[(int)Misions.SM_1 - 4] == false)
             {
                 RatHood.pointObject.SetActive(true);
-                RatHood.pointObject.transform.position = new Vector3(13.17202f, -31.81266f, -18.64425f) + transform.position;
+                //RatHood.pointObject.transform.position = new Vector3(13.17202f, -31.81266f, -18.64425f) + transform.position;
             }
-            if (RebelCat.MisionsCompleted[(int)Misions.SM_2] == false)
+            if (RebelCat.MisionsCompleted[(int)Misions.SM_2 - 5] == false)
             {
                 RebelCat.pointObject.SetActive(true);
                 RebelCat.pointObject.transform.position = new Vector3(-49.41798f, -31.81266f, 48.72575f) + transform.position;
             }
-            if (ScaryDog.MisionsCompleted[(int)Misions.SM_3] == false)
+            if (ScaryDog.MisionsCompleted[(int)Misions.SM_3 - 6] == false)
             {
                 ScaryDog.pointObject.SetActive(true);
                 ScaryDog.pointObject.transform.position = new Vector3(-95.95798f, -31.81266f, 5.595755f) + transform.position;
@@ -611,32 +820,32 @@ public class misions : MonoBehaviour {
         {
             PrincipalMision.pointObject.SetActive(true);
             PrincipalMision.pointObject.transform.position = new Vector3(78.94f, -31.81266f, 275.4f) + transform.position;
-            if (RatHood.MisionsCompleted[(int)Misions.SM_1] == false)
+            if (RatHood.MisionsCompleted[(int)Misions.SM_1 - 4] == false)
             {
                 RatHood.pointObject.SetActive(true);
-                RatHood.pointObject.transform.position = new Vector3(13.17202f, -31.81266f, -18.64425f) + transform.position;
+                //RatHood.pointObject.transform.position = new Vector3(13.17202f, -31.81266f, -18.64425f) + transform.position;
             }
-            else if (RatHood.MisionsCompleted[(int)Misions.SM_4] == false)
+            else if (RatHood.MisionsCompleted[(int)Misions.SM_4 - 6] == false)
             {
                 RatHood.pointObject.SetActive(true);
                 RatHood.pointObject.transform.position = new Vector3(-14.7f, -31.81266f, 178.6f) + transform.position;
             }
-            if (RebelCat.MisionsCompleted[(int)Misions.SM_2] == false)
+            if (RebelCat.MisionsCompleted[(int)Misions.SM_2 - 5] == false)
             {
                 RebelCat.pointObject.SetActive(true);
                 RebelCat.pointObject.transform.position = new Vector3(-49.41798f, -31.81266f, 48.72575f) + transform.position;
             }
-            else if (RebelCat.MisionsCompleted[(int)Misions.SM_5] == false)
+            else if (RebelCat.MisionsCompleted[(int)Misions.SM_5 - 7] == false)
             {
                 RebelCat.pointObject.SetActive(true);
                 RebelCat.pointObject.transform.position = new Vector3(-96.1f, -31.81266f, 133.5f) + transform.position;
             }
-            if (ScaryDog.MisionsCompleted[(int)Misions.SM_3] == false)
+            if (ScaryDog.MisionsCompleted[(int)Misions.SM_3 - 6] == false)
             {
                 ScaryDog.pointObject.SetActive(true);
                 ScaryDog.pointObject.transform.position = new Vector3(-95.95798f, -31.81266f, 5.595755f) + transform.position;
             }
-            else if (ScaryDog.MisionsCompleted[(int)Misions.SM_6] == false)
+            else if (ScaryDog.MisionsCompleted[(int)Misions.SM_6 - 8] == false)
             {
                 ScaryDog.pointObject.SetActive(true);
                 ScaryDog.pointObject.transform.position = new Vector3(-18.41f, -31.81266f, 293.47f) + transform.position;

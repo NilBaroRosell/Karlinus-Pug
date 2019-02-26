@@ -49,6 +49,7 @@ public class movement : MonoBehaviour
 
     public GameObject hidratationStates;
 
+    public static int dashCooldown = 80;
 
     // Use this for initialization
     void Start()
@@ -95,7 +96,8 @@ public class movement : MonoBehaviour
                         }
                         else
                         {
-                            if ((finishDash - startDash) > 80) activateDash = true;
+                            if ((finishDash - startDash) > 80 && !GameObject.Find("Misiones").GetComponent<misions>().RatHood.MisionsCompleted[(int)misions.Misions.SM_1 - 4]) activateDash = true;
+                            else if ((finishDash - startDash) > 20 && GameObject.Find("Misiones").GetComponent<misions>().ActualMision == misions.Misions.SM_1 && SceneManager.GetActiveScene().name == "sewer") activateDash = true;
                         }
                         //Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.forward) * hit.distance, Color.yellow);
                     }
@@ -113,7 +115,10 @@ public class movement : MonoBehaviour
                     cooldown = checkCooldown.cooldown;
                     if (Input.GetKeyDown(KeyCode.Q) && !cooldown && liquidState.hidratation >= 0)
                     {
-                        liquidTransformation();
+                        rb.useGravity = false;
+                        GetComponent<Collider>().enabled = false;
+                        LiquidState = true;
+                        state = playerState.LIQUID;
                     }
 
 
@@ -161,7 +166,7 @@ public class movement : MonoBehaviour
                     break;
                 }
         }
-        
+
     }
 
     private void OnCollisionEnter(Collision collision)
