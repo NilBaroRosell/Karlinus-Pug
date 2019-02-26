@@ -9,7 +9,7 @@ public class SoundPlayer : MonoBehaviour {
     public AudioClip liqState;
     public AudioClip run;
     public AudioClip walk;
-    public AudioClip draw;
+    public AudioClip withdraw;
     AudioSource source1;
     AudioSource source2;
     AudioSource source3;
@@ -23,10 +23,11 @@ public class SoundPlayer : MonoBehaviour {
     private float lastSpeed;
     private string lastActualState;
     private int lastMisionIndex;
-    public bool playingDrink, playingStateChange, playingLiquidState, playingRun, playingWalk, playingCrouch, playingDraw, playingAttack;
-    private float startDrink, finishDrink, startChange, finishChange, startDraw, finishDraw;
+    public bool playingDrink, playingStateChange, playingLiquidState, playingRun, playingCrouch, playingAttack;
+    private float startDrink, finishDrink, startChange, finishChange;
     public GameObject head, leftEnd, leftBase, rightEnd, rightBase, rightFoot, leftFoot;
     private Animator anim;
+
 
     // Use this for initialization
     void Start () {
@@ -66,20 +67,10 @@ public class SoundPlayer : MonoBehaviour {
                 source4.Stop();
                 playingRun = false;
             }
-            if (source5.isPlaying)
-            {
-                source5.Stop();
-                playingWalk = false;
-            }
             if (source6.isPlaying)
             {
                 source6.Stop();
                 playingCrouch = false;
-            }
-            if (source7.isPlaying)
-            {
-                source7.Stop();
-                playingDraw = false;
             }
             if (source8.isPlaying)
             {
@@ -111,31 +102,6 @@ public class SoundPlayer : MonoBehaviour {
                     source3.Play();
                     playingLiquidState = true;
                 }
-                if (movement.speed == 13 && !playingRun && !playingDraw && misions.misionIndex != 6)
-                {
-                    source4.clip = run;
-                    source4.Play();
-                    playingRun = true;
-                }
-                if (movement.speed == 9 && !playingWalk && !playingDraw && misions.misionIndex != 6)
-                {
-                    source5.clip = walk;
-                    source5.Play();
-                    playingWalk = true;
-                }
-                if (movement.speed == 6 && !playingCrouch && !playingDraw && misions.misionIndex != 6)
-                {
-                    source6.clip = walk;
-                    source6.Play();
-                    playingCrouch = true;
-                }
-                if (Input.GetKeyDown(KeyCode.Mouse1) && !playingDraw && anim.GetBool("Is_Draw"))
-                {
-                    source7.clip = draw;
-                    source7.Play();
-                    playingDraw = true;
-                    startDraw = Time.frameCount;
-                }
             }
 
             else if (kill_cono_vision.actualString == "A" || kill_cono_vision.actualString == "R")
@@ -155,25 +121,10 @@ public class SoundPlayer : MonoBehaviour {
                     source3.Stop();
                     playingLiquidState = false;
                 }
-                if (source4.isPlaying)
-                {
-                    source4.Stop();
-                    playingRun = false;
-                }
-                if (source5.isPlaying)
-                {
-                    source5.Stop();
-                    playingWalk = false;
-                }
                 if (source6.isPlaying)
                 {
                     source6.Stop();
                     playingCrouch = false;
-                }
-                if (source7.isPlaying)
-                {
-                    source7.Stop();
-                    playingDraw = false;
                 }
                 if (!playingAttack)
                 {
@@ -202,16 +153,6 @@ public class SoundPlayer : MonoBehaviour {
                 source3.Stop();
                 playingLiquidState = false;
             }
-            if (source4.isPlaying)
-            {
-                source4.Stop();
-                playingRun = false;
-            }
-            if (source5.isPlaying)
-            {
-                source5.Stop();
-                playingWalk = false;
-            }
             if (source6.isPlaying)
             {
                 source6.Stop();
@@ -239,17 +180,7 @@ public class SoundPlayer : MonoBehaviour {
             playingLiquidState = false;
         }
 
-        if (playingRun && (movement.speed != 13))
-        {
-            source4.Stop();
-            playingRun = false;
-        }
 
-        if (playingWalk && (movement.speed != 9 || movement.LiquidState))
-        {
-            source5.Stop();
-            playingWalk = false;
-        }
 
         if (playingCrouch && (movement.speed != 6 || movement.LiquidState))
         {
@@ -257,41 +188,7 @@ public class SoundPlayer : MonoBehaviour {
             playingCrouch = false;
         }
 
-        if (playingDraw)
-        {
-            if (source1.isPlaying)
-            {
-                source1.Stop();
-                playingDrink = false;
-            }
-            if (source2.isPlaying)
-            {
-                source2.Stop();
-                playingStateChange = false;
-            }
-            if (source3.isPlaying)
-            {
-                source3.Stop();
-                playingLiquidState = false;
-            }
-            if (source4.isPlaying)
-            {
-                source4.Stop();
-                playingRun = false;
-            }
-            if (source5.isPlaying)
-            {
-                source5.Stop();
-                playingWalk = false;
-            }
-            if (source6.isPlaying)
-            {
-                source6.Stop();
-                playingCrouch = false;
-            }
-            finishDraw = Time.frameCount;
-            if (finishDraw - startDraw > 80) playingDraw = false;
-        }
+      
 
         if (playingAttack && !source8.isPlaying) playingAttack = false;
     }
@@ -302,5 +199,24 @@ public class SoundPlayer : MonoBehaviour {
         lastState = movement.LiquidState;
         lastSpeed = movement.speed;
         lastActualState = kill_cono_vision.actualString;
+    }
+
+    //Animation Sounds
+
+    public void SoftStep(string foot)
+    {
+        if (foot == "left") leftFoot.GetComponent<AudioSource>().PlayOneShot(walk);
+        else if (foot == "right") rightFoot.GetComponent<AudioSource>().PlayOneShot(walk);
+    }
+
+    public void HardStep(string foot)
+    {
+        if (foot == "left") leftFoot.GetComponent<AudioSource>().PlayOneShot(run);
+        else if (foot == "right") rightFoot.GetComponent<AudioSource>().PlayOneShot(run);
+    }
+
+    public void WithdrawSword()
+    {
+        GetComponent<AudioSource>().PlayOneShot(withdraw);
     }
 }

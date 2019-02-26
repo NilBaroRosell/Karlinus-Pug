@@ -58,7 +58,7 @@ public class misions : MonoBehaviour {
         }
         else
         {
-            DestroyObject(gameObject);
+            Object.Destroy(gameObject);
         }
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
