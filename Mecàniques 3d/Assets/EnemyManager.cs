@@ -9,7 +9,7 @@ public class EnemyManager : MonoBehaviour {
     public GameObject Player;
     public float maxDist;
 	// Use this for initialization
-	void Start () {
+	void Awake () {
         Enemies = GameObject.FindGameObjectsWithTag("enemy");
         EnemiesPos = new Vector3[Enemies.Length];
         Debug.Log(Enemies.Length);

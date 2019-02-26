@@ -5,52 +5,35 @@ using UnityEngine.SceneManagement;
 
 public class LoadScene : MonoBehaviour {
 
-    public enum Scenes {SEWER_1, SEWER_2, SEWER_3, CITY_1, CITY_2, PUB, HOUSE, PALACE};
-    public Scenes SceneToLoad;
-    public static Scenes respawnToLoad;
-    private bool changeScene;
+    public Respawns.InitialRespawns SceneToLoad;
+    public static Respawns.InitialRespawns respawnToLoad;
 
-    // Use this for initialization
-    void Awake ()
+
+    private void OnTriggerStay(Collider collision)
     {
-        changeScene = false;
-	}
-	
-	// Update is called once per frame
-	void Update () {
-        if (changeScene && Input.GetKey(KeyCode.E) || misions.changeSceneSM1)
+        if (collision.gameObject.tag == "Player" && Input.GetKey(KeyCode.E))
         {
-            switch (SceneToLoad)
+           switch (SceneToLoad)
             {
-                case Scenes.SEWER_1:
-                case Scenes.SEWER_2:
-                case Scenes.SEWER_3:
+                case Respawns.InitialRespawns.SEWER_1:
+                case Respawns.InitialRespawns.SEWER_2:
+                case Respawns.InitialRespawns.SEWER_3:
                     respawnToLoad = SceneToLoad;
                     loadScreen.Instancia.CargarEscena("sewer");
-                    misions.changeSceneSM1 = false;
                     break;
-                case Scenes.CITY_1:
-                case Scenes.CITY_2:
+                case Respawns.InitialRespawns.CITY_1:
+                case Respawns.InitialRespawns.CITY_2:
+                case Respawns.InitialRespawns.PUB_OUTSIDE:
                     respawnToLoad = SceneToLoad;
                     loadScreen.Instancia.CargarEscena("city");
-                    misions.changeSceneSM1 = false;
                     break;
-                default:                    
+                case Respawns.InitialRespawns.PUB_INSIDE:
+                    respawnToLoad = SceneToLoad;
+                    loadScreen.Instancia.CargarEscena("PUB");
+                    break;
+                default:
                     break;
             }
-        }
-    }
-
-    private void OnCollisionEnter(Collision collision)
-    {
-        if (collision.gameObject.tag == "Player")
-        {
-            
-            changeScene = true;
-        }
-        else
-        {
-            changeScene = false;
         }
     }
 }

@@ -354,6 +354,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="Mecàniques 3d.Plugins.csproj">
+      <Project>{89D4C2A5-08F9-5893-EDAD-937F44143C2C}</Project>
+      <Name>Mecàniques 3d.Plugins</Name>
+    </ProjectReference>
     <ProjectReference Include="Mecàniques 3d.csproj">
       <Project>{42450248-15A7-C532-9E09-5CEDC0B76A57}</Project>
       <Name>Mecàniques 3d</Name>
@@ -426,6 +430,13 @@
     <None Include="Assets\Fantasy Skybox FREE\Fog and Ambient references.txt" />
     <None Include="Assets\Fantasy Skybox FREE\Readme.txt" />
     <None Include="Assets\GE Common Assets\Readme.txt" />
+    <None Include="Assets\Standard Assets\Environment\Water (Basic)\DO_NOT_WORK_IN_VR.txt" />
+    <None Include="Assets\Standard Assets\Environment\Water (Basic)\Shaders\FXWaterBasic.shader" />
+    <None Include="Assets\Standard Assets\Environment\Water\DO_NOT_WORK_IN_VR.txt" />
+    <None Include="Assets\Standard Assets\Environment\Water\Water\Shaders\FXWaterPro.shader" />
+    <None Include="Assets\Standard Assets\Environment\Water\Water4\Shaders\FXWater4Advanced.shader" />
+    <None Include="Assets\Standard Assets\Environment\Water\Water4\Shaders\FXWater4Simple.shader" />
+    <None Include="Assets\Standard Assets\Environment\Water\Water4\Shaders\WaterInclude.cginc" />
     <None Include="Assets\UrbanNightSky\Readme.txt" />
     <None Include="Assets\read me.txt" />
     <None Include="Packages\com.unity.package-manager-ui\Editor\Resources\Styles\Main_Dark.uss" />

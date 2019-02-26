@@ -47,12 +47,10 @@ public class movement : MonoBehaviour
     private Vector3 dashDistance;
     public float distanceDash;
     public static bool startSM2 = false;
-    public bool startingSM2 = false;
 
     public GameObject hidratationStates;
 
     public static int dashCooldown = 80;
-
 
     // Use this for initialization
     void Start()
@@ -169,14 +167,14 @@ public class movement : MonoBehaviour
                     break;
                 }
         }
-        startingSM2 = startSM2;
+
     }
 
     private void OnTriggerEnter(Collider collision)
     {
-        if (collision.gameObject.tag == "RatHood" && !startSM2)//GameObject.Find("Misiones").GetComponent<misions>().ActualMision == misions.Misions.NONE)
+        if (collision.gameObject.tag == "RatHood" && GameObject.Find("Misiones").GetComponent<misions>().ActualMision == misions.Misions.NONE)
         {
-            if (Input.GetKeyDown(KeyCode.E)) startSM2 = true;
+            if (Input.GetKey(KeyCode.E)) startSM2 = true;
         }
     }
 
@@ -233,9 +231,10 @@ public class movement : MonoBehaviour
         else dist = 30;
         for (int i = 0; i < EnemyManager.Enemies.Length; i++)
         {
-            if (EnemyManager.Enemies[i].activeSelf)
+            if (EnemyManager.Enemies[i].activeSelf && EnemyManager.Enemies[i].GetComponent<csAreaVision>().actualState != csAreaVision.enemyState.FIGHTING
+                && EnemyManager.Enemies[i].GetComponent<csAreaVision>().actualState != csAreaVision.enemyState.LEAVING)
             {
-                enemyDist = new Vector3(EnemyManager.Enemies[i].transform.position.x - rb.transform.position.x, 0.0f, EnemyManager.Enemies[i].transform.position.z - rb.transform.position.z);
+                enemyDist = EnemyManager.Enemies[i].GetComponent<csAreaVision>().playerDist;
                 if (enemyDist.magnitude <= dist)
                 {
                     EnemyManager.Enemies[i].GetComponent<csAreaVision>().actualState = csAreaVision.enemyState.SEARCHING;
@@ -245,6 +244,14 @@ public class movement : MonoBehaviour
                 }
             }
         }
+    }
+
+    public void liquidTransformation()
+    {
+        rb.useGravity = false;
+        GetComponent<Collider>().enabled = false;
+        LiquidState = true;
+        state = playerState.LIQUID;
     }
 
     public void movePlayer()

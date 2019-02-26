@@ -34,7 +34,7 @@ public class FollowKarlinus : MonoBehaviour {
         
         if(misionsScript.ActualMision == misions.Misions.SM_1)
         {
-            switch(misionsScript.indexMision)
+            switch(misions.misionIndex)
             {
                 case 6:
                     anim.SetBool("Is_Idle", false);

@@ -291,6 +291,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="Mecàniques 3d.Plugins.csproj">
+      <Project>{89D4C2A5-08F9-5893-EDAD-937F44143C2C}</Project>
+      <Name>Mecàniques 3d.Plugins</Name>
+    </ProjectReference>
     <ProjectReference Include="UnityEditor.StandardEvents.csproj">
       <Project>{6800202F-4402-D405-F8CB-03DC7BD78B92}</Project>
       <Name>UnityEditor.StandardEvents</Name>
@@ -370,6 +374,8 @@
     <Compile Include="Assets\ConoVision\NPC_movement.cs" />
     <Compile Include="Assets\ConoVision\RandomDestination.cs" />
     <Compile Include="Assets\cucumber.cs" />
+    <Compile Include="Assets\Dead_Zone.cs" />
+    <Compile Include="Assets\drunk_NPC.cs" />
     <Compile Include="Assets\EnemyManager.cs" />
     <Compile Include="Assets\Fantasy Skybox FREE\Demo\Scripts\GE_FantasySkyboxFREE_Demo.cs" />
     <Compile Include="Assets\Fantasy Skybox FREE\Demo\Scripts\GE_FantasySkyboxFREE_UIs.cs" />
@@ -392,9 +398,13 @@
     <Compile Include="Assets\PauseMenu.cs" />
     <Compile Include="Assets\referenceMovement.cs" />
     <Compile Include="Assets\Respawns.cs" />
+    <Compile Include="Assets\Servant.cs" />
+    <Compile Include="Assets\servantUnlock_NPC.cs" />
     <Compile Include="Assets\SoundCucumber.cs" />
     <Compile Include="Assets\SoundEnemy.cs" />
     <Compile Include="Assets\SoundPlayer.cs" />
+    <Compile Include="Assets\torchManager.cs" />
+    <Compile Include="Assets\Warning_Zone.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\2Ginge\GritBuildupShader\Shaders\GritBuildupShader.shader" />
@@ -402,6 +412,13 @@
     <None Include="Assets\Fantasy Skybox FREE\Fog and Ambient references.txt" />
     <None Include="Assets\Fantasy Skybox FREE\Readme.txt" />
     <None Include="Assets\GE Common Assets\Readme.txt" />
+    <None Include="Assets\Standard Assets\Environment\Water (Basic)\DO_NOT_WORK_IN_VR.txt" />
+    <None Include="Assets\Standard Assets\Environment\Water (Basic)\Shaders\FXWaterBasic.shader" />
+    <None Include="Assets\Standard Assets\Environment\Water\DO_NOT_WORK_IN_VR.txt" />
+    <None Include="Assets\Standard Assets\Environment\Water\Water\Shaders\FXWaterPro.shader" />
+    <None Include="Assets\Standard Assets\Environment\Water\Water4\Shaders\FXWater4Advanced.shader" />
+    <None Include="Assets\Standard Assets\Environment\Water\Water4\Shaders\FXWater4Simple.shader" />
+    <None Include="Assets\Standard Assets\Environment\Water\Water4\Shaders\WaterInclude.cginc" />
     <None Include="Assets\UrbanNightSky\Readme.txt" />
     <None Include="Assets\read me.txt" />
     <None Include="Packages\com.unity.package-manager-ui\Editor\Resources\Styles\Main_Dark.uss" />
