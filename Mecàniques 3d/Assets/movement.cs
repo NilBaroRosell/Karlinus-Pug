@@ -46,7 +46,6 @@ public class movement : MonoBehaviour
     public Vector3 vel;
     private Vector3 dashDistance;
     public float distanceDash;
-    public static bool startSM2 = false;
 
     public GameObject hidratationStates;
 
@@ -169,22 +168,6 @@ public class movement : MonoBehaviour
         }
 
     }
-
-    private void OnTriggerEnter(Collider collision)
-    {
-        if (collision.gameObject.tag == "RatHood" && GameObject.Find("Misiones").GetComponent<misions>().ActualMision == misions.Misions.NONE)
-        {
-            if (Input.GetKey(KeyCode.E)) startSM2 = true;
-        }
-    }
-
-    /*private void OnTriggerExit(Collider collision)
-    {
-        if (collision.gameObject.tag == "RatHood")
-        {
-            startSM2 = false;
-        }
-    }*/
 
     private void OnCollisionEnter(Collision collision)
     {

@@ -264,11 +264,6 @@ public class misions : MonoBehaviour {
         switch (ActualMision)
         {
             case Misions.NONE:
-                if (movement.startSM2)
-                {
-                    ActualMision = Misions.SM_1;
-                    loadScreen.Instancia.CargarEscena("city");
-                }
                 break;
             case Misions.M1:
                 M1();
