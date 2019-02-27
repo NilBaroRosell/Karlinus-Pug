@@ -244,8 +244,12 @@ public class misions : MonoBehaviour {
 
     // Update is called once per frame
     void FixedUpdate() {
-        if (Input.GetKeyDown(KeyCode.C) && Cursor.lockState == CursorLockMode.Locked) Cursor.lockState = CursorLockMode.None;
-        else if (Input.GetKeyDown(KeyCode.C) && Cursor.lockState == CursorLockMode.None) Cursor.lockState = CursorLockMode.Locked;
+        if (Input.GetKeyDown(KeyCode.X))
+        {
+            ActualMision = Misions.M2;
+            respawnIndex = 5;
+            loadScreen.Instancia.CargarEscena("city");
+        }
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             if (pauseMenu)
@@ -874,8 +878,12 @@ public class misions : MonoBehaviour {
         loadRespawn.setAllFalse();
         if (SceneManager.GetActiveScene().name != "DEAD")
         {
-            if (SceneManager.GetActiveScene().name == "Menu_1") respawnIndex = 0;
-            Start();
+            if (SceneManager.GetActiveScene().name == "Menu_1")
+            {
+                respawnIndex = 0;
+                ActualMision = Misions.NONE;
+            }
+            else Start();
         }
     }
 }
