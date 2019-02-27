@@ -264,6 +264,7 @@ public class misions : MonoBehaviour {
         switch (ActualMision)
         {
             case Misions.NONE:
+                if (GameObject.Find("RatHood") != null) GameObject.Find("RatHood").SetActive(false);
                 break;
             case Misions.M1:
                 M1();
@@ -642,7 +643,7 @@ public class misions : MonoBehaviour {
                     Player.transform.position = new Vector3(32.44f, -27.523f, -43f);
                     Player.transform.eulerAngles = new Vector3(0.0f, 180.0f, 0.0f);
                     misionIndex++;
-                    HUD_Script.showSM_1Dialog(1, 40, (Screen.width * 8) / 13, (Screen.height * 10) / 12, 300);
+                    HUD_Script.showSM_1Dialog(1, 40, (Screen.width * 10) / 17, (Screen.height * 10) / 12, 300);
                     secundaryCamera.SetActive(true);
                     secundaryCamera.transform.position = new Vector3(33.09f, -23.33f, -38.72f);
                     secundaryCamera.transform.eulerAngles = new Vector3(30.0f, 180.0f, 0.0f);
@@ -651,21 +652,21 @@ public class misions : MonoBehaviour {
             case 2:
                 if (HUD.finalTime - HUD.startTime > HUD.timeUntilDisapear)
                 {
-                    HUD_Script.showSM_1Dialog(2, 50, (Screen.width * 8) / 13, (Screen.height * 10) / 12, 300);
+                    HUD_Script.showSM_1Dialog(2, 50, (Screen.width * 10) / 17, (Screen.height * 10) / 12, 300);
                     misionIndex++;
                 }
                 break;
             case 3:
                 if (HUD.finalTime - HUD.startTime > HUD.timeUntilDisapear)
                 {
-                    HUD_Script.showSM_1Dialog(3, 50, (Screen.width * 7) / 11, (Screen.height * 9) / 12, 300);
+                    HUD_Script.showSM_1Dialog(3, 50, (Screen.width * 10) / 15, (Screen.height * 10) / 14, 300);
                     misionIndex++;
                 }
                 break;
             case 4:
                 if (HUD.finalTime - HUD.startTime > HUD.timeUntilDisapear)
                 {
-                    HUD_Script.showSM_1Dialog(4, 40, (Screen.width * 8) / 13, (Screen.height * 10) / 12, 150);
+                    HUD_Script.showSM_1Dialog(4, 40, (Screen.width * 10) / 17, (Screen.height * 10) / 12, 150);
                     misionIndex++;
                 }
                 break;
@@ -692,7 +693,7 @@ public class misions : MonoBehaviour {
             case 7:
                 if (SceneManager.GetActiveScene().name == "sewer")
                 {
-                    HUD_Script.showSM_1Dialog(5, 50, (Screen.width * 8) / 13, (Screen.height * 10) / 12, 300);
+                    HUD_Script.showSM_1Dialog(5, 50, (Screen.width * 10) / 17, (Screen.height * 10) / 12, 300);
                     misionIndex++;
                 }
                 break;
@@ -753,13 +754,13 @@ public class misions : MonoBehaviour {
                     secundaryCamera.transform.position = new Vector3(14.27f, -4.5f, 140.0f);
                     secundaryCamera.transform.eulerAngles = new Vector3(20.0f, 0.0f, 0.0f);
                     playerMovement.state = movement.playerState.HITTING;
-                    HUD_Script.showSM_1Dialog(9, 50, (Screen.width * 8) / 13, (Screen.height * 10) / 12, 300);
+                    HUD_Script.showSM_1Dialog(9, 50, (Screen.width * 9) / 15, (Screen.height * 9) / 13, 300);
                 }
                 break;
             case 14:
                 if (HUD.finalTime - HUD.startTime > HUD.timeUntilDisapear)
                 {
-                    HUD_Script.showSM_1Dialog(10, 50, (Screen.width * 8) / 13, (Screen.height * 10) / 12, 400);
+                    HUD_Script.showSM_1Dialog(10, 50, (Screen.width * 9) / 15, (Screen.height * 9) / 13, 400);
                     misionIndex++;
                 }
                 break;
