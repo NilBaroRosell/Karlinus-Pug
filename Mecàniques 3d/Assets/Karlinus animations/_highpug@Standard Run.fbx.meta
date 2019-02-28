@@ -123,10 +123,18 @@ ModelImporter:
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
       events:
-      - time: 0.9225867
-        functionName: stepNoise
-        data: 
+      - time: 0.33661416
+        functionName: HardStep
+        data: left
         objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 2
+        messageOptions: 0
+      - time: 0.8249478
+        functionName: HardStep
+        data: right
+        objectReferenceParameter: {fileID: 11500000, guid: 6b5b4bb7d8dca3840b7421ecd0c812e0,
+          type: 3}
         floatParameter: 0
         intParameter: 2
         messageOptions: 0

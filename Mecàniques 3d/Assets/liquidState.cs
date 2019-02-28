@@ -14,6 +14,7 @@ public class liquidState : MonoBehaviour
     public GameObject badlyHidratated;
     public GameObject dead;
     public GameObject[] weapons = new GameObject[4];
+    private Controller controller;
     public bool liquidStateOn = false;
     public bool cooldown = false;
     public bool firstFrameLiquid = true;
@@ -42,12 +43,13 @@ public class liquidState : MonoBehaviour
         wellHidratated.SetActive(false);
         badlyHidratated.SetActive(false);
         dead.SetActive(false);
+        controller = GetComponent<Controller>();
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
-        if (!movement.hitting)
+        if (!controller.hitting)
         {
             showHidratation = hidratation;
 
@@ -69,7 +71,7 @@ public class liquidState : MonoBehaviour
             }
             else
             {
-                liquidStateOn = movement.LiquidState;
+                liquidStateOn = controller.LiquidState;
 
                 if (liquidStateOn)
                 {
@@ -85,7 +87,7 @@ public class liquidState : MonoBehaviour
                     if ((finishLiquid - startLiquid > hidratation * 3) || (Input.GetKey(KeyCode.Q) && startLiquid + 30 < Time.frameCount))
                     {
                         liquidStateOn = false;
-                        movement.LiquidState = liquidStateOn;
+                        controller.LiquidState = liquidStateOn;
                         cooldown = true;
                         startCooldown = Time.frameCount;
                         firstFrameNormal = true;
