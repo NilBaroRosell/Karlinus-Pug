@@ -282,7 +282,7 @@ public class kill_cono_vision : MonoBehaviour {
 
     private void killEnemy()
     {
-        
+        Debug.Log("HI");
         anim.SetBool("Is_Running", false);
             anim.SetBool("Is_Crouching", false);
             anim.SetBool("Is_Walking", false);

@@ -246,8 +246,6 @@ public class csAreaVision : MonoBehaviour {
     }
 
     Mesh areaMesh(Mesh mesh) {
-
-        Debug.Log("Comeme los huevos");
         Mesh _mesh = new Mesh();
         Vector3[] vertices = new Vector3[mesh.vertices.Length];
         Vector2[] uv = new Vector2[mesh.uv.Length];
