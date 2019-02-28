@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Controller : MonoBehaviour {
+public class Controller : MonoBehaviour
+{
 
     CharacterController characterController;
     //public float jumpSpeed = 8.0f;
@@ -25,6 +26,7 @@ public class Controller : MonoBehaviour {
     private Vector3 camForward;
     private Vector3 camRight;
     private Vector3 moveDirection = Vector3.zero;
+    public bool usingGravity = true;
 
     //Nil Variables
     public bool hitting;
@@ -48,10 +50,11 @@ public class Controller : MonoBehaviour {
     public playerState state;
 
     // Use this for initialization
-    void Start () {
+    void Start()
+    {
         characterController = GetComponent<CharacterController>();
-        WeaponInitialize();
         state = playerState.IDLE;
+        //Physics.IgnoreLayerCollision(9, 8);
     }
 
     // Update is called once per frame
@@ -164,13 +167,6 @@ public class Controller : MonoBehaviour {
         camRight = camRight.normalized;
     }
 
-    void WeaponInitialize()
-    {
-        anim.SetBool("Is_Draw", true);
-        weaponState[1].SetActive(false);
-        weaponState[0].SetActive(true);
-    }
-
     void Move()
     {
         if (characterController.isGrounded)
@@ -191,10 +187,10 @@ public class Controller : MonoBehaviour {
             {
                 Run();
             }
-            else if(!(Input.GetAxis("Horizontal") == 0 && Input.GetAxis("Vertical") == 0)) Walk();
+            else if (!(Input.GetAxis("Horizontal") == 0 && Input.GetAxis("Vertical") == 0)) Walk();
         }
 
-        moveDirection.y -= gravity * Time.deltaTime;
+       if(usingGravity) moveDirection.y -= gravity * Time.deltaTime;
 
         //Move relative to camera
         CamDirection();
@@ -202,7 +198,7 @@ public class Controller : MonoBehaviour {
         transform.LookAt(transform.position + new Vector3(moveDirection.x, 0, moveDirection.z));
         // Move the controller
         characterController.Move(moveDirection * Time.deltaTime);
-     
+
     }
 
     void Crouch()
@@ -233,42 +229,45 @@ public class Controller : MonoBehaviour {
         anim.SetBool("Is_Idle", true);
     }
 
-public void stepNoise(int message)
-{
-    float dist;
-    Vector3 enemyDist;
-    if (message == 1) dist = 10;
-    else dist = 30;
-    for (int i = 0; i < EnemyManager.Enemies.Length; i++)
+    public void stepNoise(int message)
     {
-        if (EnemyManager.Enemies[i].activeSelf && EnemyManager.Enemies[i].GetComponent<csAreaVision>().actualState != csAreaVision.enemyState.FIGHTING)
+        float dist;
+        Vector3 enemyDist;
+        if (message == 1) dist = 10;
+        else dist = 30;
+        for (int i = 0; i < EnemyManager.Enemies.Length; i++)
         {
-            enemyDist = new Vector3(EnemyManager.Enemies[i].transform.position.x - transform.position.x, 0.0f, EnemyManager.Enemies[i].transform.position.z - transform.position.z);
-            if (enemyDist.magnitude <= dist)
+            if (EnemyManager.Enemies[i].activeSelf && EnemyManager.Enemies[i].GetComponent<csAreaVision>().actualState != csAreaVision.enemyState.FIGHTING)
             {
-                EnemyManager.Enemies[i].GetComponent<csAreaVision>().actualState = csAreaVision.enemyState.SEARCHING;
-                EnemyManager.Enemies[i].GetComponent<csAreaVision>().lastState = csAreaVision.enemyState.FIGHTING;
-                EnemyManager.Enemies[i].GetComponent<csAreaVision>().lastSeenPosition = GameObject.Find("Jugador").transform.position;
-                EnemyManager.Enemies[i].GetComponent<csAreaVision>().speed = 50;
+                enemyDist = new Vector3(EnemyManager.Enemies[i].transform.position.x - transform.position.x, 0.0f, EnemyManager.Enemies[i].transform.position.z - transform.position.z);
+                if (enemyDist.magnitude <= dist)
+                {
+                    EnemyManager.Enemies[i].GetComponent<csAreaVision>().actualState = csAreaVision.enemyState.SEARCHING;
+                    EnemyManager.Enemies[i].GetComponent<csAreaVision>().lastState = csAreaVision.enemyState.FIGHTING;
+                    EnemyManager.Enemies[i].GetComponent<csAreaVision>().lastSeenPosition = GameObject.Find("Jugador").transform.position;
+                    EnemyManager.Enemies[i].GetComponent<csAreaVision>().speed = 50;
+                }
             }
         }
     }
-}
 
-public void Take_sword(int message)
-{
-    if (anim.GetBool("Is_Damaging") == false && state != playerState.LIQUID)
+
+
+    public void finishAnim(int message)
     {
-        if (anim.GetBool("Is_Detected"))
+        if (message == 1)
         {
-            weaponState[1].SetActive(true);
-            weaponState[0].SetActive(false);
+            kill_cono_vision.returnPlayer = true;
         }
-        else
-        {
-            weaponState[1].SetActive(false);
-            weaponState[0].SetActive(true);
-        }
+
     }
-}
+
+
+    public void liquidTransformation()
+    {
+        usingGravity = false;
+        GetComponent<Collider>().enabled = false;
+        LiquidState = true;
+        state = playerState.LIQUID;
+    }
 }

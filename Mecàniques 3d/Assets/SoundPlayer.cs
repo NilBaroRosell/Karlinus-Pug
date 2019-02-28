@@ -8,8 +8,7 @@ public class SoundPlayer : MonoBehaviour {
     public AudioClip stateChange;
     public AudioClip liqState;
     public AudioClip run;
-    public AudioClip walk;
-    public AudioClip withdraw;    
+    public AudioClip walk; 
     public GameObject head, leftEnd, leftBase, rightEnd, rightBase, rightFoot, leftFoot;
 
     //Animation Sounds
@@ -17,17 +16,20 @@ public class SoundPlayer : MonoBehaviour {
     public void SoftStep(string foot)
     {
         if (foot == "left") leftFoot.GetComponent<AudioSource>().PlayOneShot(walk);
-        else if (foot == "right") rightFoot.GetComponent<AudioSource>().PlayOneShot(walk);
+        else if (foot == "right")
+        {
+            GetComponent<Controller>().stepNoise(1);
+            rightFoot.GetComponent<AudioSource>().PlayOneShot(walk);
+        }
     }
 
     public void HardStep(string foot)
     {
         if (foot == "left") leftFoot.GetComponent<AudioSource>().PlayOneShot(run);
-        else if (foot == "right") rightFoot.GetComponent<AudioSource>().PlayOneShot(run);
-    }
-
-    public void WithdrawSword()
-    {
-        GetComponent<AudioSource>().PlayOneShot(withdraw);
+        else if (foot == "right")
+        {
+            GetComponent<Controller>().stepNoise(2);
+            rightFoot.GetComponent<AudioSource>().PlayOneShot(run);
+        }
     }
 }

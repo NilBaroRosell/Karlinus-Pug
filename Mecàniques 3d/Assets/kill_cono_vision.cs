@@ -31,7 +31,7 @@ public class kill_cono_vision : MonoBehaviour {
     public static bool returnPlayer;
     private GameObject player;
     private liquidState liquidKill;
-    private movement playerMovement;
+    private Controller playerMovement;
     private Vector3 playerPos;
     private float altura;
     private bool aproaching;
@@ -126,7 +126,7 @@ public class kill_cono_vision : MonoBehaviour {
         auxPressed = false;
         player = GameObject.Find("Jugador");
         liquidKill = player.GetComponent<liquidState>();
-        playerMovement = player.GetComponent<movement>();
+        playerMovement = player.GetComponent<Controller>();
         liquidAgent = player.GetComponent<NavMeshAgent>();
         if (liquidAgent == null)
         {
@@ -182,10 +182,10 @@ public class kill_cono_vision : MonoBehaviour {
                         if (Input.GetKeyDown(KeyCode.Mouse0))
                         {
                             playerPos = player.transform.position;
-                            playerMovement.state = movement.playerState.HITTING;
+                            playerMovement.state = Controller.playerState.HITTING;
                             liquidAgent.enabled = true;
                             liquidAgent.SetDestination(targets[0].target.transform.GetChild(4).gameObject.transform.position);
-                            player.GetComponent<Rigidbody>().useGravity = false;
+                         //   player.GetComponent<Controller>().usingGravity = false;
                             targets[targetI].target.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePosition;
                             player.GetComponent<Collider>().enabled = false;
                             targets[targetI].target.GetComponent<Collider>().enabled = false;
@@ -240,8 +240,7 @@ public class kill_cono_vision : MonoBehaviour {
         switch(actualState)
         {
             case killState.WATCHING:
-                if (anim.GetBool("Is_Detected")) kill_vision();
-                if(!anim.GetBool("Is_Damaging")) draw_Weapon();
+                kill_vision();
                 actualString = "W";
                 break;
             case killState.APROACHING:
@@ -270,12 +269,12 @@ public class kill_cono_vision : MonoBehaviour {
     {
         liquidKill.hideLiquid();
         //player.transform.position = target.transform.GetChild(4).transform.position;
-        player.GetComponent<Rigidbody>().transform.LookAt(destination);
+        player.transform.LookAt(destination);
         actualState = killState.KILLING;
         liquidAgent.enabled = false;
         //StartCoroutine(ExecuteAfterTime(1.0f));
         aproaching = false;
-        player.GetComponent<Rigidbody>().velocity *= 0;
+        player.GetComponent<CharacterController>().SimpleMove(Vector3.zero);
         targets[targetI].target.gameObject.GetComponent<Animator>().SetTrigger("Is_Dying");
         targets[targetI].targetState.dead = true;
         killEnemy();
@@ -294,10 +293,10 @@ public class kill_cono_vision : MonoBehaviour {
     private void returnToPosition()
     {
         player.GetComponent<Collider>().enabled = true;
-        player.GetComponent<Rigidbody>().useGravity = true;
+        //player.GetComponent<Controller>().usingGravity = true;
         liquidKill.setHidratation();
         liquidKill.hideLiquid();
-        playerMovement.state = movement.playerState.IDLE;
+        playerMovement.state = Controller.playerState.IDLE;
         liquidAgent.enabled = false;
         actualState = killState.WATCHING;
     }
@@ -308,27 +307,6 @@ public class kill_cono_vision : MonoBehaviour {
             targets[targetI].target.transform.GetChild(4).gameObject.SetActive(false);
     }
 
-    private void draw_Weapon()
-    {
-        if (!auxPressed && anim.GetBool("Is_Draw"))
-        {
-            if (Input.GetKeyDown(KeyCode.Mouse1) && anim.GetBool("Is_Detected"))
-            {
-                anim.SetBool("Is_Detected", false);
-                anim.ResetTrigger("Is_Sheathing");
-                anim.SetTrigger("Is_Sheathing");
-                auxPressed = true;
-            }
-            else if ((Input.GetKeyDown(KeyCode.Mouse1) || Input.GetKeyDown(KeyCode.Mouse0)) && !anim.GetBool("Is_Detected"))
-            {
-                anim.SetBool("Is_Detected", true);
-                anim.ResetTrigger("Is_Withdrawing");
-                anim.SetTrigger("Is_Withdrawing");
-                auxPressed = true;
-            }
-        }
-        else if (!Input.GetKeyDown(KeyCode.Mouse1)) auxPressed = false;
-    }
 
 
     void setReturn()
@@ -344,7 +322,6 @@ public class kill_cono_vision : MonoBehaviour {
         {
             actualState = killState.APROACHING;
             liquidAgent.SetDestination(targets[targetI].target.transform.GetChild(4).gameObject.transform.position);
-            Debug.Log("dos");
         }
         else
         {

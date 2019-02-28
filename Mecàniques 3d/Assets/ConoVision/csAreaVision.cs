@@ -25,7 +25,7 @@ public class csAreaVision : MonoBehaviour {
     private Rigidbody rb;
     private Animator anim;
     static Animator playerAnim;
-    private movement playerMovement;
+    private Controller playerMovement;
     private float maxDist;
 
     public int speed;
@@ -155,7 +155,7 @@ public class csAreaVision : MonoBehaviour {
         KarlinusEspectre.transform.position = new Vector3(0.15f, 0.023f, -0.7f) * -1 + transform.position;
         KarlinusEspectre.SetActive(false);
         Pepino = GameObject.Find("Pepino");
-        playerMovement = GameObject.Find("Jugador").GetComponent<movement>();
+        playerMovement = GameObject.Find("Jugador").GetComponent<Controller>();
         playerDist = new Vector3(GameObject.Find("Jugador").transform.position.x - rb.transform.position.x, 0.0f, GameObject.Find("Jugador").transform.position.z - rb.transform.position.z);
         discovered = false;
         discoveredRef = Time.realtimeSinceStartup;
@@ -212,7 +212,7 @@ public class csAreaVision : MonoBehaviour {
                     {
                         StartCoroutine(CheckStuck(10.0f));
                         playerScaped();
-                        GameObject.Find("Jugador").GetComponent<movement>().liquidTransformation();
+                        GameObject.Find("Jugador").GetComponent<Controller>().liquidTransformation();
                         for (int i = 0; i < EnemyManager.Enemies.Length; i++)
                         {
                             if (EnemyManager.Enemies[i].GetComponent<csAreaVision>().actualState == enemyState.FIGHTING) EnemyManager.Enemies[i].GetComponent<csAreaVision>().playerScaped();
@@ -247,6 +247,7 @@ public class csAreaVision : MonoBehaviour {
 
     Mesh areaMesh(Mesh mesh) {
 
+        Debug.Log("Comeme los huevos");
         Mesh _mesh = new Mesh();
         Vector3[] vertices = new Vector3[mesh.vertices.Length];
         Vector2[] uv = new Vector2[mesh.uv.Length];
@@ -378,7 +379,7 @@ public class csAreaVision : MonoBehaviour {
     {
         yield return new WaitForSeconds(time);
 
-        playerMovement.state = movement.playerState.IDLE;
+        playerMovement.state = Controller.playerState.IDLE;
 
         DestroyEnemy();
     }
@@ -446,9 +447,10 @@ public class csAreaVision : MonoBehaviour {
             if (playerDist.magnitude <= rango)
             {
                 if (actualState == enemyState.PATROLLING || actualState == enemyState.SEARCHING) searchingRef = Time.realtimeSinceStartup;
-                if (actualState != enemyState.FIGHTING) meshFilter.mesh = areaMesh(meshFilter.mesh);
+                //if (actualState != enemyState.FIGHTING) 
             }
         }
+        meshFilter.mesh = areaMesh(meshFilter.mesh);
         switch (actualState)
         {
             case enemyState.PATROLLING:
@@ -559,7 +561,7 @@ public class csAreaVision : MonoBehaviour {
                     if (playerDist.magnitude< 1.5f)
                     {
                         speed = 0;
-                        playerMovement.state = movement.playerState.HITTING;
+                        playerMovement.state = Controller.playerState.HITTING;
                         if (atacking == false) playerDeath(3.0f);
                         if (atackRefTaken == false)
                         {

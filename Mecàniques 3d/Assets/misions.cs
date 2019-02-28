@@ -17,7 +17,7 @@ public class misions : MonoBehaviour {
     private Respawns loadRespawn;
     private HUD HUD_Script;
     private GameObject Player;
-    private movement playerMovement;
+    private Controller playerMovement;
     public static bool nextEvent;
     private GameObject mainCamera;
     private GameObject secundaryCamera;
@@ -79,7 +79,7 @@ public class misions : MonoBehaviour {
         if (GameObject.Find("Jugador") != null)
         {
             Player = GameObject.Find("Jugador");
-            playerMovement = Player.GetComponent<movement>();
+            playerMovement = Player.GetComponent<Controller>();
             HUD_Script = Player.GetComponent<HUD>();
             Cursor.visible = false;
             Cursor.lockState = CursorLockMode.Locked;
@@ -293,7 +293,7 @@ public class misions : MonoBehaviour {
                     c.a += 0.04f;
                     GameObject.Find("Logo_M1").transform.GetChild(0).GetComponent<Image>().color = c;
                 }
-                playerMovement.state = movement.playerState.HITTING;
+                playerMovement.state = Controller.playerState.HITTING;
                 Player.GetComponent<Animator>().SetBool("Is_Draw", false);
                 liquidState.hidratation = 100;
                 if (nextEvent)
@@ -337,7 +337,7 @@ public class misions : MonoBehaviour {
                     nextEvent = false;
                     HUD_Script.showM1Objective(0);
                     HUD_Script.showM1Helps(0, 60);
-                    playerMovement.state = movement.playerState.IDLE;
+                    playerMovement.state = Controller.playerState.IDLE;
                 }
                 break;
             case 3:
@@ -346,7 +346,7 @@ public class misions : MonoBehaviour {
                 {
                     Player.transform.position = new Vector3(-48.61f, 0.5040904f, -16.74f);
                     Player.transform.eulerAngles = new Vector3(0.0f, 147.341f, 0.0f);
-                    playerMovement.state = movement.playerState.HITTING;
+                    playerMovement.state = Controller.playerState.HITTING;
                     secundaryCamera.SetActive(true);
                     loadRespawn.Mision_Objects[2].SetActive(true);
                     loadRespawn.Mision_Objects[2].GetComponent<EnemyManager>().maxDist = 125;
@@ -401,7 +401,7 @@ public class misions : MonoBehaviour {
                     HUD_Script.showM1Helps(5, 45);
                     Player.GetComponent<Animator>().SetBool("Is_Detected", true);
                     Player.GetComponent<Animator>().SetBool("Is_Draw", true);
-                    playerMovement.state = movement.playerState.IDLE;
+                    playerMovement.state = Controller.playerState.IDLE;
                 }
                 break;
             case 7:
@@ -481,7 +481,7 @@ public class misions : MonoBehaviour {
                 if (loadRespawn.BoxTriggers[0].activeSelf == false)
                 {
                     misionIndex++;
-                    playerMovement.state = movement.playerState.HITTING;
+                    playerMovement.state = Controller.playerState.HITTING;
                     secundaryCamera.SetActive(true);
                     secundaryCamera.transform.position = new Vector3(66.5f, -13.7f, -29.8f);
                     secundaryCamera.transform.eulerAngles = new Vector3(14.901f, 448.579f, -0.9480001f);
@@ -516,7 +516,7 @@ public class misions : MonoBehaviour {
                 secundaryCamera.transform.rotation = Quaternion.Lerp(secundaryCamera.transform.rotation, secundaryCameraDestination.transform.rotation, 1.25f * Time.deltaTime);
                 if (nextEvent)
                 {
-                    playerMovement.state = movement.playerState.IDLE;
+                    playerMovement.state = Controller.playerState.IDLE;
                     HUD_Script.showM2Objective(1);
                     HUD_Script.showM2Helps(0, 70);
                     secundaryCamera.SetActive(false);
@@ -541,7 +541,7 @@ public class misions : MonoBehaviour {
                     loadRespawn.Mision_Objects[1].SetActive(true);
                     nextEvent = false;
                     misionIndex++;
-                    playerMovement.state = movement.playerState.HITTING;
+                    playerMovement.state = Controller.playerState.HITTING;
                     secundaryCamera.SetActive(true);
                     secundaryCamera.transform.position = mainCamera.transform.position;
                     secundaryCamera.transform.rotation = mainCamera.transform.rotation;
@@ -563,7 +563,7 @@ public class misions : MonoBehaviour {
                 if (nextEvent)
                 {
                     nextEvent = false;
-                    playerMovement.state = movement.playerState.IDLE;
+                    playerMovement.state = Controller.playerState.IDLE;
                     HUD_Script.showM2Objective(3);
                     secundaryCamera.SetActive(false);
                     misionIndex++;
@@ -623,7 +623,7 @@ public class misions : MonoBehaviour {
         switch (misionIndex)
         {
             case 0:
-                playerMovement.state = movement.playerState.HITTING;
+                playerMovement.state = Controller.playerState.HITTING;
                 Player.transform.position = new Vector3(30.765f, -27.523f, -38.321f);
                 Player.transform.eulerAngles = new Vector3(0.0f, 90f, 0.0f);
                 if (nextEvent)
@@ -633,7 +633,7 @@ public class misions : MonoBehaviour {
                     Player.transform.position = new Vector3(31.6725f, -27.523f, -38.321f);
                     Player.transform.eulerAngles = new Vector3(0.0f, 180.0f, 0.0f);
                     secundaryCamera.SetActive(false);
-                    playerMovement.state = movement.playerState.IDLE;
+                    playerMovement.state = Controller.playerState.IDLE;
                     HUD_Script.showSM_1Dialog(0, 60, (Screen.width * 5) / 9, (Screen.height) / 9, 300);
                     if (GameObject.Find("Enemigos_SM1") != null) GameObject.Find("Enemigos_SM1").transform.GetChild(0).gameObject.GetComponent<csAreaVision>().DestroyEnemy();
                     if (GameObject.Find("Enemigos_SM1") != null) GameObject.Find("Enemigos_SM1").transform.GetChild(1).gameObject.GetComponent<csAreaVision>().DestroyEnemy();
@@ -642,7 +642,7 @@ public class misions : MonoBehaviour {
             case 1:
                 if (loadRespawn.BoxTriggers[0].activeSelf == false)
                 {
-                    playerMovement.state = movement.playerState.HITTING;
+                    playerMovement.state = Controller.playerState.HITTING;
                     Player.transform.position = new Vector3(32.44f, -27.523f, -43f);
                     Player.transform.eulerAngles = new Vector3(0.0f, 180.0f, 0.0f);
                     misionIndex++;
@@ -676,7 +676,7 @@ public class misions : MonoBehaviour {
             case 5:
                 if (HUD.finalTime - HUD.startTime > HUD.timeUntilDisapear + 10)
                 {
-                    playerMovement.state = movement.playerState.IDLE;
+                    playerMovement.state = Controller.playerState.IDLE;
                     HUD_Script.showSM_1Objective(0);
                     HUD_Script.showSM_1Helps(0, 38);
                     secundaryCamera.SetActive(false);
@@ -709,7 +709,7 @@ public class misions : MonoBehaviour {
                     Player.transform.eulerAngles = new Vector3(0f, 10f, 0f);
                     secundaryCamera.transform.position = new Vector3(-63.08f, -3.9f, 105.13f);
                     secundaryCamera.transform.eulerAngles = new Vector3(30.0f, 40.0f, 0.0f);
-                    playerMovement.state = movement.playerState.HITTING;
+                    playerMovement.state = Controller.playerState.HITTING;
                     HUD_Script.showSM_1Dialog(6, 35, (Screen.width * 7) / 13, (Screen.height * 10) / 13, 300);
                 }
                 break;
@@ -741,7 +741,7 @@ public class misions : MonoBehaviour {
                     HUD_Script.showSM_1Objective(1);
                     HUD_Script.showSM_1Helps(1, 38);
                     nextEvent = false;
-                    playerMovement.state = movement.playerState.IDLE;
+                    playerMovement.state = Controller.playerState.IDLE;
                     RatHood.pointObject.GetComponentInChildren<UnityEngine.AI.NavMeshAgent>().Warp(new Vector3(14.32f, -9.1f, 150.9f));
                     misionIndex++;
                 }
@@ -756,7 +756,7 @@ public class misions : MonoBehaviour {
                     secundaryCamera.SetActive(true);
                     secundaryCamera.transform.position = new Vector3(14.27f, -4.5f, 140.0f);
                     secundaryCamera.transform.eulerAngles = new Vector3(20.0f, 0.0f, 0.0f);
-                    playerMovement.state = movement.playerState.HITTING;
+                    playerMovement.state = Controller.playerState.HITTING;
                     HUD_Script.showSM_1Dialog(9, 50, (Screen.width * 8) / 13, (Screen.height * 10) / 12, 300);
                 }
                 break;
@@ -772,7 +772,7 @@ public class misions : MonoBehaviour {
                 {
                     HUD_Script.showSM_1Objective(2);
                     secundaryCamera.SetActive(false);
-                    playerMovement.state = movement.playerState.IDLE;
+                    playerMovement.state = Controller.playerState.IDLE;
                     misionIndex++;
                 }
                 break;
