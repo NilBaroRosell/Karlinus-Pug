@@ -15,6 +15,8 @@ public class FollowKarlinus : MonoBehaviour {
     NavMeshAgent ratHoodAgent;
     private Animator anim;
 
+    public bool firstPoint = false;
+
     private void Awake()
     {
         ratHoodAgent = this.GetComponent<NavMeshAgent>();
@@ -31,15 +33,33 @@ public class FollowKarlinus : MonoBehaviour {
 	
 	// Update is called once per frame
 	void FixedUpdate () {
-        
-        if(misionsScript.ActualMision == misions.Misions.SM_1)
+        if (misionsScript.ActualMision == misions.Misions.SM_1)
         {
             switch(misions.misionIndex)
             {
                 case 6:
+                    if (GameObject.Find("Zone Controll SM1") != null) GameObject.Find("Zone Controll SM1").transform.position = gameObject.transform.position;
                     anim.SetBool("Is_Idle", false);
-                    destinationPoint = karlinus.transform.position;
-                    if ((destinationPoint - gameObject.transform.position).magnitude > 2)
+                    if(!firstPoint) destinationPoint = new Vector3(32.56f, -27.33f, -29.2f);
+                    else destinationPoint = new Vector3(-83.95f, -27.33f, -46.68f);
+                    vecToDestination = new Vector3(destinationPoint.x - ratHoodTransform.position.x, 0.0f, destinationPoint.z - ratHoodTransform.transform.position.z);
+                    if (vecToDestination.magnitude > 2 && !firstPoint)
+                    {
+                        if (!anim.GetBool("Is_Running")) anim.SetBool("Is_Running", true);
+                        if (GetComponent<NavMeshObstacle>().enabled == false)
+                        {
+                            ratHoodAgent.SetDestination(destinationPoint);
+                            gameObject.transform.LookAt(destinationPoint);
+                            ratHoodAgent.speed = 7;
+                        }
+                        else
+                        {
+                            anim.SetBool("Is_Running", false);
+                        }
+                    }
+                    else firstPoint = true;
+
+                    if (vecToDestination.magnitude > 2 && firstPoint)
                     {
                         if (!anim.GetBool("Is_Running")) anim.SetBool("Is_Running", true);
                         if (GetComponent<NavMeshObstacle>().enabled == false)
@@ -55,6 +75,7 @@ public class FollowKarlinus : MonoBehaviour {
                     }
                     break;
                 case 8:
+                    if (GameObject.Find("Zone Controll SM1") != null) GameObject.Find("Zone Controll SM1").transform.position = gameObject.transform.position;
                     anim.SetBool("Is_Idle", false);
                     destinationPoint = new Vector3 (-58.87f,-9.1f,112.47f);
                     vecToDestination = new Vector3(destinationPoint.x - ratHoodTransform.position.x, 0.0f, destinationPoint.z - ratHoodTransform.transform.position.z);
@@ -80,11 +101,13 @@ public class FollowKarlinus : MonoBehaviour {
                     }
                     break;
                 case 9:
+                    if (GameObject.Find("Zone Controll SM1") != null) GameObject.Find("Zone Controll SM1").transform.position = karlinus.transform.position;
                     anim.SetBool("Is_Running", false);
                     anim.SetBool("Is_Idle", true);
                     gameObject.transform.LookAt(karlinus.transform.position);
                     break;
                 case 12:
+                    if (GameObject.Find("Zone Controll SM1") != null) GameObject.Find("Zone Controll SM1").transform.position = karlinus.transform.position;
                     anim.SetBool("Is_Idle", false);
                     destinationPoint = new Vector3(-37f, -9.1f, 95);
                     vecToDestination = new Vector3(destinationPoint.x - gameObject.transform.position.x, 0.0f, destinationPoint.z - gameObject.transform.position.z);
@@ -107,16 +130,19 @@ public class FollowKarlinus : MonoBehaviour {
                     }
                     break;
                 case 13:
+                    if (GameObject.Find("Zone Controll SM1") != null) GameObject.Find("Zone Controll SM1").transform.position = karlinus.transform.position;
                     anim.SetBool("Is_Running", false);
                     anim.SetBool("Is_Idle", true);
                     gameObject.transform.LookAt(karlinus.transform.position);
                     break;
                 case 14:
+                    if (GameObject.Find("Zone Controll SM1") != null) GameObject.Find("Zone Controll SM1").transform.position = karlinus.transform.position;
                     anim.SetBool("Is_Running", false);
                     anim.SetBool("Is_Idle", true);
                     gameObject.transform.LookAt(karlinus.transform.position);
                     break;
                 case 15:
+                    if (GameObject.Find("Zone Controll SM1") != null) GameObject.Find("Zone Controll SM1").transform.position = karlinus.transform.position;
                     anim.SetBool("Is_Running", false);
                     anim.SetBool("Is_Idle", true);
                     gameObject.transform.LookAt(karlinus.transform.position);
