@@ -109,32 +109,14 @@ public class Respawns : MonoBehaviour {
     public Vector3 NONE()
     {
         LoadNONE();
-        if (GameObject.Find("Zone_1") != null)
-        {
-            for (int i = 0; i < GameObject.Find("Zone_1").transform.childCount; i++)
-            {
-                if (GameObject.Find("Zone_1").transform.GetChild(i).gameObject.tag == "enemy") GameObject.Find("Zone_1").transform.GetChild(i).GetComponent<csAreaVision>().DestroyEnemy();
-            }
-                Destroy(GameObject.Find("Zone_1"));
-        }
+        if (GameObject.Find("Zone_1") != null) GameObject.Find("Zone_1").SetActive(false);
         if (GameObject.Find("Enemies_Zone_2") != null) GameObject.Find("Enemies_Zone_2").SetActive(true);
-        if (GameObject.Find("Enemigos_SM1") != null)
-        {
-            for(int i = 0; i < GameObject.Find("Enemigos_SM1").transform.childCount; i++)
-                GameObject.Find("Enemigos_SM1").transform.GetChild(i).GetComponent<csAreaVision>().DestroyEnemy();
-        }
-        if (GameObject.Find("ENEMIGOS_SEWER_2") != null)
-        {
-            for (int i = 0; i < GameObject.Find("ENEMIGOS_SEWER_2").transform.childCount; i++)
-                GameObject.Find("ENEMIGOS_SEWER_2").transform.GetChild(i).GetComponent<csAreaVision>().DestroyEnemy();
-        }
-        Debug.Log("Aquí");
+        if (GameObject.Find("Enemigos_SM1") != null) GameObject.Find("Enemigos_SM1").SetActive(false);
         if (initialRespawn == InitialRespawns.NONE) return RespawnPoints[(int)LoadScene.respawnToLoad];
         else
         {
-            LoadScene.respawnToLoad = initialRespawn;
+            LoadScene.respawnToLoad = (InitialRespawns)initialRespawn;
             initialRespawnIndex = (int)initialRespawn;
-            Debug.Log(initialRespawnIndex);
             initialRespawn = InitialRespawns.NONE;
             return RespawnPoints[initialRespawnIndex];
         }
