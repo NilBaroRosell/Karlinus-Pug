@@ -244,7 +244,12 @@ public class kill_cono_vision : MonoBehaviour {
                 actualString = "W";
                 break;
             case killState.APROACHING:
-                if ((liquidAgent.remainingDistance <= 0.0f && stuckReference + 0.5f < Time.realtimeSinceStartup) || stuckReference + 2.5f < Time.realtimeSinceStartup) aproachEnemy(targets[targetI].killTargetPos);
+                if (!liquidAgent.isOnNavMesh) {
+                    Vector3 destDirection = targets[targetI].killTargetPos - player.transform.position;
+                    destDirection.Normalize();
+                    player.transform.position += destDirection;
+                }
+                else if ((liquidAgent.remainingDistance <= 0.0f && stuckReference + 0.5f < Time.realtimeSinceStartup) || stuckReference + 2.5f < Time.realtimeSinceStartup) aproachEnemy(targets[targetI].killTargetPos);
                 actualString = "A";
                 break;
             case killState.KILLING:
@@ -252,7 +257,13 @@ public class kill_cono_vision : MonoBehaviour {
                 actualString = "K";
                 break;
             case killState.RETURNING:
-                if ((liquidAgent.remainingDistance <= 0.0f && stuckReference + 0.5f < Time.realtimeSinceStartup) || stuckReference + 2.5f < Time.realtimeSinceStartup) returnToPosition();
+                if (!liquidAgent.isOnNavMesh)
+                {
+                    Vector3 destDirection = playerPos - player.transform.position;
+                    destDirection.Normalize();
+                    player.transform.position += destDirection;
+                }
+                else if ((liquidAgent.remainingDistance <= 0.0f && stuckReference + 0.5f < Time.realtimeSinceStartup) || stuckReference + 2.5f < Time.realtimeSinceStartup) returnToPosition();
                 actualString = "R";
                 break;
             default:
@@ -268,11 +279,9 @@ public class kill_cono_vision : MonoBehaviour {
     private void aproachEnemy(Vector3 destination)
     {
         liquidKill.hideLiquid();
-        //player.transform.position = target.transform.GetChild(4).transform.position;
         player.transform.LookAt(destination);
         actualState = killState.KILLING;
         liquidAgent.enabled = false;
-        //StartCoroutine(ExecuteAfterTime(1.0f));
         aproaching = false;
         player.GetComponent<CharacterController>().SimpleMove(Vector3.zero);
         targets[targetI].target.gameObject.GetComponent<Animator>().SetTrigger("Is_Dying");
@@ -313,11 +322,9 @@ public class kill_cono_vision : MonoBehaviour {
     {
         targetI++;
         anim.SetBool("Is_Damaging", false);
-       // actualState = killState.RETURNING;
         stuckReference = Time.realtimeSinceStartup;
         liquidKill.showLiquid();
         liquidAgent.enabled = true;
-        //liquidAgent.SetDestination(playerPos);
         if (targetI < targets.Length && targets[targetI].seen)
         {
             actualState = killState.APROACHING;
