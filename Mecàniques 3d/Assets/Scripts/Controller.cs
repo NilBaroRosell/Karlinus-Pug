@@ -67,11 +67,7 @@ public class Controller : MonoBehaviour
                     Idle();
                     hidratationStates.SetActive(true);
                     hitting = false;
-                    if (!anim.GetCurrentAnimatorStateInfo(0).IsName("Sheathing Sword") && !anim.GetCurrentAnimatorStateInfo(0).IsName("Withdrawing Sword"))
-                    {
-                        Move();
-                    }
-
+                    Move();
                     finishDash = Time.frameCount;
 
                     RaycastHit hit;
@@ -204,6 +200,7 @@ public class Controller : MonoBehaviour
     void Crouch()
     {
         moveDirection *= speed * croachMultiplier;
+        anim.SetBool("Is_Idle", false);
         if (Input.GetAxis("Horizontal") == 0 && Input.GetAxis("Vertical") == 0) anim.SetBool("Is_Crouched_Idle", true);
         else anim.SetBool("Is_Crouching", true);
     }
@@ -212,6 +209,7 @@ public class Controller : MonoBehaviour
     {
         moveDirection *= speed * runMultiplier;
         anim.SetBool("Is_Running", true);
+        anim.SetBool("Is_Idle", false);
     }
 
     void Walk()
