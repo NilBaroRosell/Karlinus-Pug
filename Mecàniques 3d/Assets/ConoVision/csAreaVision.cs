@@ -410,7 +410,7 @@ public class csAreaVision : MonoBehaviour {
             EnemyManager.EnemiesPos = auxPos;
         }
         Debug.Log(EnemyManager.Enemies.Length);
-        transform.gameObject.SetActive(false);
+        this.gameObject.SetActive(false);
     }
 
     public void playerScaped()
@@ -446,10 +446,9 @@ public class csAreaVision : MonoBehaviour {
             if (playerDist.magnitude <= rango)
             {
                 if (actualState == enemyState.PATROLLING || actualState == enemyState.SEARCHING) searchingRef = Time.realtimeSinceStartup;
-                //if (actualState != enemyState.FIGHTING) 
+                if (actualState != enemyState.FIGHTING) meshFilter.mesh = areaMesh(meshFilter.mesh);
             }
         }
-        meshFilter.mesh = areaMesh(meshFilter.mesh);
         switch (actualState)
         {
             case enemyState.PATROLLING:
