@@ -309,10 +309,9 @@ public class csAreaVision : MonoBehaviour {
     void FixedUpdate() {
         playerDist = new Vector3(GameObject.Find("Jugador").transform.position.x - rb.transform.position.x, 0.0f, GameObject.Find("Jugador").transform.position.z - rb.transform.position.z);
 
-        if (playerDist.magnitude <= maxDist && !dead)
+        if (playerDist.magnitude <= maxDist)
         {
-
-            IA_Controller();
+            if(!dead) IA_Controller();
             Start();
         }
         else if (playerDist.magnitude > maxDist)
