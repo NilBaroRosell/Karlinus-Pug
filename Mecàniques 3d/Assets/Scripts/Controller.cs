@@ -231,6 +231,7 @@ public class Controller : MonoBehaviour
 
     public void stepNoise(int message)
     {
+        if (state == playerState.LIQUID) return;
         float dist;
         Vector3 enemyDist;
         if (message == 1) dist = 10;

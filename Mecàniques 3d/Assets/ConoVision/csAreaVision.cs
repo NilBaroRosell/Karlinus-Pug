@@ -124,6 +124,7 @@ public class csAreaVision : MonoBehaviour {
     // Use this for initialization
     void Awake() {
         GetComponent<NavMeshObstacle>().enabled = false;
+        KarlinusEspectre = transform.GetChild(5).gameObject;
         disabler = GetComponent<csAreaVision>();
         if (GameObject.Find("EnemyManager") != null) maxDist = GameObject.Find("EnemyManager").GetComponent<EnemyManager>().maxDist;
         else maxDist = 100;
@@ -368,8 +369,8 @@ public class csAreaVision : MonoBehaviour {
             lastState = enemyState.SEARCHING;
             speed = 10;
             alertRend.material.SetColor("_Color", Color.green);
-            KarlinusEspectre.transform.position = new Vector3(0.15f, 0.023f, -0.7f) * -1 + transform.position;
-            KarlinusEspectre.SetActive(false);
+          //  KarlinusEspectre.transform.position = new Vector3(0.15f, 0.023f, -0.7f) * -1 + transform.position;
+          //  KarlinusEspectre.SetActive(false);
         }
     }
 
@@ -467,14 +468,14 @@ public class csAreaVision : MonoBehaviour {
                     lastState = enemyState.PATROLLING;
                     alertRend.material.SetColor("_Color", Color.yellow);
                     destinationPoint = GameObject.Find("Jugador").transform.position;
-                    KarlinusEspectre.SetActive(false);
+                 //   KarlinusEspectre.SetActive(false);
                 }
                 actualString = "P";
                 break;
             case enemyState.SEARCHING:
                 //if (lastState == enemyState.PATROLLING) lastSeenPosition = GameObject.Find("Jugador").transform.position;
                 if (playerAnim.GetBool("Is_Damaging") && GetComponent<Collider>().enabled == false) speed = 0;
-                KarlinusEspectre.transform.position = destinationPoint;
+               // KarlinusEspectre.transform.position = destinationPoint;
                 if (discoveredRef + 0.25f < Time.realtimeSinceStartup && searchingState)
                 {
                     alertRend.material.SetColor("_Color", Color.yellow);
@@ -494,8 +495,8 @@ public class csAreaVision : MonoBehaviour {
                     lastState = enemyState.SEARCHING;
                     speed = 10;
                     alertRend.material.SetColor("_Color", Color.green);
-                    KarlinusEspectre.transform.position = new Vector3(0.15f, 0.023f, -0.7f) * -1 + transform.position;
-                    KarlinusEspectre.SetActive(false);
+                 //   KarlinusEspectre.transform.position = new Vector3(0.15f, 0.023f, -0.7f) * -1 + transform.position;
+                 //   KarlinusEspectre.SetActive(false);
                 }
                 else if (playerDist.magnitude <= rango && discovered)//Change to DETECTING
                 {
@@ -504,7 +505,7 @@ public class csAreaVision : MonoBehaviour {
                     lastState = enemyState.PATROLLING;
                     alertRend.material.SetColor("_Color", Color.yellow);
                     destinationPoint = GameObject.Find("Jugador").transform.position;
-                    KarlinusEspectre.SetActive(false);
+                   // KarlinusEspectre.SetActive(false);
                 }
                 actualString = "S";
                 break;
@@ -540,8 +541,8 @@ public class csAreaVision : MonoBehaviour {
                     lastState = enemyState.DETECTING;
                     discoveredRef = Time.realtimeSinceStartup;
                     lastSeenPosition = GameObject.Find("Jugador").transform.position;
-                    KarlinusEspectre.SetActive(true);
-                    KarlinusEspectre.transform.position = lastSeenPosition;
+                //    KarlinusEspectre.SetActive(true);
+                 //   KarlinusEspectre.transform.position = lastSeenPosition;
                 }
                 actualString = "D";
                 break;
@@ -573,8 +574,8 @@ public class csAreaVision : MonoBehaviour {
                         lastState = enemyState.FIGHTING;
                         speed = 50;
                         lastSeenPosition = GameObject.Find("Jugador").transform.position;
-                        KarlinusEspectre.SetActive(true);
-                        KarlinusEspectre.transform.position = lastSeenPosition;
+                    //    KarlinusEspectre.SetActive(true);
+                      //  KarlinusEspectre.transform.position = lastSeenPosition;
                     }
                 }
                 else if (playerAnim.GetBool("Is_Damaging") && GetComponent<Collider>().enabled == false) speed = 0;

@@ -45,6 +45,7 @@ public class misions : MonoBehaviour {
         {
             if (Instance != null)
             {
+                GetComponent<Respawns>().initialRespawn = Instance.loadRespawn.initialRespawn;
                 Destroy(Instance.gameObject);
                 ActualMision = Misions.NONE;
                 editorRespawn = false;
