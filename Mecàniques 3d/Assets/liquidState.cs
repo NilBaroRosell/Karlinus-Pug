@@ -23,7 +23,7 @@ public class liquidState : MonoBehaviour
     public float finishLiquid;
     public float startCooldown;
     public float finishCooldown;
-    public static int hidratation;
+    public int hidratation;
     public int showHidratation;
     public int hidratationPrice;
     public bool inFountain;
@@ -197,5 +197,10 @@ public class liquidState : MonoBehaviour
         transform.GetComponent<cucumber>().enabled = true;
         for (int i = 0; i < weapons.Length; i++) weapons[i].SetActive(true);
         liquid.SetActive(false);
+    }
+
+    public void DrinkWater()
+    {
+        hidratation = 100;
     }
 }

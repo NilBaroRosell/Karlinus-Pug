@@ -113,7 +113,7 @@ public class movement : MonoBehaviour
 
                     checkCooldown = GetComponent<liquidState>();
                     cooldown = checkCooldown.cooldown;
-                    if (Input.GetKeyDown(KeyCode.Q) && !cooldown && liquidState.hidratation >= 0)
+                    if (Input.GetKeyDown(KeyCode.Q) && !cooldown && GameObject.Find("Jugador").GetComponent<liquidState>().hidratation >= 0)
                     {
                         rb.useGravity = false;
                         GetComponent<Collider>().enabled = false;

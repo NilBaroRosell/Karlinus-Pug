@@ -295,7 +295,7 @@ public class misions : MonoBehaviour {
                 }
                 playerMovement.state = Controller.playerState.HITTING;
                 Player.GetComponent<Animator>().SetBool("Is_Draw", false);
-                liquidState.hidratation = 100;
+                GameObject.Find("Jugador").GetComponent<liquidState>().hidratation = 100;
                 if (nextEvent)
                 {
                     misionIndex++;
@@ -310,7 +310,7 @@ public class misions : MonoBehaviour {
                     c2.a -= 0.04f;
                     GameObject.Find("Logo_M1").transform.GetChild(0).GetComponent<Image>().color = c2;
                 }
-                liquidState.hidratation = 100;
+                GameObject.Find("Jugador").GetComponent<liquidState>().hidratation = 100;
                 secundaryCamera.transform.position = Vector3.Lerp(secundaryCamera.transform.position, secundaryCameraDestination.transform.position, 0.75f * Time.deltaTime);
                 secundaryCamera.transform.rotation = Quaternion.Lerp(secundaryCamera.transform.rotation, secundaryCameraDestination.transform.rotation, 0.75f * Time.deltaTime);
                 if (nextEvent)
@@ -324,7 +324,7 @@ public class misions : MonoBehaviour {
                 }
                 break;
             case 2:
-                liquidState.hidratation = 100;
+                GameObject.Find("Jugador").GetComponent<liquidState>().hidratation = 100;
                 secundaryCamera.transform.position = Vector3.Lerp(secundaryCamera.transform.position, secundaryCameraDestination.transform.position, 1.25f * Time.deltaTime);
                 secundaryCamera.transform.rotation = Quaternion.Lerp(secundaryCamera.transform.rotation, secundaryCameraDestination.transform.rotation, 1.25f * Time.deltaTime);
                 if (nextEvent)
@@ -341,7 +341,7 @@ public class misions : MonoBehaviour {
                 }
                 break;
             case 3:
-                liquidState.hidratation = 100;
+                GameObject.Find("Jugador").GetComponent<liquidState>().hidratation = 100;
                 if (loadRespawn.BoxTriggers[0].activeSelf == false)
                 {
                     Player.transform.position = new Vector3(-48.61f, 0.5040904f, -16.74f);
@@ -361,7 +361,7 @@ public class misions : MonoBehaviour {
                 }
                 break;
             case 4:
-                liquidState.hidratation = 100;
+                GameObject.Find("Jugador").GetComponent<liquidState>().hidratation = 100;
                 loadRespawn.Mision_Objects[1].GetComponent<csAreaVision>().speed = 10;
                 loadRespawn.Mision_Objects[1].GetComponent<csAreaVision>().actualState = csAreaVision.enemyState.PATROLLING;
                 if (nextEvent)
@@ -377,7 +377,7 @@ public class misions : MonoBehaviour {
             case 5:
                 loadRespawn.Mision_Objects[1].GetComponent<csAreaVision>().speed = 10;
                 loadRespawn.Mision_Objects[1].GetComponent<csAreaVision>().actualState = csAreaVision.enemyState.PATROLLING;
-                liquidState.hidratation = 100;
+                GameObject.Find("Jugador").GetComponent<liquidState>().hidratation = 100;
                 secundaryCamera.transform.position = Vector3.Lerp(secundaryCamera.transform.position, secundaryCameraDestination.transform.position, 1.25f * Time.deltaTime);
                 secundaryCamera.transform.rotation = Quaternion.Lerp(secundaryCamera.transform.rotation, secundaryCameraDestination.transform.rotation, 1.25f * Time.deltaTime);
                 if(nextEvent)
@@ -389,7 +389,7 @@ public class misions : MonoBehaviour {
                 }
                 break;
             case 6:
-                liquidState.hidratation = 100;
+                GameObject.Find("Jugador").GetComponent<liquidState>().hidratation = 100;
                 if (GameObject.Find("Enemigo (3)") != null && GameObject.Find("Enemigo (3)").transform.GetChild(4).gameObject.activeSelf)
                 {
                     HUD_Script.showM1Helps(4, 32);
@@ -405,7 +405,7 @@ public class misions : MonoBehaviour {
                 }
                 break;
             case 7:
-                liquidState.hidratation = 100;
+                GameObject.Find("Jugador").GetComponent<liquidState>().hidratation = 100;
                 if (loadRespawn.BoxTriggers[1].activeSelf == false)
                 {
                     misionIndex++;
@@ -413,7 +413,7 @@ public class misions : MonoBehaviour {
                 }
                 break;
             case 8:
-                liquidState.hidratation = 100;
+                GameObject.Find("Jugador").GetComponent<liquidState>().hidratation = 100;
                 if (loadRespawn.BoxTriggers[2].activeSelf == false)
                 {
                     misionIndex++;
@@ -423,7 +423,7 @@ public class misions : MonoBehaviour {
                 }
                 break;
             case 9:
-                liquidState.hidratation = 100;
+                GameObject.Find("Jugador").GetComponent<liquidState>().hidratation = 100;
                 if (loadRespawn.BoxTriggers[3].activeSelf == false)
                 {
                     misionIndex++;
@@ -431,7 +431,7 @@ public class misions : MonoBehaviour {
                 }
                 break;
             case 10:
-                liquidState.hidratation = 100;
+                GameObject.Find("Jugador").GetComponent<liquidState>().hidratation = 100;
                 if (loadRespawn.BoxTriggers[4].activeSelf == false)
                 {
                     misionIndex++;
@@ -443,7 +443,7 @@ public class misions : MonoBehaviour {
                 {                   
                     misionIndex++;
                     respawnIndex++;
-                    liquidState.hidratation = 10;
+                    GameObject.Find("Jugador").GetComponent<liquidState>().hidratation = 10;
                     loadRespawn.Mision_Objects[0].SetActive(true);
                     for (int i = 0; i < loadRespawn.Mision_Objects[0].transform.childCount; i++) loadRespawn.Mision_Objects[0].transform.GetChild(i).gameObject.SetActive(true);
                     GameObject.Find("Zone_1").SetActive(false);

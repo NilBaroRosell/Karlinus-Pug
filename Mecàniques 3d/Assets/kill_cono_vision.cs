@@ -175,7 +175,7 @@ public class kill_cono_vision : MonoBehaviour {
                     targets[targetI].target.transform.GetChild(4).gameObject.SetActive(true);
                     targets[targetI].targetRenderer = targets[targetI].target.transform.GetChild(4).gameObject.GetComponent<Renderer>();
                     targets[targetI].targetState = targets[targetI].target.GetComponent<csAreaVision>();
-                    if (liquidState.hidratation > 0 && targets[targetI].targetState.canBeKilled())
+                    if (GameObject.Find("Jugador").GetComponent<liquidState>().hidratation > 0 && targets[targetI].targetState.canBeKilled())
                     {
                         targets[targetI].targetRenderer.material = textures[0];
 

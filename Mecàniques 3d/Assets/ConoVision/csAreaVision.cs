@@ -208,7 +208,7 @@ public class csAreaVision : MonoBehaviour {
                         atacking = true;
                         playerAnim.SetBool("Is_Dying", true);
                     }
-                    else if (Input.GetKeyDown(KeyCode.Q) && liquidState.hidratation >= 0 && !GameObject.Find("Jugador").GetComponent<liquidState>().cooldown)
+                    else if (Input.GetKeyDown(KeyCode.Q) && GameObject.Find("Jugador").GetComponent<liquidState>().hidratation >= 0 && !GameObject.Find("Jugador").GetComponent<liquidState>().cooldown)
                     {
                         StartCoroutine(CheckStuck(10.0f));
                         playerScaped();
@@ -309,8 +309,9 @@ public class csAreaVision : MonoBehaviour {
     void FixedUpdate() {
         playerDist = new Vector3(GameObject.Find("Jugador").transform.position.x - rb.transform.position.x, 0.0f, GameObject.Find("Jugador").transform.position.z - rb.transform.position.z);
 
-        if (playerDist.magnitude <= maxDist)
+        if (playerDist.magnitude <= maxDist && !dead)
         {
+
             IA_Controller();
             Start();
         }

@@ -101,7 +101,7 @@ public class Controller : MonoBehaviour
 
                     checkCooldown = GetComponent<liquidState>();
                     cooldown = checkCooldown.cooldown;
-                    if (Input.GetKeyDown(KeyCode.Q) && !cooldown && liquidState.hidratation >= 0)
+                    if (Input.GetKeyDown(KeyCode.Q) && !cooldown && GameObject.Find("Jugador").GetComponent<liquidState>().hidratation >= 0)
                     {
                         //GetComponent<Collider>().enabled = false;
                         LiquidState = true;
@@ -250,8 +250,6 @@ public class Controller : MonoBehaviour
             }
         }
     }
-
-
 
     public void finishAnim(int message)
     {

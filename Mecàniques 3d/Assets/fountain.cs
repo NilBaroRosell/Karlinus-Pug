@@ -4,54 +4,8 @@ using UnityEngine;
 
 public class fountain : MonoBehaviour
 {
-    public bool inFountain = false;
-    public bool drinking = false;
-    public bool cooldownFountain = false;
-    public float startCooldownFountain;
-    public float finishCooldownFountain;
-    public string a;
-
-    // Update is called once per frame
-    void FixedUpdate()
+    private void OnTriggerStay(Collider other)
     {
-        if (drinking)
-        {
-            liquidState.hidratation = 100;
-            drinking = false;
-        }
-
-        if (cooldownFountain)
-        {
-            finishCooldownFountain = Time.frameCount;
-            if (finishCooldownFountain - startCooldownFountain > 980) cooldownFountain = false;
-        }
-        else
-        {
-            if (inFountain && Input.GetKey(KeyCode.E))
-            {
-                drinking = true;
-                startCooldownFountain = Time.frameCount;
-                cooldownFountain = true;
-            }
-        }
-
-        if (inFountain) liquidState.fountain = a;
-    }
-
-    private void OnTriggerEnter(Collider collision)
-    {
-        if (collision.gameObject.tag == "Player")
-        {
-            inFountain = true;
-            a = gameObject.name;
-        }
-    }
-
-    private void OnTriggerExit(Collider collision)
-    {
-        if (collision.gameObject.tag == "Player")
-        {
-            inFountain = false;
-        }
+        if (other.CompareTag("Player") && Input.GetKeyDown("e")) other.GetComponent<liquidState>().DrinkWater();
     }
 }
