@@ -108,6 +108,9 @@ public class misions : MonoBehaviour {
                     if (GameObject.Find("Torchs Sewer") != null)
                     {
                         sewerLight.SetActive(true);
+                    }
+                    if (GameObject.Find("Directional Light") != null)
+                    {
                         normalLight.SetActive(false);
                     }
                     if (GameObject.Find("Enemigos M2") != null)
