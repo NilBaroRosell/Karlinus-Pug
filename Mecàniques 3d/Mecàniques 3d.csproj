@@ -313,6 +313,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\addObstacleMeshToAll.cs" />
     <Compile Include="Assets\BoxTriggerScript.cs" />
     <Compile Include="Assets\button_pressed.cs" />
     <Compile Include="Assets\camaraMovement.cs" />
@@ -390,6 +391,7 @@
     <Compile Include="Assets\loadScreen.cs" />
     <Compile Include="Assets\MainMenu.cs" />
     <Compile Include="Assets\Menuctrl.cs" />
+    <Compile Include="Assets\MirameWapo.cs" />
     <Compile Include="Assets\MisionFailed.cs" />
     <Compile Include="Assets\misions.cs" />
     <Compile Include="Assets\movement.cs" />
@@ -398,12 +400,17 @@
     <Compile Include="Assets\PauseMenu.cs" />
     <Compile Include="Assets\referenceMovement.cs" />
     <Compile Include="Assets\Respawns.cs" />
+    <Compile Include="Assets\Scripts\CameraCollision.cs" />
+    <Compile Include="Assets\Scripts\CameraFollow.cs" />
+    <Compile Include="Assets\Scripts\Controller.cs" />
     <Compile Include="Assets\Servant.cs" />
     <Compile Include="Assets\servantUnlock_NPC.cs" />
+    <Compile Include="Assets\setAllVisibleScript.cs" />
     <Compile Include="Assets\SoundCucumber.cs" />
     <Compile Include="Assets\SoundEnemy.cs" />
     <Compile Include="Assets\SoundPlayer.cs" />
     <Compile Include="Assets\torchManager.cs" />
+    <Compile Include="Assets\visible.cs" />
     <Compile Include="Assets\Warning_Zone.cs" />
   </ItemGroup>
   <ItemGroup>

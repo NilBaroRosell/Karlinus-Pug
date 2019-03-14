@@ -20,7 +20,7 @@ public class Servant : MonoBehaviour {
     private Rigidbody rb;
     static Animator anim;
     static Animator playerAnim;
-    private movement playerMovement;
+    private Controller playerMovement;
     private float maxDist;
 
     public int speed;
@@ -154,7 +154,7 @@ public class Servant : MonoBehaviour {
         stoped = true;
         if (GameObject.Find("Jugador") != null)
         {
-            playerMovement = GameObject.Find("Jugador").GetComponent<movement>();
+            playerMovement = GameObject.Find("Jugador").GetComponent<Controller>();
             playerDist = new Vector3(GameObject.Find("Jugador").transform.position.x - rb.transform.position.x, 0.0f, GameObject.Find("Jugador").transform.position.z - rb.transform.position.z);
             discovered = false;
             discoveredRef = Time.realtimeSinceStartup;

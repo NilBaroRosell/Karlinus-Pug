@@ -13,7 +13,8 @@ public class liquidState : MonoBehaviour
     public GameObject wellHidratated;
     public GameObject badlyHidratated;
     public GameObject dead;
-    public GameObject[] weapons = new GameObject[4];
+    public GameObject[] weapons = new GameObject[3];
+    private Controller controller;
     public bool liquidStateOn = false;
     public bool cooldown = false;
     public bool firstFrameLiquid = true;
@@ -22,7 +23,7 @@ public class liquidState : MonoBehaviour
     public float finishLiquid;
     public float startCooldown;
     public float finishCooldown;
-    public static int hidratation;
+    public int hidratation;
     public int showHidratation;
     public int hidratationPrice;
     public bool inFountain;
@@ -42,15 +43,15 @@ public class liquidState : MonoBehaviour
         wellHidratated.SetActive(false);
         badlyHidratated.SetActive(false);
         dead.SetActive(false);
+        controller = GetComponent<Controller>();
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
-        if (!movement.hitting)
+        if (!controller.hitting)
         {
             showHidratation = hidratation;
-
             if (cooldown)
             {
                 if (firstFrameNormal)
@@ -69,7 +70,7 @@ public class liquidState : MonoBehaviour
             }
             else
             {
-                liquidStateOn = movement.LiquidState;
+                liquidStateOn = controller.LiquidState;
 
                 if (liquidStateOn)
                 {
@@ -85,7 +86,7 @@ public class liquidState : MonoBehaviour
                     if ((finishLiquid - startLiquid > hidratation * 3) || (Input.GetKey(KeyCode.Q) && startLiquid + 30 < Time.frameCount))
                     {
                         liquidStateOn = false;
-                        movement.LiquidState = liquidStateOn;
+                        controller.LiquidState = liquidStateOn;
                         cooldown = true;
                         startCooldown = Time.frameCount;
                         firstFrameNormal = true;
@@ -195,11 +196,11 @@ public class liquidState : MonoBehaviour
         }
         transform.GetComponent<cucumber>().enabled = true;
         for (int i = 0; i < weapons.Length; i++) weapons[i].SetActive(true);
-        if (transform.GetComponent<Animator>().GetBool("Is_Detected"))
-        {
-            weapons[0].SetActive(false);
-        }
-        else weapons[3].SetActive(false);
         liquid.SetActive(false);
+    }
+
+    public void DrinkWater()
+    {
+        hidratation = 100;
     }
 }

@@ -111,8 +111,7 @@ public class Respawns : MonoBehaviour {
         LoadNONE();
         if (GameObject.Find("Zone_1") != null) GameObject.Find("Zone_1").SetActive(false);
         if (GameObject.Find("Enemies_Zone_2") != null) GameObject.Find("Enemies_Zone_2").SetActive(true);
-        if (GameObject.Find("Enemigos_SM1(1)") != null) GameObject.Find("Enemigos_SM1(1)").SetActive(false);
-        if (GameObject.Find("Enemies_SM1") != null) GameObject.Find("Enemies_SM1").SetActive(false);
+        if (GameObject.Find("Enemigos_SM1") != null) GameObject.Find("Enemigos_SM1").SetActive(false);
         if (initialRespawn == InitialRespawns.NONE) return RespawnPoints[(int)LoadScene.respawnToLoad];
         else
         {

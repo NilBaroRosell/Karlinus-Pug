@@ -22,7 +22,7 @@ public class NPC_movement : MonoBehaviour {
     private Rigidbody rb;
     static Animator anim;
     static Animator playerAnim;
-    private movement playerMovement;
+    private Controller playerMovement;
 
     public int speed;
 
@@ -122,7 +122,7 @@ public class NPC_movement : MonoBehaviour {
         destinationPoint = Points[patrollingIndex];
         transform.GetChild(4).gameObject.transform.position = new Vector3(0.15f, 0.023f, -0.7f) * -1 + transform.position;
         transform.GetChild(4).gameObject.SetActive(false);
-        playerMovement = GameObject.Find("Jugador").GetComponent<movement>();
+        playerMovement = GameObject.Find("Jugador").GetComponent<Controller>();
         enemyAgent = this.GetComponent<NavMeshAgent>();
         if (enemyAgent == null)
         {
