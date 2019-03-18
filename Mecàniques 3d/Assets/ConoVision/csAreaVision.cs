@@ -7,8 +7,7 @@ using System;
 
 public class csAreaVision : MonoBehaviour {
 
-    private int angulo = 140;
-    private int w_ref = 40;
+    private int angulo = 100;
     private int rango = 30;
 
     MeshFilter meshFilter;
@@ -63,64 +62,6 @@ public class csAreaVision : MonoBehaviour {
     //Nav Mesh
     NavMeshAgent enemyAgent;
 
-
-    Mesh Cono() {
-
-        Mesh _cono = new Mesh();
-        List<Vector3> vertices = new List<Vector3>();
-        List<Vector3> normals = new List<Vector3>();
-        List<Vector2> uv = new List<Vector2>();
-
-        Vector3 oldPosition, temp;
-        oldPosition = temp = Vector3.zero;
-
-        vertices.Add(Vector3.zero);
-        normals.Add(Vector3.up);
-        uv.Add(Vector2.one * 0.5f);
-
-        int w, s;
-        for (w = w_ref; w < angulo; w++) {
-
-            for (s = 0; s < rango; s++) {
-                temp.x = Mathf.Cos(Mathf.Deg2Rad * w + Mathf.Deg2Rad * (s / rango)) * rango;
-                temp.z = Mathf.Sin(Mathf.Deg2Rad * w + Mathf.Deg2Rad * (s / rango)) * rango;
-
-                if (oldPosition != temp) {
-
-                    oldPosition = temp;
-                    vertices.Add(new Vector3(temp.x, temp.y, temp.z));
-                    normals.Add(Vector3.up);
-                    uv.Add(new Vector2((rango + temp.x) / (rango * 2), (rango + temp.z) / (rango * 2)));
-
-                }
-
-            }
-
-        }
-
-        int[] triangles = new int[(vertices.Count - 2) * 3];
-        s = 0;
-
-        for (w = 1; w < (vertices.Count - 2); w++) {
-
-            triangles[s++] = w + 1;
-            triangles[s++] = w;
-            triangles[s++] = 0;
-
-        }
-
-        _cono.vertices = vertices.ToArray();
-        _cono.normals = normals.ToArray();
-        _cono.uv = uv.ToArray();
-        _cono.triangles = triangles;
-
-        return _cono;
-
-    }
-
-    Vector3[] initialPosition;
-    Vector2[] initialUV;
-
     // Use this for initialization
     void Awake() {
         GetComponent<NavMeshObstacle>().enabled = false;
@@ -134,9 +75,6 @@ public class csAreaVision : MonoBehaviour {
         if (GetComponent<AudioListener>() == null) gameObject.AddComponent<AudioSource>();
         if (GetComponent<RandomDestination>() == null) gameObject.AddComponent<RandomDestination>();
         meshFilter = transform.GetChild(2).GetChild(2).GetChild(0).GetChild(0).GetChild(1).GetChild(0).GetComponent<MeshFilter>();
-        meshFilter.mesh = Cono();
-        initialPosition = meshFilter.mesh.vertices;
-        initialUV = meshFilter.mesh.uv;
         rb = GetComponent<Rigidbody>();
         anim = GetComponent<Animator>();
         anim.SetBool("Is_Walking", true);
@@ -157,7 +95,7 @@ public class csAreaVision : MonoBehaviour {
         KarlinusEspectre.SetActive(false);
         Pepino = GameObject.Find("Pepino");
         playerMovement = GameObject.Find("Jugador").GetComponent<Controller>();
-        playerDist = new Vector3(GameObject.Find("Jugador").transform.position.x - rb.transform.position.x, 0.0f, GameObject.Find("Jugador").transform.position.z - rb.transform.position.z);
+        playerDist = new Vector3(GameObject.Find("Jugador").transform.position.x - rb.transform.position.x, 0.8f, GameObject.Find("Jugador").transform.position.z - rb.transform.position.z);
         discovered = false;
         discoveredRef = Time.realtimeSinceStartup;
         scaredRef = Time.realtimeSinceStartup;
@@ -246,69 +184,58 @@ public class csAreaVision : MonoBehaviour {
         }
     }
 
-    Mesh areaMesh(Mesh mesh) {
-        Mesh _mesh = new Mesh();
-        Vector3[] vertices = new Vector3[mesh.vertices.Length];
-        Vector2[] uv = new Vector2[mesh.uv.Length];
+    void areaMesh() {
+        Vector3 v = playerDist;
+        float dist = v.sqrMagnitude;
 
-        Vector3 center = transform.localToWorldMatrix.MultiplyPoint3x4(initialPosition[0]);
-        uv[0] = initialUV[0];
-        Vector3 worldPoint;
+        v.Normalize();
 
-        RaycastHit hit = new RaycastHit();
+        float dotFov = Mathf.Cos(angulo * 0.5f * Mathf.Deg2Rad);
+        float dot = Vector3.Dot(transform.forward, v);
 
-        for (int i = 1; i < vertices.Length; i++)
+        if (dist <= rango * rango && dot >= dotFov)
         {
-
-            worldPoint = transform.localToWorldMatrix.MultiplyPoint3x4(initialPosition[i]);
-
-            if (Physics.Linecast(center, worldPoint, out hit))
+            RaycastHit hit = new RaycastHit();
+            Ray raycast = new Ray(transform.position, v);
+            if(Physics.Raycast(raycast, out hit, rango, 1 << LayerMask.NameToLayer("cobertura")) && hit.transform.gameObject.tag == "Player")
             {
-                if (hit.transform.gameObject.tag == "cucumber" && !scared)
+                Debug.Log(hit.transform.name);
+                discovered = true;
+                    lastSeenPosition = GameObject.Find("Jugador").transform.position;
+
+            }
+        }
+        if (GameObject.Find("Pepino") != null && !scared)
+            {
+
+            v = new Vector3(GameObject.Find("Pepino").transform.position.x - rb.transform.position.x, 0.8f, GameObject.Find("Pepino").transform.position.z - rb.transform.position.z);
+            dist = v.sqrMagnitude;
+
+            v.Normalize();
+
+            dotFov = Mathf.Cos(angulo * 0.5f * Mathf.Deg2Rad);
+            dot = Vector3.Dot(transform.forward, v);
+
+            if (dist <= (rango/2) * (rango/2) && dot >= dotFov)
+            {
+                RaycastHit hit = new RaycastHit();
+                Ray raycast = new Ray(transform.position, v);
+                if (Physics.Raycast(raycast, out hit, rango, 1 << LayerMask.NameToLayer("cobertura")) && hit.transform.gameObject.tag == "cucumber")
                 {
                     scaredRef = Time.realtimeSinceStartup;
                     stuckPos = rb.transform.position;
                     getPanicDestination();
                     StartCoroutine(CheckStuck(1));
                     scared = true;
-                }
-                if (hit.transform.gameObject.tag == "Player")
-                {
-                    discovered = true;
-                    lastSeenPosition = GameObject.Find("Jugador").transform.position;
-                }
 
-                if (hit.transform.position != transform.position)
-                {
-                    vertices[i] = transform.worldToLocalMatrix.MultiplyPoint3x4(hit.point);
-                    uv[i] = new Vector2((rango + vertices[i].x) / (rango * 2), (rango + vertices[i].z) / (rango * 2));
                 }
-
             }
-            else
-            {
-
-                vertices[i] = initialPosition[i];
-                uv[i] = initialUV[i];
-
-            }
-
         }
-
-        _mesh.vertices = vertices;
-        _mesh.uv = uv;
-        _mesh.normals = mesh.normals;
-        _mesh.triangles = mesh.triangles;
-
-        return _mesh;
-
-
-
     }
 
     // Update is called once per frame
     void FixedUpdate() {
-        playerDist = new Vector3(GameObject.Find("Jugador").transform.position.x - rb.transform.position.x, 0.0f, GameObject.Find("Jugador").transform.position.z - rb.transform.position.z);
+        playerDist = new Vector3(GameObject.Find("Jugador").transform.position.x - rb.transform.position.x, 0.8f, GameObject.Find("Jugador").transform.position.z - rb.transform.position.z);
 
         if (playerDist.magnitude <= maxDist)
         {
@@ -446,7 +373,7 @@ public class csAreaVision : MonoBehaviour {
             if (playerDist.magnitude <= rango)
             {
                 if (actualState == enemyState.PATROLLING || actualState == enemyState.SEARCHING) searchingRef = Time.realtimeSinceStartup;
-                if (actualState != enemyState.FIGHTING) meshFilter.mesh = areaMesh(meshFilter.mesh);
+                if (actualState != enemyState.FIGHTING) areaMesh();
             }
         }
         switch (actualState)

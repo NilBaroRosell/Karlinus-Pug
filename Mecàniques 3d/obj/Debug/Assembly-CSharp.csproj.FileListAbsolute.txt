@@ -334,3 +334,4 @@ D:\Proyectos\Karlinus-Pug\Mecàniques 3d\Temp\bin\Debug\UnityEngine.SpatialTrack
 D:\Proyectos\Karlinus-Pug\Mecàniques 3d\obj\Debug\Assembly-CSharp.csprojResolveAssemblyReference.cache
 D:\Proyectos\Karlinus-Pug\Mecàniques 3d\obj\Debug\Assembly-CSharp.dll
 D:\Proyectos\Karlinus-Pug\Mecàniques 3d\obj\Debug\Assembly-CSharp.pdb
+D:\documents enti\projecte2\Karlinus-Pug\Mecàniques 3d\Temp\bin\Debug\Assembly-CSharp-firstpass.pdb

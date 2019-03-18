@@ -72,7 +72,7 @@ public class cucumber : MonoBehaviour
                     flying = false;
                     if (firstTime)
                     {
-                        cucumberRig.AddForce(transform.forward.x * 900, 2100, transform.forward.z * 900);
+                        cucumberRig.AddForce(transform.forward.x * 1200, 210, transform.forward.z * 1200);
                         firstTime = false;
                     }
                     if (onFloor)
