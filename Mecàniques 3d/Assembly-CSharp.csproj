@@ -61,6 +61,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\addObstacleMeshToAll.cs" />
     <Compile Include="Assets\BoxTriggerScript.cs" />
     <Compile Include="Assets\button_pressed.cs" />
     <Compile Include="Assets\camaraMovement.cs" />
@@ -122,6 +123,8 @@
     <Compile Include="Assets\ConoVision\NPC_movement.cs" />
     <Compile Include="Assets\ConoVision\RandomDestination.cs" />
     <Compile Include="Assets\cucumber.cs" />
+    <Compile Include="Assets\Dead_Zone.cs" />
+    <Compile Include="Assets\drunk_NPC.cs" />
     <Compile Include="Assets\EnemyManager.cs" />
     <Compile Include="Assets\Fantasy Skybox FREE\Demo\Scripts\GE_FantasySkyboxFREE_Demo.cs" />
     <Compile Include="Assets\Fantasy Skybox FREE\Demo\Scripts\GE_FantasySkyboxFREE_UIs.cs" />
@@ -136,16 +139,27 @@
     <Compile Include="Assets\loadScreen.cs" />
     <Compile Include="Assets\MainMenu.cs" />
     <Compile Include="Assets\Menuctrl.cs" />
+    <Compile Include="Assets\MirameWapo.cs" />
     <Compile Include="Assets\MisionFailed.cs" />
     <Compile Include="Assets\misions.cs" />
     <Compile Include="Assets\movement.cs" />
     <Compile Include="Assets\NPC.cs" />
+    <Compile Include="Assets\NPCActualizeScene.cs" />
     <Compile Include="Assets\PauseMenu.cs" />
     <Compile Include="Assets\referenceMovement.cs" />
     <Compile Include="Assets\Respawns.cs" />
+    <Compile Include="Assets\Scripts\CameraCollision.cs" />
+    <Compile Include="Assets\Scripts\CameraFollow.cs" />
+    <Compile Include="Assets\Scripts\Controller.cs" />
+    <Compile Include="Assets\Servant.cs" />
+    <Compile Include="Assets\servantUnlock_NPC.cs" />
+    <Compile Include="Assets\setAllVisibleScript.cs" />
     <Compile Include="Assets\SoundCucumber.cs" />
     <Compile Include="Assets\SoundEnemy.cs" />
     <Compile Include="Assets\SoundPlayer.cs" />
+    <Compile Include="Assets\torchManager.cs" />
+    <Compile Include="Assets\visible.cs" />
+    <Compile Include="Assets\Warning_Zone.cs" />
     <None Include="Assets\Fantasy Skybox FREE\Readme.txt" />
     <None Include="Assets\2Ginge\GritBuildupShader\Shaders\GritBuildupShader.shader" />
     <None Include="Assets\read me.txt" />
@@ -402,6 +416,12 @@
     <Reference Include="Boo.Lang">
       <HintPath>C:/Program Files/Unity/Editor/Data/MonoBleedingEdge/lib/mono/unity/Boo.Lang.dll</HintPath>
     </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="Assembly-CSharp-firstpass.csproj">
+      <Project>{ABEE4D9E-E66A-BC83-40D2-5FF5E294D920}</Project>
+      <Name>Assembly-CSharp-firstpass</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />
