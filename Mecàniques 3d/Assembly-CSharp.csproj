@@ -159,6 +159,7 @@
     <Compile Include="Assets\SoundPlayer.cs" />
     <Compile Include="Assets\torchManager.cs" />
     <Compile Include="Assets\visible.cs" />
+    <Compile Include="Assets\visibleEnemy.cs" />
     <Compile Include="Assets\Warning_Zone.cs" />
     <None Include="Assets\Fantasy Skybox FREE\Readme.txt" />
     <None Include="Assets\2Ginge\GritBuildupShader\Shaders\GritBuildupShader.shader" />

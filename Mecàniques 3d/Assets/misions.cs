@@ -109,7 +109,7 @@ public class misions : MonoBehaviour {
                     {
                         sewerLight.SetActive(true);
                     }
-                    if (GameObject.Find("Directional Light") != null)
+                    if (normalLight != null)
                     {
                         normalLight.SetActive(false);
                     }
