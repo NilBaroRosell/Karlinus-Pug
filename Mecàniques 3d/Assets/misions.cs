@@ -36,6 +36,7 @@ public class misions : MonoBehaviour {
     public MisionPoint RebelCat;
     public MisionPoint ScaryDog;
     public static bool pauseMenu;
+    public static bool fight;
 
     private void Awake()
     {
@@ -86,6 +87,7 @@ public class misions : MonoBehaviour {
             Cursor.lockState = CursorLockMode.Locked;
             hideMisionPoints();
             nextEvent = false;
+            fight = false;
             if (SceneManager.GetActiveScene().name == "sewer")
             {
                 sewerLight = GameObject.Find("Torchs Sewer");
@@ -248,12 +250,6 @@ public class misions : MonoBehaviour {
 
     // Update is called once per frame
     void FixedUpdate() {
-        if (Input.GetKeyDown(KeyCode.X))
-        {
-            ActualMision = Misions.M2;
-            respawnIndex = 5;
-            loadScreen.Instancia.CargarEscena("city");
-        }
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             if (pauseMenu)
@@ -269,21 +265,24 @@ public class misions : MonoBehaviour {
                 Cursor.lockState = CursorLockMode.None;
             }
         }
-        switch (ActualMision)
-        {
-            case Misions.NONE:
-                if (GameObject.Find("RatHood") != null) GameObject.Find("RatHood").SetActive(false);
-                break;
-            case Misions.M1:
-                M1();
-                break;
-            case Misions.M2:
-                M2();
-                break;
-            case Misions.SM_1:
-                SM1();
-                break;
+        if (Player.activeSelf) {
+            switch (ActualMision)
+            {
+                case Misions.NONE:
+                    if (GameObject.Find("RatHood") != null) GameObject.Find("RatHood").SetActive(false);
+                    break;
+                case Misions.M1:
+                    M1();
+                    break;
+                case Misions.M2:
+                    M2();
+                    break;
+                case Misions.SM_1:
+                    SM1();
+                    break;
+            }
         }
+        fight = false;
     }
 
     void M1()
@@ -531,8 +530,10 @@ public class misions : MonoBehaviour {
                 }
                 break;
             case 4:
-                if (loadRespawn.BoxTriggers[1].activeSelf == false)
+                Debug.Log(fight);
+                if (loadRespawn.BoxTriggers[1].activeSelf == false && !fight)
                 {
+                    Debug.Log("Entered");
                     respawnIndex++;
                     misionIndex++;
                     loadRespawn.initialRespawn = Respawns.InitialRespawns.PUB_INSIDE;
@@ -609,7 +610,7 @@ public class misions : MonoBehaviour {
                 }
                 break;
             case 12:
-                if (loadRespawn.BoxTriggers[5].activeSelf == false)
+                if (loadRespawn.BoxTriggers[5].activeSelf == false && !fight)
                 {
                     misionIndex++;
                     respawnIndex++;

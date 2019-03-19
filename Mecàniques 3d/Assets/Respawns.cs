@@ -167,20 +167,21 @@ public class Respawns : MonoBehaviour {
             case 0:
             case 1:
                 LoadScene.respawnToLoad = InitialRespawns.CITY_1;
+                Mision_Objects[0].GetComponent<Collider>().enabled = false;
                 Mision_Objects[1].SetActive(false);
                 Mision_Objects[2].SetActive(false);
                 for (int i = 1; i < BoxTriggers.Length; i++) BoxTriggers[i].SetActive(true);
                 break;
             case 2:
                 LoadScene.respawnToLoad = InitialRespawns.PUB_INSIDE;
-                Mision_Objects[0].SetActive(false);
+                Mision_Objects[0].GetComponent<Collider>().enabled = false;
                 Mision_Objects[1].SetActive(false);
                 Mision_Objects[Mision_Objects.Length - 1].SetActive(false);
                 for (int i = 2; i < BoxTriggers.Length; i++) BoxTriggers[i].SetActive(true);
                 break;
             case 3:
                 LoadScene.respawnToLoad = InitialRespawns.PUB_OUTSIDE;
-                Mision_Objects[0].SetActive(false);
+                Mision_Objects[0].GetComponent<Collider>().enabled = false;
                 Mision_Objects[1].SetActive(true);
                 Mision_Objects[1].transform.position = new Vector3(74.3f, -27.52f, -34.519f);
                 Mision_Objects[2].SetActive(true);
@@ -191,7 +192,7 @@ public class Respawns : MonoBehaviour {
                 break;
             case 4:
                 LoadScene.respawnToLoad = InitialRespawns.PUB_OUTSIDE;
-                Mision_Objects[0].SetActive(false);
+                Mision_Objects[0].GetComponent<Collider>().enabled = false;
                 Mision_Objects[1].SetActive(true);
                 Mision_Objects[1].transform.position = new Vector3(75.1f, -27.52f, 35.57f);
                 Mision_Objects[2].SetActive(true);
@@ -203,7 +204,7 @@ public class Respawns : MonoBehaviour {
                 break;
             case 5:
                 LoadScene.respawnToLoad = InitialRespawns.PUB_OUTSIDE;
-                Mision_Objects[0].SetActive(false);
+                Mision_Objects[0].GetComponent<Collider>().enabled = false;
                 Mision_Objects[1].SetActive(true);
                 Mision_Objects[1].transform.position = new Vector3(-13.7f, -27.52f, 151.8f);
                 Mision_Objects[2].SetActive(true);

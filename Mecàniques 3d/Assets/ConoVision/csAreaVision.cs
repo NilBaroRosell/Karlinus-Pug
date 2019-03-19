@@ -19,6 +19,7 @@ public class csAreaVision : MonoBehaviour {
     Vector3 oldScale;
     Vector3 patrollingPosition;
 
+    
     private Rigidbody rb;
     private Animator anim;
     static Animator playerAnim;
@@ -330,6 +331,7 @@ public class csAreaVision : MonoBehaviour {
     {
         yield return new WaitForSeconds(time);
 
+        GameObject.Find("Jugador").SetActive(false);
         loadScreen.Instancia.CargarEscena("DEAD");
     }
 
@@ -490,6 +492,7 @@ public class csAreaVision : MonoBehaviour {
                 actualString = "D";
                 break;
             case enemyState.FIGHTING:
+                misions.fight = true;
                 if (first)
                 {
                     source.clip = catSound;

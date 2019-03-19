@@ -255,7 +255,7 @@ public class Servant : MonoBehaviour {
             if (patrollingIndex >= Points.Length)
             {
                 misions.nextEvent = true;
-                Destroy(this.gameObject);
+                this.gameObject.SetActive(false);
             }
             else if (patrollingIndex == 3 || patrollingIndex == 1) misions.nextEvent = true;
             destinationPoint = Points[patrollingIndex];
@@ -272,6 +272,7 @@ public class Servant : MonoBehaviour {
             enemyAgent.speed = 0;
             anim.SetBool("Walk", false);
             anim.SetBool("Backward", false);
+            anim.SetBool("Run", false);
             anim.SetBool("Idle", true);
         }
         else
@@ -286,6 +287,25 @@ public class Servant : MonoBehaviour {
                     anim.SetBool("Walk", true);
                     anim.SetBool("Backward", false);
                     anim.SetBool("Idle", false);
+                    anim.SetBool("Run", false);
+                    rb.transform.LookAt(destinationPoint);
+                    enemyAgent.SetDestination(destinationPoint);
+                    break;
+
+                case 4:
+                case 5:
+                case 6:
+                case 10:
+                case 11:
+                case 12:
+                case 15:
+                case 20:
+                case 23:
+                    enemyAgent.speed = 3;
+                    anim.SetBool("Walk", false);
+                    anim.SetBool("Backward", false);
+                    anim.SetBool("Idle", false);
+                    anim.SetBool("Run", true);
                     rb.transform.LookAt(destinationPoint);
                     enemyAgent.SetDestination(destinationPoint);
                     break;
@@ -298,6 +318,7 @@ public class Servant : MonoBehaviour {
                     anim.SetBool("Walk", false);
                     anim.SetBool("Backward", true);
                     anim.SetBool("Idle", false);
+                    anim.SetBool("Run", false);
                     rb.transform.LookAt(destinationPoint);
                     enemyAgent.SetDestination(destinationPoint);
                     transform.eulerAngles = transform.eulerAngles + new Vector3(0.0f, 180.0f, 0.0f);
