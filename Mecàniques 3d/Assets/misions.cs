@@ -12,6 +12,7 @@ public class misions : MonoBehaviour {
     public  Misions ActualMision;
     public bool editorRespawn;
     public int editorRespawnNum;
+    public bool doorsUnlucked;
     public static int respawnIndex;
     public static int misionIndex;
     private Respawns loadRespawn;
@@ -47,6 +48,7 @@ public class misions : MonoBehaviour {
             if (Instance != null)
             {
                 GetComponent<Respawns>().initialRespawn = Instance.loadRespawn.initialRespawn;
+                doorsUnlucked = Instance.doorsUnlucked;
                 Destroy(Instance.gameObject);
                 ActualMision = Misions.NONE;
                 editorRespawn = false;
@@ -92,6 +94,13 @@ public class misions : MonoBehaviour {
             {
                 sewerLight = GameObject.Find("Torchs Sewer");
                 normalLight = GameObject.Find("Directional Light");
+                if (doorsUnlucked || ActualMision == Misions.M4)
+                {
+                    GameObject.Find("Door1").transform.GetChild(0).gameObject.SetActive(false);
+                    GameObject.Find("Door2").transform.GetChild(0).gameObject.SetActive(false);
+                    GameObject.Find("Door3").transform.GetChild(0).gameObject.SetActive(false);
+                    GameObject.Find("Door4").transform.GetChild(0).gameObject.SetActive(false);
+                }
             }
             switch (ActualMision)
             {
@@ -160,9 +169,7 @@ public class misions : MonoBehaviour {
                     Player.transform.position = loadRespawn.M2(respawnIndex);
                     mainCamera = GameObject.Find("Main Camera");
                     secundaryCamera = GameObject.Find("Secundary Camera");
-                    secundaryCameraDestination = GameObject.Find("Camera Destination");
-                    if (GameObject.Find("Enemigos_SM1") != null) GameObject.Find("Enemigos_SM1").transform.GetChild(0).gameObject.GetComponent<csAreaVision>().DestroyEnemy();
-                    if (GameObject.Find("Enemigos_SM1") != null) GameObject.Find("Enemigos_SM1").transform.GetChild(1).gameObject.GetComponent<csAreaVision>().DestroyEnemy();
+                    secundaryCameraDestination = GameObject.Find("Camera Destination");                  
                     switch (respawnIndex)
                     {
                         case 0:
@@ -202,6 +209,25 @@ public class misions : MonoBehaviour {
                             HUD_Script.showM2Objective(4);
                             HUD_Script.showM2Helps(2, 45);
                             misionIndex = 11;
+                            break;
+                    }
+                    break;
+                case Misions.M4:
+                    Player.transform.position = loadRespawn.M4(respawnIndex);
+                    mainCamera = GameObject.Find("Main Camera");
+                    secundaryCamera = GameObject.Find("Secundary Camera");
+                    secundaryCameraDestination = GameObject.Find("Camera Destination");
+                    switch (respawnIndex)
+                    {
+                        case 0:
+                            sewerLight.SetActive(true);
+                            normalLight.SetActive(false);
+                            secundaryCamera.SetActive(false);
+                            misionIndex = 0;
+                            break;
+                        case 1:
+                            secundaryCamera.SetActive(false);
+                            misionIndex = 1;
                             break;
                     }
                     break;
@@ -276,6 +302,9 @@ public class misions : MonoBehaviour {
                     break;
                 case Misions.M2:
                     M2();
+                    break;
+                case Misions.M4:
+                    M4();
                     break;
                 case Misions.SM_1:
                     SM1();
@@ -624,6 +653,27 @@ public class misions : MonoBehaviour {
         }
     }
 
+    void M4()
+    {
+        //MISION EVENTS
+        switch (misionIndex)
+        {
+            case 0:
+                if (loadRespawn.BoxTriggers[0].activeSelf == false && !fight)
+                {
+                    misionIndex++;
+                    respawnIndex++;
+                    loadRespawn.initialRespawn = Respawns.InitialRespawns.CITY_2;
+                    loadScreen.Instancia.CargarEscena("city");
+                }
+                break;
+            case 1:
+                break;
+            default:
+                break;
+        }
+    }
+
     void SM1()
     {
         switch (misionIndex)
@@ -802,12 +852,16 @@ public class misions : MonoBehaviour {
             {
                 PrincipalMision.pointObject.SetActive(true);
                 PrincipalMision.pointObject.transform.position = new Vector3(80.73f, -31.81266f, 189.97f) + transform.position;
+                PrincipalMision.pointObject.GetComponent<NPCActualizeScene>().misionGO = Misions.M3;
+                PrincipalMision.pointObject.GetComponent<NPCActualizeScene>().sceneToLoad = "city";
             }
             else
             {
                 {
                     PrincipalMision.pointObject.SetActive(true);
                     PrincipalMision.pointObject.transform.position = new Vector3(-14.1f, -31.81266f, -12.6f) + transform.position;
+                    PrincipalMision.pointObject.GetComponent<NPCActualizeScene>().misionGO = Misions.M2;
+                    PrincipalMision.pointObject.GetComponent<NPCActualizeScene>().sceneToLoad = "city";
                 }
             }
             if (RatHood.MisionsCompleted[(int)Misions.SM_1 - 4] == false)
@@ -830,6 +884,8 @@ public class misions : MonoBehaviour {
         {
             PrincipalMision.pointObject.SetActive(true);
             PrincipalMision.pointObject.transform.position = new Vector3(78.94f, -31.81266f, 275.4f) + transform.position;
+            PrincipalMision.pointObject.GetComponent<NPCActualizeScene>().misionGO = Misions.M4;
+            PrincipalMision.pointObject.GetComponent<NPCActualizeScene>().sceneToLoad = "sewer";
             if (RatHood.MisionsCompleted[(int)Misions.SM_1 - 4] == false)
             {
                 RatHood.pointObject.SetActive(true);
