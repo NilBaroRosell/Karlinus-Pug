@@ -280,13 +280,16 @@ public class csAreaVision : MonoBehaviour {
 
     private void IsCloseAndVisible()
     {
-        if (transform.GetChild(0).GetComponent<visibleEnemy>().visible && playerDist.magnitude <= 7.5f)
+        if(!GetComponent<NavMeshObstacle>().enabled)
         {
-            transform.GetChild(4).gameObject.SetActive(true);
-            if (kill_cono_vision.assignedTargets[0] == null) kill_cono_vision.assignedTargets[0] = this.gameObject;
-            else kill_cono_vision.assignedTargets[1] = this.gameObject;
+            if (transform.GetChild(0).GetComponent<visibleEnemy>().visible && playerDist.magnitude <= 7.5f)
+            {
+                transform.GetChild(4).gameObject.SetActive(true);
+                if (kill_cono_vision.assignedTargets[0] == null) kill_cono_vision.assignedTargets[0] = this.gameObject;
+                else kill_cono_vision.assignedTargets[1] = this.gameObject;
+            }
+            else transform.GetChild(4).gameObject.SetActive(false);
         }
-        else transform.GetChild(4).gameObject.SetActive(false);
     }
 
     private void getPanicDestination()
@@ -331,7 +334,7 @@ public class csAreaVision : MonoBehaviour {
     {
         yield return new WaitForSeconds(time);
 
-        GameObject.Find("Jugador").SetActive(false);
+        GameObject.Find("Jugador").transform.position = new Vector3(0, -500, 0);
         loadScreen.Instancia.CargarEscena("DEAD");
     }
 

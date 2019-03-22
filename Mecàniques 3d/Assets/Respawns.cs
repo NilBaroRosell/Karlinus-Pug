@@ -33,8 +33,12 @@ public class Respawns : MonoBehaviour {
         RespawnPoints[6] = new Vector3(83.48f, -27.52f, -34.6f);
 
         //Enemies
-        if (GameObject.Find("Enemigos_SM1") != null) GameObject.Find("Enemigos_SM1").transform.GetChild(0).gameObject.GetComponent<csAreaVision>().DestroyEnemy();
-        if (GameObject.Find("Enemigos_SM1") != null) GameObject.Find("Enemigos_SM1").transform.GetChild(1).gameObject.GetComponent<csAreaVision>().DestroyEnemy();
+        Enemies = GameObject.FindGameObjectsWithTag("enemy");
+
+        for (int i = 0; i < Enemies.Length; i++)
+        {
+            if (Enemies[i].transform.parent.gameObject.name != "Enemigos Notoriedad Normal" && Enemies[i].transform.parent.gameObject.name != "ENEMIGOS_SEWER_2" && Enemies[i].transform.parent.gameObject.name != "Enemies_Zone_2") Enemies[i].GetComponent<csAreaVision>().DestroyEnemy();
+        }
     }
 
     private void LoadM1()
@@ -78,8 +82,11 @@ public class Respawns : MonoBehaviour {
 
         //MISION 2 ENEMIES
         Enemies = GameObject.FindGameObjectsWithTag("enemy");
-        if (GameObject.Find("Enemigos_SM1") != null) GameObject.Find("Enemigos_SM1").transform.GetChild(0).gameObject.GetComponent<csAreaVision>().DestroyEnemy();
-        if (GameObject.Find("Enemigos_SM1") != null) GameObject.Find("Enemigos_SM1").transform.GetChild(1).gameObject.GetComponent<csAreaVision>().DestroyEnemy();
+
+        for (int i = 0; i < Enemies.Length; i++)
+        {
+            if (Enemies[i].transform.parent.gameObject.name != "Enemigos M2" && Enemies[i].transform.parent.gameObject.name != "Enemigos Notoriedad Normal") Enemies[i].GetComponent<csAreaVision>().DestroyEnemy();
+        }
 
         //MISION 2 OTHER OBJECTS
         Mision_Objects = new GameObject[4];
@@ -94,9 +101,10 @@ public class Respawns : MonoBehaviour {
     private void LoadM4()
     {
         //MISION 4 RESPAWN POINTS
-        RespawnPoints = new Vector3[2];
+        RespawnPoints = new Vector3[3];
         RespawnPoints[0] = new Vector3(85.8f, -9.1f, 321.1f);
         RespawnPoints[1] = new Vector3(-122.71f, -27.52f, 267.58f);
+        RespawnPoints[2] = new Vector3(-69.33f, -27.52f, 295.55f);
 
         //MISION 4 BOX TRIGGERS
         All_Mision_Objects.transform.GetChild(3).gameObject.SetActive(true);
@@ -112,6 +120,11 @@ public class Respawns : MonoBehaviour {
         }
 
         //MISION 4 OTHER OBJECTS
+        if (GameObject.Find("Muralla") != null) Destroy(GameObject.Find("Muralla"));
+        if (GameObject.Find("Cases pobres") != null) Destroy(GameObject.Find("Cases pobres"));
+        if (GameObject.Find("Casa Capita") != null) Destroy(GameObject.Find("Casa Capita"));
+        if (GameObject.Find("Cases rics") != null) Destroy(GameObject.Find("Cases rics"));
+        if (GameObject.Find("Taberna") != null) Destroy(GameObject.Find("Taberna"));
         if (GameObject.Find("Zone_1") != null) GameObject.Find("Zone_1").SetActive(false);
         Mision_Objects = new GameObject[1];
         Mision_Objects[Mision_Objects.Length - 1] =
@@ -269,6 +282,14 @@ public class Respawns : MonoBehaviour {
                 break;
             case 1:
                 Mision_Objects[Mision_Objects.Length - 1].SetActive(false);
+                LoadScene.respawnToLoad = InitialRespawns.PUB_OUTSIDE;
+                break;
+            case 2:
+                Mision_Objects[Mision_Objects.Length - 1].SetActive(false);
+                if (GameObject.Find("Enemigos M4") != null)
+                {
+                    for (int i = 7; i >= 0; i--) GameObject.Find("Enemigos M4").transform.GetChild(i).GetComponent<csAreaVision>().DestroyEnemy();
+                }
                 break;
             default:
                 break;

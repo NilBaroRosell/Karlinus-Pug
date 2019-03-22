@@ -102,6 +102,7 @@ public class misions : MonoBehaviour {
                     GameObject.Find("Door4").transform.GetChild(0).gameObject.SetActive(false);
                 }
             }
+            else if(SceneManager.GetActiveScene().name == "city" && ActualMision != Misions.M4) Destroy(GameObject.Find("Pati Palau"));
             switch (ActualMision)
             {
                 case Misions.NONE:
@@ -229,6 +230,10 @@ public class misions : MonoBehaviour {
                             secundaryCamera.SetActive(false);
                             misionIndex = 1;
                             break;
+                        case 2:
+                            secundaryCamera.SetActive(false);
+                            misionIndex = 2;
+                            break;
                     }
                     break;
                 case Misions.SM_1:
@@ -291,7 +296,7 @@ public class misions : MonoBehaviour {
                 Cursor.lockState = CursorLockMode.None;
             }
         }
-        if (Player.activeSelf) {
+        if (Player != null) {
             switch (ActualMision)
             {
                 case Misions.NONE:
@@ -668,6 +673,14 @@ public class misions : MonoBehaviour {
                 }
                 break;
             case 1:
+                if(EnemyManager.Enemies.Length < 8)
+                {
+                    misionIndex++;
+                    respawnIndex++;
+                    Debug.Log("check");
+                }
+                break;
+            case 2:
                 break;
             default:
                 break;

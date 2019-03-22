@@ -17,6 +17,7 @@ public class kill_cono_vision : MonoBehaviour {
 
     targetData[] targets;
     private int targetI;
+    private int errorAcum = 0;
     public static GameObject[] assignedTargets;
     static Animator anim;
     public static bool returnPlayer;
@@ -119,7 +120,9 @@ public class kill_cono_vision : MonoBehaviour {
                 actualString = "W";
                 break;
             case killState.APROACHING:
-                if (!liquidAgent.isOnNavMesh) {
+                if (!liquidAgent.isOnNavMesh && stuckReference + 2.5f > Time.realtimeSinceStartup) {
+                    errorAcum++;
+                    if (errorAcum > 10) aproachEnemy(targets[targetI].killTargetPos);
                     Vector3 destDirection = targets[targetI].ghostPos - player.transform.position;
                     destDirection.Normalize();
                     player.transform.position += destDirection;
@@ -146,13 +149,21 @@ public class kill_cono_vision : MonoBehaviour {
                 actualString = "K";
                 break;
             case killState.RETURNING:
-                if (!liquidAgent.isOnNavMesh)
+                if (!liquidAgent.isOnNavMesh && stuckReference + 2.5f > Time.realtimeSinceStartup)
                 {
-                    Vector3 destDirection = playerPos - player.transform.position;
-                    destDirection.Normalize();
-                    player.transform.position += destDirection;
+                    errorAcum++;
+                    if (stuckReference + 1.0f < Time.realtimeSinceStartup || Vector3.Magnitude(transform.position - liquidAgent.destination) <= 0.25f) returnToPosition();
+                    else
+                    {
+                        Vector3 destDirection = playerPos - player.transform.position;
+                        destDirection.Normalize();
+                        playerPos += destDirection * errorAcum;
+                        player.transform.position = playerPos;
+                        liquidAgent.SetDestination(playerPos);
+                    }
                 }
                 else if ((liquidAgent.remainingDistance <= 0.25f && stuckReference + 0.5f < Time.realtimeSinceStartup) || stuckReference + 2.5f < Time.realtimeSinceStartup) returnToPosition();
+                else errorAcum = 0;
                 actualString = "R";
                 break;
             default:
@@ -167,6 +178,7 @@ public class kill_cono_vision : MonoBehaviour {
 
     private void aproachEnemy(Vector3 destination)
     {
+        errorAcum = 0;
         liquidKill.hideLiquid();
         player.transform.position = targets[targetI].ghostPos;
         player.transform.LookAt(destination);
@@ -190,6 +202,7 @@ public class kill_cono_vision : MonoBehaviour {
 
     private void returnToPosition()
     {
+        errorAcum = 0;
         player.transform.position = playerPos;
         player.GetComponent<Collider>().enabled = true;
         liquidKill.setHidratation();
