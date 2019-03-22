@@ -99,7 +99,7 @@ public class Respawns : MonoBehaviour
 
     }
 
-    private void LoadM3()
+    private void LoadM3(int checkPoint)
     {
         //MISION 2 RESPAWN POINTS
         RespawnPoints = new Vector3[3];
@@ -117,7 +117,7 @@ public class Respawns : MonoBehaviour
 
         for (int i = 0; i < Enemies.Length; i++)
         {
-            if (Enemies[i].transform.parent.gameObject.name != "Enemigos M3") Enemies[i].GetComponent<csAreaVision>().DestroyEnemy();
+            if (Enemies[i].transform.parent.gameObject.name != "Enemigos M3 Scape") Enemies[i].GetComponent<csAreaVision>().DestroyEnemy();
         }
 
         //MISION 2 OTHER OBJECTS
@@ -303,7 +303,7 @@ public class Respawns : MonoBehaviour
     public Vector3 M3(int checkPoint)
     {
         //LOAD M4
-        LoadM3();
+        LoadM3(checkPoint);
         //OBJECTS RESPAWN
         switch (checkPoint)
         {
@@ -311,6 +311,7 @@ public class Respawns : MonoBehaviour
                 LoadScene.respawnToLoad = InitialRespawns.CITY_2;
                 break;
             case 1:
+                LoadScene.respawnToLoad = InitialRespawns.NONE;
                 break;
             case 2:
                 LoadScene.respawnToLoad = InitialRespawns.CITY_2;
