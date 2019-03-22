@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine.AI;
 using UnityEngine;
 
-public class kill_cono_vision : MonoBehaviour {
+public class kill_cono_vision : MonoBehaviour
+{
 
     private struct targetData
     {
@@ -17,6 +18,7 @@ public class kill_cono_vision : MonoBehaviour {
 
     targetData[] targets;
     private int targetI;
+    private int errorAcum = 0;
     public static GameObject[] assignedTargets;
     static Animator anim;
     public static bool returnPlayer;
@@ -34,12 +36,12 @@ public class kill_cono_vision : MonoBehaviour {
     //Nav Mesh
     NavMeshAgent liquidAgent;
 
-   
+
     // Use this for initialization
     void Awake()
     {
         targets = new targetData[2];
-        for(int i = 0; i < targets.Length; i++)
+        for (int i = 0; i < targets.Length; i++)
         {
             targets[i] = new targetData();
             targets[i].seen = false;
@@ -73,31 +75,31 @@ public class kill_cono_vision : MonoBehaviour {
         targets[0].seen = targets[1].seen = false;
         for (int i = 0; i < assignedTargets.Length; i++)
         {
-            if (assignedTargets[i] != null  && GameObject.Find("Jugador").GetComponent<liquidState>().hidratation > 0 && Input.GetKeyDown(KeyCode.Mouse0))
+            if (assignedTargets[i] != null && GameObject.Find("Jugador").GetComponent<liquidState>().hidratation > 0 && Input.GetKeyDown(KeyCode.Mouse0))
             {
 
-                    if (targets[targetI].seen) targetI = 1;
-                    targets[targetI].seen = true;
-                    targets[targetI].target = assignedTargets[i].transform.gameObject;
-                    targets[targetI].targetState = targets[targetI].target.GetComponent<csAreaVision>();
-                    playerPos = player.transform.position;
-                    playerMovement.state = Controller.playerState.HITTING;
-                    liquidAgent.enabled = true;
-                    targets[targetI].ghostPos = targets[targetI].target.transform.GetChild(4).gameObject.transform.position;
-                    targets[targetI].target.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePosition;
-                    player.GetComponent<Collider>().enabled = false;
-                    targets[targetI].target.GetComponent<Collider>().enabled = false;
-                    targets[targetI].target.GetComponent<Rigidbody>().useGravity = false;
-                    anim.SetBool("Is_Damaging", true);
-                    targets[targetI].target.GetComponent<NavMeshAgent>().enabled = false;
-                    targets[targetI].target.GetComponent<NavMeshObstacle>().enabled = true;
-                    Destroy(targets[targetI].target.transform.GetChild(4).gameObject);
-                    stuckReference = Time.realtimeSinceStartup;
-                    liquidKill.firstFrameNormal = false;
-                    liquidKill.cooldown = false;
-                    liquidKill.showLiquid();
-                    actualState = killState.APROACHING;
-                    targets[targetI].killTargetPos = targets[targetI].target.transform.position;
+                if (targets[targetI].seen) targetI = 1;
+                targets[targetI].seen = true;
+                targets[targetI].target = assignedTargets[i].transform.gameObject;
+                targets[targetI].targetState = targets[targetI].target.GetComponent<csAreaVision>();
+                playerPos = player.transform.position;
+                playerMovement.state = Controller.playerState.HITTING;
+                liquidAgent.enabled = true;
+                targets[targetI].ghostPos = targets[targetI].target.transform.GetChild(4).gameObject.transform.position;
+                targets[targetI].target.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePosition;
+                player.GetComponent<Collider>().enabled = false;
+                targets[targetI].target.GetComponent<Collider>().enabled = false;
+                targets[targetI].target.GetComponent<Rigidbody>().useGravity = false;
+                anim.SetBool("Is_Damaging", true);
+                targets[targetI].target.GetComponent<NavMeshAgent>().enabled = false;
+                targets[targetI].target.GetComponent<NavMeshObstacle>().enabled = true;
+                Destroy(targets[targetI].target.transform.GetChild(4).gameObject);
+                stuckReference = Time.realtimeSinceStartup;
+                liquidKill.firstFrameNormal = false;
+                liquidKill.cooldown = false;
+                liquidKill.showLiquid();
+                actualState = killState.APROACHING;
+                targets[targetI].killTargetPos = targets[targetI].target.transform.position;
             }
             else break;
         }
@@ -119,12 +121,15 @@ public class kill_cono_vision : MonoBehaviour {
                 actualString = "W";
                 break;
             case killState.APROACHING:
-                if (!liquidAgent.isOnNavMesh) {
+                if (!liquidAgent.isOnNavMesh && stuckReference + 2.5f > Time.realtimeSinceStartup)
+                {
+                    errorAcum++;
+                    if (errorAcum > 10) aproachEnemy(targets[targetI].killTargetPos);
                     Vector3 destDirection = targets[targetI].ghostPos - player.transform.position;
                     destDirection.Normalize();
                     player.transform.position += destDirection;
                 }
-                else if(liquidAgent.remainingDistance <= 0.25f && Vector3.Magnitude(transform.position -liquidAgent.destination) >= 1.5f)
+                else if (liquidAgent.remainingDistance <= 0.25f && Vector3.Magnitude(transform.position - liquidAgent.destination) >= 1.5f)
                 {
                     Vector3 destDirection = targets[targetI].ghostPos - player.transform.position;
                     destDirection.Normalize();
@@ -135,9 +140,9 @@ public class kill_cono_vision : MonoBehaviour {
                 else if (Vector3.Magnitude(transform.position - liquidAgent.destination) < 1.5f || stuckReference + 2.5f < Time.realtimeSinceStartup) aproachEnemy(targets[targetI].killTargetPos);
                 else
                 {
-                        Vector3 destDirection = targets[targetI].ghostPos - player.transform.position;
-                        destDirection.Normalize();
-                        player.transform.position += destDirection / 10;
+                    Vector3 destDirection = targets[targetI].ghostPos - player.transform.position;
+                    destDirection.Normalize();
+                    player.transform.position += destDirection / 10;
                 }
                 actualString = "A";
                 break;
@@ -146,13 +151,21 @@ public class kill_cono_vision : MonoBehaviour {
                 actualString = "K";
                 break;
             case killState.RETURNING:
-                if (!liquidAgent.isOnNavMesh)
+                if (!liquidAgent.isOnNavMesh && stuckReference + 2.5f > Time.realtimeSinceStartup)
                 {
-                    Vector3 destDirection = playerPos - player.transform.position;
-                    destDirection.Normalize();
-                    player.transform.position += destDirection;
+                    errorAcum++;
+                    if (stuckReference + 1.0f < Time.realtimeSinceStartup || Vector3.Magnitude(transform.position - liquidAgent.destination) <= 0.25f) returnToPosition();
+                    else
+                    {
+                        Vector3 destDirection = playerPos - player.transform.position;
+                        destDirection.Normalize();
+                        playerPos += destDirection * errorAcum;
+                        player.transform.position = playerPos;
+                        liquidAgent.SetDestination(playerPos);
+                    }
                 }
                 else if ((liquidAgent.remainingDistance <= 0.25f && stuckReference + 0.5f < Time.realtimeSinceStartup) || stuckReference + 2.5f < Time.realtimeSinceStartup) returnToPosition();
+                else errorAcum = 0;
                 actualString = "R";
                 break;
             default:
@@ -167,6 +180,7 @@ public class kill_cono_vision : MonoBehaviour {
 
     private void aproachEnemy(Vector3 destination)
     {
+        errorAcum = 0;
         liquidKill.hideLiquid();
         player.transform.position = targets[targetI].ghostPos;
         player.transform.LookAt(destination);
@@ -182,14 +196,15 @@ public class kill_cono_vision : MonoBehaviour {
     private void killEnemy()
     {
         anim.SetBool("Is_Running", false);
-            anim.SetBool("Is_Crouching", false);
-            anim.SetBool("Is_Walking", false);
-            anim.SetBool("Is_Idle", false);
-            anim.SetTrigger("Is_Hitting");
+        anim.SetBool("Is_Crouching", false);
+        anim.SetBool("Is_Walking", false);
+        anim.SetBool("Is_Idle", false);
+        anim.SetTrigger("Is_Hitting");
     }
 
     private void returnToPosition()
     {
+        errorAcum = 0;
         player.transform.position = playerPos;
         player.GetComponent<Collider>().enabled = true;
         liquidKill.setHidratation();
