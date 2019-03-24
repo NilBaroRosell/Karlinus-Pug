@@ -117,17 +117,17 @@ public class Respawns : MonoBehaviour
 
         for (int i = 0; i < Enemies.Length; i++)
         {
-            if (Enemies[i].transform.parent.gameObject.name != "Enemigos M3 Scape") Enemies[i].GetComponent<csAreaVision>().DestroyEnemy();
+            if (Enemies[i].transform.parent.gameObject.name != "Enemigos M3 Scape" && Enemies[i].transform.parent.gameObject.name != "Enemigos M3 Kill") Enemies[i].GetComponent<csAreaVision>().DestroyEnemy();
         }
 
-        //MISION 2 OTHER OBJECTS
-        /*Mision_Objects = new GameObject[4];
-        if (GameObject.Find("dfk_doorframe") != null) Mision_Objects[0] = GameObject.Find("dfk_doorframe"); //PUB door trigger
-        Mision_Objects[1] = All_Mision_Objects.transform.GetChild(1).GetChild(1).GetChild(0).gameObject; //Servant
-        if (GameObject.Find("Enemigos M2") != null) Mision_Objects[2] = GameObject.Find("Enemigos M2"); //Enemigos
-        Mision_Objects[Mision_Objects.Length - 1] =
-            All_Mision_Objects.transform.GetChild(1).GetChild(1).GetChild(All_Mision_Objects.transform.GetChild(1).GetChild(1).transform.childCount - 1).gameObject;//Zone Controll*/
-
+        //MISION 3 OTHER OBJECTS
+        Mision_Objects = new GameObject[6];
+        if (GameObject.Find("ServantM3") != null) Mision_Objects[0] = GameObject.Find("ServantM3");
+        if (GameObject.Find("Enemigos M3 Scape") != null) Mision_Objects[1] = GameObject.Find("Enemigos M3 Scape");
+        if (GameObject.Find("Enemigos M3 Kill") != null) Mision_Objects[2] = GameObject.Find("Enemigos M3 Kill");
+        if (GameObject.Find("DistancePoint") != null) Mision_Objects[3] = GameObject.Find("DistancePoint");
+        Mision_Objects[4] = gameObject.transform.GetChild(1).transform.GetChild(2).transform.GetChild(1).transform.GetChild(0).transform.GetChild(0).gameObject;
+        Mision_Objects[5] = gameObject.transform.GetChild(1).transform.GetChild(2).transform.GetChild(1).transform.GetChild(2).gameObject;
     }
 
     private void LoadM4()
@@ -309,12 +309,30 @@ public class Respawns : MonoBehaviour
         {
             case 0:
                 LoadScene.respawnToLoad = InitialRespawns.CITY_2;
+                Mision_Objects[0].SetActive(true);
+                for (int i = 3; i >= 0; i --)
+                {
+                    Mision_Objects[1].transform.GetChild(i).gameObject.GetComponent<csAreaVision>().DestroyEnemy();
+                }
+                for (int i = 5; i >= 0; i--)
+                {
+                    Mision_Objects[2].transform.GetChild(i).gameObject.GetComponent<csAreaVision>().DestroyEnemy();
+                }
                 break;
             case 1:
                 LoadScene.respawnToLoad = InitialRespawns.NONE;
                 break;
             case 2:
                 LoadScene.respawnToLoad = InitialRespawns.CITY_2;
+                Mision_Objects[0].SetActive(false);
+                for (int i = 5; i >= 0; i--)
+                {
+                    Mision_Objects[2].transform.GetChild(i).gameObject.GetComponent<csAreaVision>().DestroyEnemy();
+                }
+                for (int i = 3; i >= 0; i--)
+                {
+                    Mision_Objects[1].transform.GetChild(i).gameObject.GetComponent<csAreaVision>().DestroyEnemy();
+                }
                 break;
             default:
                 break;

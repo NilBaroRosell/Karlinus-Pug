@@ -38,6 +38,7 @@ public class misions : MonoBehaviour
     public MisionPoint ScaryDog;
     public static bool pauseMenu;
     public static bool fight;
+    private bool dead;
     public int indexMision, indexRespawn;
 
     private void Awake()
@@ -222,10 +223,12 @@ public class misions : MonoBehaviour
                             Player.transform.position = new Vector3(100.59f, -27.52f, 158.03f);
                             Player.transform.eulerAngles = new Vector3(0.0f, 90f, 0.0f);
                             loadRespawn.BoxTriggers[5].SetActive(false);
+                            gameObject.GetComponent<Respawns>().Mision_Objects[4].transform.position = gameObject.GetComponent<Respawns>().Mision_Objects[5].transform.position;
                             break;
                         case 1:
                             Player.transform.position = new Vector3(8.62f, 6.558f, -13.46f);
                             misionIndex = 2;
+                            gameObject.GetComponent<Respawns>().Mision_Objects[4].transform.position = Player.transform.position;
                             break;
                         case 2:
                             Player.transform.position = new Vector3(168.51f, -27.52f, 158.2f);
@@ -233,6 +236,7 @@ public class misions : MonoBehaviour
                             secundaryCamera.SetActive(false);
                             secundaryCameraDestination.SetActive(false);
                             misionIndex = 7;
+                            gameObject.GetComponent<Respawns>().Mision_Objects[4].transform.position = gameObject.GetComponent<Respawns>().Mision_Objects[5].transform.position;
                             break;
                     }
                     break;
@@ -319,6 +323,7 @@ public class misions : MonoBehaviour
             }
         }
         fight = false;
+        dead = false;
         indexMision = misionIndex;
         indexRespawn = respawnIndex;
     }
@@ -674,11 +679,19 @@ public class misions : MonoBehaviour
                     nextEvent = false;
                     secundaryCamera.SetActive(false);
                     playerMovement.state = Controller.playerState.IDLE;
-                    //hud messages
+                    gameObject.GetComponent<Respawns>().Mision_Objects[0].SetActive(false);
+                    gameObject.GetComponent<Respawns>().Mision_Objects[0].SetActive(false);
+                    HUD_Script.showM3Objective(0);
+                    HUD_Script.showM3Helps(0, 60);
+                    loadRespawn.BoxTriggers[1].SetActive(false);
+                    loadRespawn.BoxTriggers[2].SetActive(false);
+                    loadRespawn.BoxTriggers[3].SetActive(false);
+                    loadRespawn.BoxTriggers[4].SetActive(false);
                 }
                 break;
             case 1:
-                if (loadRespawn.BoxTriggers[0].activeSelf == false)// and all the enemies are dead
+                for (int i = 5; i >= 0; i--) if (!gameObject.GetComponent<Respawns>().Mision_Objects[i].activeSelf) dead = true;
+                if (loadRespawn.BoxTriggers[0].activeSelf == false && dead)
                 {
                     misionIndex++;
                     respawnIndex++;
@@ -688,7 +701,7 @@ public class misions : MonoBehaviour
             case 2:
                 if (SceneManager.GetActiveScene().name == "CaptainHouse")
                 {
-                    //hud messages
+                    HUD_Script.showM3Objective(1, 40);
                     misionIndex++;
                     loadRespawn.BoxTriggers[1].SetActive(true);
                     loadRespawn.BoxTriggers[2].SetActive(false);
@@ -697,30 +710,34 @@ public class misions : MonoBehaviour
                 }
                 break;
             case 3:
+                gameObject.GetComponent<Respawns>().Mision_Objects[4].transform.position = Player.transform.position;
                 if (loadRespawn.BoxTriggers[1].activeSelf == false)
                 {
-                    //hud messages
-                    misionIndex++;
+                    HUD_Script.showM3Objective(2, 40);
+                    misionIndex ++;
                     loadRespawn.BoxTriggers[2].SetActive(true);
                 }
                 break;
             case 4:
+                gameObject.GetComponent<Respawns>().Mision_Objects[4].transform.position = Player.transform.position;
                 if (loadRespawn.BoxTriggers[2].activeSelf == false)
                 {
-                    //hud messages
+                    HUD_Script.showM3Objective(3, 40);
                     misionIndex++;
                     loadRespawn.BoxTriggers[3].SetActive(true);
                 }
                 break;
             case 5:
+                gameObject.GetComponent<Respawns>().Mision_Objects[4].transform.position = Player.transform.position;
                 if (loadRespawn.BoxTriggers[3].activeSelf == false)
                 {
-                    //hud messages
+                    HUD_Script.showM3Objective(4, 40);
                     misionIndex++;
                     loadRespawn.BoxTriggers[4].SetActive(true);
                 }
                 break;
             case 6:
+                gameObject.GetComponent<Respawns>().Mision_Objects[4].transform.position = Player.transform.position;
                 if (loadRespawn.BoxTriggers[4].activeSelf == false)
                 {
                     misionIndex++;
@@ -731,7 +748,8 @@ public class misions : MonoBehaviour
             case 7:
                 if (SceneManager.GetActiveScene().name == "city")
                 {
-                    //hud messages
+                    HUD_Script.showM3Objective(5, 40);
+                    HUD_Script.showM3Helps(1, 60);
                     misionIndex++;
                     loadRespawn.BoxTriggers[5].SetActive(true);
                 }
@@ -744,7 +762,7 @@ public class misions : MonoBehaviour
                 }
                 break;
             case 9:
-                if (1 == 1)// distance between player and captain house is bigger than x(100 for example) units
+                if (new Vector2(Player.transform.position.x - gameObject.GetComponent<Respawns>().Mision_Objects[3].transform.position.x, Player.transform.position.z - gameObject.GetComponent<Respawns>().Mision_Objects[3].transform.position.z).magnitude > 100)
                 {
                     //hud messages
                     misionIndex++;

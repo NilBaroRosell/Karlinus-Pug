@@ -17,6 +17,7 @@ public class HUD : MonoBehaviour {
     private GameObject Dialog_text;
     public GameObject M1;
     public GameObject M2;
+    public GameObject M3;
     public GameObject SM_1;
 
     public static GameObject canvasHUD;
@@ -35,6 +36,7 @@ public class HUD : MonoBehaviour {
         Dialog_text = Dialog.transform.GetChild(0).gameObject;
         M1.SetActive(false);
         M2.SetActive(false);
+        M3.SetActive(false);
         SM_1.SetActive(false);
         Objective.SetActive(false);
         Helps.SetActive(false);
@@ -134,6 +136,37 @@ public class HUD : MonoBehaviour {
             timeUntilDisapear = 300;
         }
         M2.SetActive(false);
+    }
+
+    public void showM3Objective(int text_to_show, int font_to_set = 50)
+    {
+        M3.SetActive(true);
+        Objective.SetActive(true);
+        if (Objective_text.GetComponent<Text>().text != M3.transform.GetChild(0).GetChild(text_to_show).gameObject.GetComponent<Text>().text)
+        {
+            Objective_text.GetComponent<Text>().text = M3.transform.GetChild(0).GetChild(text_to_show).gameObject.GetComponent<Text>().text;
+            Objective_text.GetComponent<Text>().fontSize = font_to_set;
+            Objective.GetComponent<RectTransform>().position =
+                new Vector3(Objective.GetComponent<RectTransform>().position.x, -381.4f / 10, Objective.GetComponent<RectTransform>().position.z);
+            startTime = Time.frameCount;
+            timeUntilDisapear = 300;
+        }
+        M3.SetActive(false);
+    }
+    public void showM3Helps(int text_to_show, int font_to_set = 50)
+    {
+        M3.SetActive(true);
+        Helps.SetActive(true);
+        if (Helps_text.GetComponent<Text>().text != M3.transform.GetChild(1).GetChild(text_to_show).gameObject.GetComponent<Text>().text)
+        {
+            Helps_text.GetComponent<Text>().text = M3.transform.GetChild(1).GetChild(text_to_show).gameObject.GetComponent<Text>().text;
+            Helps_text.GetComponent<Text>().fontSize = font_to_set;
+            Helps.GetComponent<RectTransform>().position =
+                        new Vector3(Helps.GetComponent<RectTransform>().position.x, -426.0f / 10, Helps.GetComponent<RectTransform>().position.z);
+            startTime = Time.frameCount;
+            timeUntilDisapear = 300;
+        }
+        M3.SetActive(false);
     }
 
     public void showZoneWarning()
