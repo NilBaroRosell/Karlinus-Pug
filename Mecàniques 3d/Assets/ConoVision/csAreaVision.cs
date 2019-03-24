@@ -4,6 +4,7 @@ using UnityEngine.AI;
 using UnityEngine.SceneManagement;
 using System.Collections;
 using System;
+using UnityEngine.Rendering;
 
 public class csAreaVision : MonoBehaviour {
 
@@ -101,7 +102,7 @@ public class csAreaVision : MonoBehaviour {
         searchingRef = Time.realtimeSinceStartup;
         atackRef = Time.realtimeSinceStartup;
         lastSeenPosition = new Vector3(0.0f, 0.0f, 0.0f);
-        alertRend = transform.GetChild(3).GetComponent<Renderer>();
+        alertRend = transform.GetChild(3).GetComponent<MeshRenderer>();
         // alertRend.material.shader = Shader.Find("_Color");
         alertRend.material.SetColor("_Color", Color.green);
         enemyAgent = this.GetComponent<NavMeshAgent>();

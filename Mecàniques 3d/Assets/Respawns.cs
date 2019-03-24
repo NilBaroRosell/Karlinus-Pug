@@ -286,6 +286,7 @@ public class Respawns : MonoBehaviour {
                 break;
             case 2:
                 Mision_Objects[Mision_Objects.Length - 1].SetActive(false);
+                LoadScene.respawnToLoad = InitialRespawns.PUB_OUTSIDE;
                 if (GameObject.Find("Enemigos M4") != null)
                 {
                     for (int i = 7; i >= 0; i--) GameObject.Find("Enemigos M4").transform.GetChild(i).GetComponent<csAreaVision>().DestroyEnemy();

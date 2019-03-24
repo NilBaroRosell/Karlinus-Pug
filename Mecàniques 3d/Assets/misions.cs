@@ -681,6 +681,13 @@ public class misions : MonoBehaviour {
                 }
                 break;
             case 2:
+                if(EnemyManager.Enemies.Length == 0)
+                {
+                    misionIndex++;
+                    respawnIndex++;
+                }
+                break;
+            case 3:
                 break;
             default:
                 break;

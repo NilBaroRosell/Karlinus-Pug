@@ -142,7 +142,6 @@
     <Compile Include="Assets\MirameWapo.cs" />
     <Compile Include="Assets\MisionFailed.cs" />
     <Compile Include="Assets\misions.cs" />
-    <Compile Include="Assets\movement.cs" />
     <Compile Include="Assets\NPC.cs" />
     <Compile Include="Assets\NPCActualizeScene.cs" />
     <Compile Include="Assets\PauseMenu.cs" />
