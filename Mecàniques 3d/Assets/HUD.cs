@@ -3,6 +3,18 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+
+public class SeenEnemy
+{
+    public GameObject enemy;
+    public GameObject triangle;
+    public SeenEnemy(GameObject _enemy)
+    {
+        enemy = _enemy;
+        triangle = null;
+    }
+}
+
 public class HUD : MonoBehaviour {
 
     public static float startTime;
@@ -186,4 +198,6 @@ public class HUD : MonoBehaviour {
         startTime = Time.frameCount;
         timeUntilDisapear = time;
     }
+
+
 }

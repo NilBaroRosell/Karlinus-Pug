@@ -58,6 +58,10 @@ public class csAreaVision : MonoBehaviour {
     private bool first = true;
     private bool scared = false;
 
+
+    private Material alertMaterial;
+    private float alertDistance = 60000;
+
     //Nav Mesh
     NavMeshAgent enemyAgent;
 
@@ -198,7 +202,6 @@ public class csAreaVision : MonoBehaviour {
             Ray raycast = new Ray(transform.position, v);
             if(Physics.Raycast(raycast, out hit, rango, 1 << LayerMask.NameToLayer("cobertura")) && hit.transform.gameObject.tag == "Player")
             {
-                Debug.Log(hit.transform.name);
                 discovered = true;
                     lastSeenPosition = GameObject.Find("Jugador").transform.position;
 
