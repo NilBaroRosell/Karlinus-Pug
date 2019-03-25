@@ -11,54 +11,8 @@ public class AreaVisionBoss : MonoBehaviour
     private int rango = 100;
 
     MeshFilter meshFilter;
-    csAreaVision disabler;
-    public static string actualString;
-    Vector3 oldPosition;
-    Quaternion oldRotation;
-    Vector3 oldScale;
-    Vector3 patrollingPosition;
-
-    private Rigidbody rb;
-    static Animator anim;
-    static Animator playerAnim;
-    private Controller playerMovement;
-    private float maxDist;
 
     public int speed;
-
-    //Patrol points and variables
-    public GameObject[] objectPoint;
-    public static Vector3[] Points;
-    public float[] StopTime;
-    public static int patrollingIndex;
-    private bool stoped;
-    GameObject Pepino;
-    public Vector3 lastSeenPosition;
-    public static Vector3 destinationPoint;
-    private Vector3 vecEnemy1;
-    private Vector3 rbDirection;
-    public Vector3 playerDist;
-    private Vector3 stuckPos;
-    private bool discovered;
-    private bool searchingState;
-    private double scaredRef;
-    private double discoveredRef;
-    private double searchingRef;
-    private double atackRef;
-    private bool atackRefTaken;
-    private bool atacking;
-    Renderer alertRend;
-    private bool hittingEnemy = false;
-    private bool sneaky = false;
-    public bool dead = false;
-    private float canAtackRef;
-    public AudioClip catSound;
-    AudioSource source;
-    private bool first = true;
-    private bool scared = false;
-
-    //Nav Mesh
-    NavMeshAgent enemyAgent;
 
     private bool forward;
     private int DestI;
@@ -134,26 +88,11 @@ public class AreaVisionBoss : MonoBehaviour
     // Use this for initialization
     void Awake()
     {
-        disabler = GetComponent<csAreaVision>();
-        if (GameObject.Find("EnemyManager") != null) maxDist = GameObject.Find("EnemyManager").GetComponent<EnemyManager>().maxDist;
-        else maxDist = 100;
-        canAtackRef = 0.0f;
-        stuckPos = Vector3.zero;
-        Physics.IgnoreLayerCollision(9, 8);
-        if (GetComponent<AudioListener>() == null) gameObject.AddComponent<AudioSource>();
         meshFilter = transform.GetComponent<MeshFilter>();
         meshFilter.mesh = Cono();
         initialPosition = meshFilter.mesh.vertices;
         initialUV = meshFilter.mesh.uv;
-        rb = GetComponent<Rigidbody>();
-        anim = GetComponent<Animator>();
-        atackRefTaken = false;
-        atacking = false;
-        searchingState = true;
-        Points = new Vector3[objectPoint.Length];
-        patrollingIndex = 0;
     }
-
     void Start()
     {
         if(DestinationRef == null)
@@ -163,7 +102,7 @@ public class AreaVisionBoss : MonoBehaviour
             DestinationRef[i - 1] = GameObject.Find("Rays" + i.ToString() + "Dest");
         }
         DestI = Random.Range(0, 8);
-        forward = true;
+        forward = false;
         transform.rotation = StartRef.transform.rotation;
         deltaMult = 0.75f;
         edgeTime = 2.25f;
@@ -193,8 +132,10 @@ public class AreaVisionBoss : MonoBehaviour
             {
                 if (hit.transform.gameObject.tag == "Player")
                 {
-                    discovered = true;
-                    lastSeenPosition = GameObject.Find("Jugador").transform.position;
+                    bossIA.discovered = true;
+                    GameObject.Find("Jugador").GetComponent<liquidState>().setHidratation();
+                    GameObject.Find("Jugador").GetComponent<liquidState>().hideLiquid();
+                    GameObject.Find("Jugador").GetComponent<Controller>().state = Controller.playerState.IDLE;
                 }
 
                 if (hit.transform.position != transform.position)

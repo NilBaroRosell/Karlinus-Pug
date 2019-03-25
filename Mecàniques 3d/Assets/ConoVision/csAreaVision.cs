@@ -256,8 +256,7 @@ public class csAreaVision : MonoBehaviour {
             }
             this.gameObject.SetActive(false);
         }
-
-        if (enemyAgent.velocity.normalized != Vector3.zero)
+        if (enemyAgent.velocity.magnitude > 0.75f)
             transform.rotation = Quaternion.LookRotation(enemyAgent.velocity.normalized);
         else
             rb.transform.LookAt(destinationPoint);
