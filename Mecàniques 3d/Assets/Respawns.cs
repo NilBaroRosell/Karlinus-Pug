@@ -101,10 +101,11 @@ public class Respawns : MonoBehaviour {
     private void LoadM4()
     {
         //MISION 4 RESPAWN POINTS
-        RespawnPoints = new Vector3[3];
+        RespawnPoints = new Vector3[4];
         RespawnPoints[0] = new Vector3(85.8f, -9.1f, 321.1f);
         RespawnPoints[1] = new Vector3(-122.71f, -27.52f, 267.58f);
         RespawnPoints[2] = new Vector3(-69.33f, -27.52f, 295.55f);
+        RespawnPoints[3] = new Vector3(-6.15f, 81.48f, -316.38f);
 
         //MISION 4 BOX TRIGGERS
         All_Mision_Objects.transform.GetChild(3).gameObject.SetActive(true);
@@ -291,6 +292,8 @@ public class Respawns : MonoBehaviour {
                 {
                     for (int i = 7; i >= 0; i--) GameObject.Find("Enemigos M4").transform.GetChild(i).GetComponent<csAreaVision>().DestroyEnemy();
                 }
+                break;
+            case 3:
                 break;
             default:
                 break;

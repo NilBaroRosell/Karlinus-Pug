@@ -62,6 +62,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\addObstacleMeshToAll.cs" />
+    <Compile Include="Assets\AreaVisionBoss.cs" />
     <Compile Include="Assets\BoxTriggerScript.cs" />
     <Compile Include="Assets\button_pressed.cs" />
     <Compile Include="Assets\camaraMovement.cs" />

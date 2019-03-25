@@ -234,6 +234,10 @@ public class misions : MonoBehaviour {
                             secundaryCamera.SetActive(false);
                             misionIndex = 2;
                             break;
+                        case 3:
+                            secundaryCamera.SetActive(false);
+                            misionIndex = 4;
+                            break;
                     }
                     break;
                 case Misions.SM_1:
@@ -683,11 +687,19 @@ public class misions : MonoBehaviour {
             case 2:
                 if(EnemyManager.Enemies.Length == 0)
                 {
-                    misionIndex++;
-                    respawnIndex++;
+                    misionIndex++;                   
                 }
                 break;
             case 3:
+                if(loadRespawn.BoxTriggers[1].activeSelf == false)
+                {
+                    misionIndex++;
+                    respawnIndex++;
+                    loadRespawn.initialRespawn = Respawns.InitialRespawns.CITY_2;
+                    loadScreen.Instancia.CargarEscena("StoneChamber");
+                }
+                break;
+            case 4:
                 break;
             default:
                 break;
