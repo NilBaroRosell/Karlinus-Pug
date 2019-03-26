@@ -6,7 +6,7 @@ using UnityEngine.AI;
 public class AreaVisionBoss : MonoBehaviour
 {
 
-    private int angulo = 90;
+    private int angulo = 60;
     private int w_ref = 40;
     private int rango = 100;
 
@@ -92,6 +92,7 @@ public class AreaVisionBoss : MonoBehaviour
         meshFilter.mesh = Cono();
         initialPosition = meshFilter.mesh.vertices;
         initialUV = meshFilter.mesh.uv;
+        DestinationRef = null;
     }
     void Start()
     {
@@ -104,8 +105,8 @@ public class AreaVisionBoss : MonoBehaviour
         DestI = Random.Range(0, 8);
         forward = false;
         transform.rotation = StartRef.transform.rotation;
-        deltaMult = 0.75f;
-        edgeTime = 2.25f;
+        deltaMult = 0.5f;
+        edgeTime = 2.5f;
         extraRandTime = Random.Range(0.0f, edgeTime);
         StartCoroutine(ExecuteAfterTime(edgeTime + extraRandTime));
     }
@@ -133,7 +134,6 @@ public class AreaVisionBoss : MonoBehaviour
                 if (hit.transform.gameObject.tag == "Player")
                 {
                     bossIA.discovered = true;
-                    GameObject.Find("Jugador").GetComponent<liquidState>().setHidratation();
                     GameObject.Find("Jugador").GetComponent<liquidState>().hideLiquid();
                     GameObject.Find("Jugador").GetComponent<Controller>().state = Controller.playerState.IDLE;
                 }
@@ -172,6 +172,17 @@ public class AreaVisionBoss : MonoBehaviour
         meshFilter.mesh = areaMesh(meshFilter.mesh);
         if(forward)transform.rotation = Quaternion.Lerp(transform.rotation, DestinationRef[DestI].transform.rotation, deltaMult * Time.deltaTime);
         else transform.rotation = Quaternion.Lerp(transform.rotation, StartRef.transform.rotation, deltaMult * Time.deltaTime);
+    }
+
+    public void restartCone()
+    {
+        DestI = Random.Range(0, 8);
+        forward = true;
+        transform.rotation = StartRef.transform.rotation;
+        deltaMult += 0.25f;
+        edgeTime -= 0.25f;
+        extraRandTime = Random.Range(0.0f, edgeTime);
+        StartCoroutine(ExecuteAfterTime(edgeTime + extraRandTime));
     }
 
     IEnumerator ExecuteAfterTime(float time)

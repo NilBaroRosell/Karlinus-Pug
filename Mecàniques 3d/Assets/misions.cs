@@ -695,7 +695,7 @@ public class misions : MonoBehaviour {
                 {
                     misionIndex++;
                     respawnIndex++;
-                    loadRespawn.initialRespawn = Respawns.InitialRespawns.CITY_2;
+                    loadRespawn.initialRespawn = Respawns.InitialRespawns.CHAMBER;
                     loadScreen.Instancia.CargarEscena("StoneChamber");
                 }
                 break;

@@ -236,7 +236,7 @@ public class bossIA : MonoBehaviour
 
     public bool canBeKilled()
     {
-        if ((actualState == enemyState.FIGHTING && canAtackRef + 2.0f > Time.realtimeSinceStartup && !playerAnim.GetBool("Is_Running")) || actualState != enemyState.FIGHTING)
+        if (actualState != enemyState.FIGHTING && !playerAnim.GetBool("Is_Running"))
         {
             return true;
         }
@@ -291,8 +291,7 @@ public class bossIA : MonoBehaviour
         yield return new WaitForSeconds(time);
 
         playerMovement.state = Controller.playerState.IDLE;
-
-        DestroyEnemy();
+        destinationPoint = Points[patrollingIndex];
     }
 
     IEnumerator playerDeath(float time)
@@ -303,30 +302,6 @@ public class bossIA : MonoBehaviour
         loadScreen.Instancia.CargarEscena("DEAD");
     }
 
-    public void DestroyEnemy()
-    {
-        if (GameObject.Find("EnemyManager") != null)
-        {
-            GameObject[] aux = new GameObject[EnemyManager.Enemies.Length - 1];
-            Vector3[] auxPos = new Vector3[EnemyManager.EnemiesPos.Length - 1];
-            int j = 0;
-            for (int i = 0; i < EnemyManager.Enemies.Length; i++)
-            {
-                if (this.gameObject != EnemyManager.Enemies[i])
-                {
-                    aux[j] = EnemyManager.Enemies[i];
-                    auxPos[j] = EnemyManager.EnemiesPos[i];
-                    j++;
-                }
-            }
-            EnemyManager.Enemies = aux;
-            EnemyManager.EnemiesPos = auxPos;
-        }
-        Debug.Log(EnemyManager.Enemies.Length);
-        Destroy(KarlinusEspectre);
-        this.gameObject.SetActive(false);
-    }
-
     public void playerScaped()
     {
         StartCoroutine(CheckStuck(10.0f));
@@ -335,6 +310,16 @@ public class bossIA : MonoBehaviour
         speed = 50;
         actualState = enemyState.SEARCHING;
         lastState = enemyState.DETECTING;
+    }
+
+    public void noiseDetected()
+    {
+        actualState = enemyState.DETECTING;
+        searchingRef = Time.realtimeSinceStartup;
+        lastState = enemyState.PATROLLING;
+        alertRend.material.SetColor("_Color", Color.yellow);
+        destinationPoint = GameObject.Find("Jugador").transform.position;
+        KarlinusEspectre.SetActive(false);
     }
 
     void IA_Controller()
@@ -426,7 +411,7 @@ public class bossIA : MonoBehaviour
             case enemyState.DETECTING:
                 seenAcum++;
                 destinationPoint = GameObject.Find("Jugador").transform.position;
-                if (seenAcum > 100 || ((playerDist.magnitude <= rango / 3 || searchingRef + 5.0f < Time.realtimeSinceStartup) &&
+                if (seenAcum > 150 || ((playerDist.magnitude <= rango / 3 || searchingRef + 5.0f < Time.realtimeSinceStartup) &&
                     lastState == enemyState.PATROLLING) || lastState == enemyState.SEARCHING && speed == 50)//Change to FIGHTING
                 {
                     canAtackRef = Time.realtimeSinceStartup;

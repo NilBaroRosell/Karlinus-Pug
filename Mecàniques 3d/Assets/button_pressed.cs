@@ -24,6 +24,9 @@ public class button_pressed : MonoBehaviour {
             case Respawns.InitialRespawns.PUB_OUTSIDE:
                 loadScreen.Instancia.CargarEscena("city");
                 break;
+            case Respawns.InitialRespawns.CHAMBER:
+                loadScreen.Instancia.CargarEscena("StoneChamber");
+                break;
             default:
                 break;
         }

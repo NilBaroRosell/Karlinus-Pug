@@ -54,7 +54,6 @@ public class Controller : MonoBehaviour
     {
         characterController = GetComponent<CharacterController>();
         state = playerState.IDLE;
-        //Physics.IgnoreLayerCollision(9, 8);
     }
 
     // Update is called once per frame
@@ -175,14 +174,15 @@ public class Controller : MonoBehaviour
             //Change relation to camera
             moveDirection = moveDirection.x * camRight + moveDirection.z * camForward;
 
-            if (Input.GetButton("Crouch"))
-            {
-                Crouch();
-            }
+            if(state == playerState.LIQUID) moveDirection *= speed * runMultiplier;
             else if (Input.GetButton("Run"))
             {
                 Run();
             }
+            else if (Input.GetButton("Crouch"))
+            {
+                Crouch();
+            }           
             else if (!(Input.GetAxis("Horizontal") == 0 && Input.GetAxis("Vertical") == 0)) Walk();
         }
 
@@ -234,17 +234,32 @@ public class Controller : MonoBehaviour
         Vector3 enemyDist;
         if (message == 1) dist = 10;
         else dist = 30;
-        for (int i = 0; i < EnemyManager.Enemies.Length; i++)
+        if (GameObject.Find("Enemy Manager") != null)
         {
-            if (EnemyManager.Enemies[i].activeSelf && EnemyManager.Enemies[i].GetComponent<csAreaVision>().actualState != csAreaVision.enemyState.FIGHTING)
+            for (int i = 0; i < EnemyManager.Enemies.Length; i++)
             {
-                enemyDist = new Vector3(EnemyManager.Enemies[i].transform.position.x - transform.position.x, 0.0f, EnemyManager.Enemies[i].transform.position.z - transform.position.z);
-                if (enemyDist.magnitude <= dist)
+                if (EnemyManager.Enemies[i].activeSelf && EnemyManager.Enemies[i].GetComponent<csAreaVision>().actualState != csAreaVision.enemyState.FIGHTING)
                 {
-                    EnemyManager.Enemies[i].GetComponent<csAreaVision>().actualState = csAreaVision.enemyState.SEARCHING;
-                    EnemyManager.Enemies[i].GetComponent<csAreaVision>().lastState = csAreaVision.enemyState.FIGHTING;
-                    EnemyManager.Enemies[i].GetComponent<csAreaVision>().lastSeenPosition = GameObject.Find("Jugador").transform.position;
-                    EnemyManager.Enemies[i].GetComponent<csAreaVision>().speed = 50;
+                    enemyDist = new Vector3(EnemyManager.Enemies[i].transform.position.x - transform.position.x, 0.0f, EnemyManager.Enemies[i].transform.position.z - transform.position.z);
+                    if (enemyDist.magnitude <= dist)
+                    {
+                        EnemyManager.Enemies[i].GetComponent<csAreaVision>().actualState = csAreaVision.enemyState.SEARCHING;
+                        EnemyManager.Enemies[i].GetComponent<csAreaVision>().lastState = csAreaVision.enemyState.FIGHTING;
+                        EnemyManager.Enemies[i].GetComponent<csAreaVision>().lastSeenPosition = GameObject.Find("Jugador").transform.position;
+                        EnemyManager.Enemies[i].GetComponent<csAreaVision>().speed = 50;
+                    }
+                }
+            }
+        }
+        else if(GameObject.Find("batalla final") != null)
+        {
+            GameObject[] Bosses = GameObject.Find("batalla final").GetComponent<finalBattleManager>().Bosses;
+            for (int i = 0; i < Bosses.Length; i++)
+            {
+                if (Bosses[i].activeSelf && Bosses[i].GetComponent<bossIA>().actualState != bossIA.enemyState.FIGHTING)
+                {
+                    enemyDist = new Vector3(Bosses[i].transform.position.x - transform.position.x, 0.0f, Bosses[i].transform.position.z - transform.position.z);
+                    if (enemyDist.magnitude <= dist) Bosses[i].GetComponent<bossIA>().noiseDetected();
                 }
             }
         }

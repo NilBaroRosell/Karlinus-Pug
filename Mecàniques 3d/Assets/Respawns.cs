@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Respawns : MonoBehaviour {
 
-    public enum InitialRespawns { SEWER_1, SEWER_2, SEWER_3, CITY_1, CITY_2, PUB_INSIDE, PUB_OUTSIDE, NONE };
+    public enum InitialRespawns { SEWER_1, SEWER_2, SEWER_3, CITY_1, CITY_2, PUB_INSIDE, PUB_OUTSIDE, CHAMBER, NONE };
     private Vector3[] RespawnPoints;
     private GameObject All_Mision_Objects;
     public GameObject[] BoxTriggers;
@@ -294,6 +294,7 @@ public class Respawns : MonoBehaviour {
                 }
                 break;
             case 3:
+                LoadScene.respawnToLoad = InitialRespawns.CHAMBER;
                 break;
             default:
                 break;
