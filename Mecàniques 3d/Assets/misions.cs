@@ -217,8 +217,8 @@ public class misions : MonoBehaviour
                     {
                         case 0:
                             misionIndex = 0;
-                            StartCoroutine(ExecuteAfterTime(5.0f));
-                            secundaryCamera.transform.position = new Vector3(144.25f, -22.98f, 157.5f);
+                            StartCoroutine(ExecuteAfterTime(7.5f));
+                            secundaryCamera.transform.position = new Vector3(157.3f, -25.19f, 157.5f);
                             secundaryCamera.transform.eulerAngles = new Vector3(15, 450, 0);
                             Player.transform.position = new Vector3(100.59f, -27.52f, 158.03f);
                             Player.transform.eulerAngles = new Vector3(0.0f, 90f, 0.0f);
@@ -227,7 +227,7 @@ public class misions : MonoBehaviour
                             break;
                         case 1:
                             Player.transform.position = new Vector3(8.62f, 6.558f, -13.46f);
-                            misionIndex = 2;
+                            misionIndex = 3;
                             gameObject.GetComponent<Respawns>().Mision_Objects[4].transform.position = Player.transform.position;
                             break;
                         case 2:
@@ -235,7 +235,7 @@ public class misions : MonoBehaviour
                             Player.transform.eulerAngles = new Vector3(0.0f, -90f, 0.0f);
                             secundaryCamera.SetActive(false);
                             secundaryCameraDestination.SetActive(false);
-                            misionIndex = 7;
+                            misionIndex = 8;
                             gameObject.GetComponent<Respawns>().Mision_Objects[4].transform.position = gameObject.GetComponent<Respawns>().Mision_Objects[5].transform.position;
                             break;
                     }
@@ -673,10 +673,22 @@ public class misions : MonoBehaviour
         {
             case 0:
                 playerMovement.state = Controller.playerState.HITTING;
+                GameObject.Find("Jugador").GetComponent<liquidState>().hidratation = 100;
                 if (nextEvent)
                 {
                     misionIndex++;
+                    secundaryCameraDestination.transform.position = new Vector3(92.59f, -24.02f, 157.88f);
+                    secundaryCameraDestination.transform.eulerAngles = new Vector3(15.0f, 90.0f,0.0f);
                     nextEvent = false;
+                    StartCoroutine(ExecuteAfterTime(3.25f));
+                }
+                break;
+            case 1:
+                secundaryCamera.transform.position = Vector3.Lerp(secundaryCamera.transform.position, secundaryCameraDestination.transform.position, 0.75f * Time.deltaTime);
+                secundaryCamera.transform.rotation = Quaternion.Lerp(secundaryCamera.transform.rotation, secundaryCameraDestination.transform.rotation, 0.75f * Time.deltaTime);
+                if(nextEvent)
+                {
+                    misionIndex++;
                     secundaryCamera.SetActive(false);
                     playerMovement.state = Controller.playerState.IDLE;
                     gameObject.GetComponent<Respawns>().Mision_Objects[0].SetActive(false);
@@ -689,7 +701,7 @@ public class misions : MonoBehaviour
                     loadRespawn.BoxTriggers[4].SetActive(false);
                 }
                 break;
-            case 1:
+            case 2:
                 for (int i = 5; i >= 0; i--) if (!gameObject.GetComponent<Respawns>().Mision_Objects[i].activeSelf) dead = true;
                 if (loadRespawn.BoxTriggers[0].activeSelf == false && dead)
                 {
@@ -698,7 +710,7 @@ public class misions : MonoBehaviour
                     loadScreen.Instancia.CargarEscena("CaptainHouse");
                 }
                 break;
-            case 2:
+            case 3:
                 if (SceneManager.GetActiveScene().name == "CaptainHouse")
                 {
                     HUD_Script.showM3Objective(1, 40);
@@ -709,7 +721,7 @@ public class misions : MonoBehaviour
                     loadRespawn.BoxTriggers[4].SetActive(false);
                 }
                 break;
-            case 3:
+            case 4:
                 gameObject.GetComponent<Respawns>().Mision_Objects[4].transform.position = Player.transform.position;
                 if (loadRespawn.BoxTriggers[1].activeSelf == false)
                 {
@@ -718,7 +730,7 @@ public class misions : MonoBehaviour
                     loadRespawn.BoxTriggers[2].SetActive(true);
                 }
                 break;
-            case 4:
+            case 5:
                 gameObject.GetComponent<Respawns>().Mision_Objects[4].transform.position = Player.transform.position;
                 if (loadRespawn.BoxTriggers[2].activeSelf == false)
                 {
@@ -727,7 +739,7 @@ public class misions : MonoBehaviour
                     loadRespawn.BoxTriggers[3].SetActive(true);
                 }
                 break;
-            case 5:
+            case 6:
                 gameObject.GetComponent<Respawns>().Mision_Objects[4].transform.position = Player.transform.position;
                 if (loadRespawn.BoxTriggers[3].activeSelf == false)
                 {
@@ -736,7 +748,7 @@ public class misions : MonoBehaviour
                     loadRespawn.BoxTriggers[4].SetActive(true);
                 }
                 break;
-            case 6:
+            case 7:
                 gameObject.GetComponent<Respawns>().Mision_Objects[4].transform.position = Player.transform.position;
                 if (loadRespawn.BoxTriggers[4].activeSelf == false)
                 {
@@ -745,7 +757,7 @@ public class misions : MonoBehaviour
                     loadScreen.Instancia.CargarEscena("city");
                 }
                 break;
-            case 7:
+            case 8:
                 if (SceneManager.GetActiveScene().name == "city")
                 {
                     HUD_Script.showM3Objective(5, 40);
@@ -754,14 +766,14 @@ public class misions : MonoBehaviour
                     loadRespawn.BoxTriggers[5].SetActive(true);
                 }
                 break;
-            case 8:
+            case 9:
                 if (loadRespawn.BoxTriggers[5].activeSelf == false && !fight)
                 {
                     //hud messages
                     misionIndex++;
                 }
                 break;
-            case 9:
+            case 10:
                 if (new Vector2(Player.transform.position.x - gameObject.GetComponent<Respawns>().Mision_Objects[3].transform.position.x, Player.transform.position.z - gameObject.GetComponent<Respawns>().Mision_Objects[3].transform.position.z).magnitude > 100)
                 {
                     //hud messages
@@ -779,6 +791,7 @@ public class misions : MonoBehaviour
                 playerMovement.state = Controller.playerState.HITTING;
                 Player.transform.position = new Vector3(30.765f, -27.523f, -38.321f);
                 Player.transform.eulerAngles = new Vector3(0.0f, 90f, 0.0f);
+                GameObject.Find("Jugador").GetComponent<liquidState>().hidratation = 100;
                 if (nextEvent)
                 {
                     misionIndex++;

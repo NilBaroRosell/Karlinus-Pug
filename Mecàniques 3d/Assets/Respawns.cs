@@ -315,8 +315,6 @@ public class Respawns : MonoBehaviour
                 {
                     Mision_Objects[1].transform.GetChild(i).gameObject.GetComponent<csAreaVision>().DestroyEnemy();
                 }
-                /*Mision_Objects[6].transform.GetChild(0).gameObject.GetComponent<csAreaVision>().DestroyEnemy();
-                Mision_Objects[6].transform.GetChild(1).gameObject.GetComponent<csAreaVision>().DestroyEnemy();*/
                 break;
             case 1:
                 LoadScene.respawnToLoad = InitialRespawns.NONE;
@@ -328,8 +326,6 @@ public class Respawns : MonoBehaviour
                 {
                     Mision_Objects[2].transform.GetChild(i).gameObject.GetComponent<csAreaVision>().DestroyEnemy();
                 }
-                /*Mision_Objects[6].transform.GetChild(0).gameObject.GetComponent<csAreaVision>().DestroyEnemy();
-                Mision_Objects[6].transform.GetChild(1).gameObject.GetComponent<csAreaVision>().DestroyEnemy();*/
                 break;
             default:
                 break;
