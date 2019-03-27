@@ -164,6 +164,7 @@
     <Compile Include="Assets\Warning_Zone.cs" />
     <None Include="Assets\Fantasy Skybox FREE\Readme.txt" />
     <None Include="Assets\2Ginge\GritBuildupShader\Shaders\GritBuildupShader.shader" />
+    <None Include="Assets\Medieval props\Read me.txt" />
     <None Include="Assets\read me.txt" />
     <None Include="Assets\Fantasy Skybox FREE\Fog and Ambient references.txt" />
     <None Include="Assets\Cinemachine\ReleaseNotes.txt" />
