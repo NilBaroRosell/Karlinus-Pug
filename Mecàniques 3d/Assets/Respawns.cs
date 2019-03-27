@@ -104,7 +104,7 @@ public class Respawns : MonoBehaviour
         //MISION 2 RESPAWN POINTS
         RespawnPoints = new Vector3[3];
         RespawnPoints[0] = new Vector3(5.85f, -27.52068f, -41.88f);
-        RespawnPoints[1] = new Vector3(8.62f, 6.558f, -13.46f);
+        RespawnPoints[1] = new Vector3(9.87f, 6.558f, -14.56f);
         RespawnPoints[2] = new Vector3(168.51f, -27.52f, 158.2f);
 
         //MISION 2 BOX TRIGGERS

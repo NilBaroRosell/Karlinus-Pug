@@ -226,7 +226,7 @@ public class misions : MonoBehaviour
                             gameObject.GetComponent<Respawns>().Mision_Objects[4].transform.position = gameObject.GetComponent<Respawns>().Mision_Objects[5].transform.position;
                             break;
                         case 1:
-                            Player.transform.position = new Vector3(8.62f, 6.558f, -13.46f);
+                            Player.transform.position = new Vector3(9.87f, 6.558f, -14.56f);
                             misionIndex = 3;
                             gameObject.GetComponent<Respawns>().Mision_Objects[4].transform.position = Player.transform.position;
                             break;
@@ -713,7 +713,8 @@ public class misions : MonoBehaviour
             case 3:
                 if (SceneManager.GetActiveScene().name == "CaptainHouse")
                 {
-                    HUD_Script.showM3Objective(1, 40);
+                    GameObject.Find("Jugador").GetComponent<liquidState>().hidratation = 100;
+                    HUD_Script.showM3Objective(1, 38);
                     misionIndex++;
                     loadRespawn.BoxTriggers[1].SetActive(true);
                     loadRespawn.BoxTriggers[2].SetActive(false);
@@ -734,6 +735,7 @@ public class misions : MonoBehaviour
                 gameObject.GetComponent<Respawns>().Mision_Objects[4].transform.position = Player.transform.position;
                 if (loadRespawn.BoxTriggers[2].activeSelf == false)
                 {
+                    HUD_Script.showM3Helps(1, 60);
                     HUD_Script.showM3Objective(3, 40);
                     misionIndex++;
                     loadRespawn.BoxTriggers[3].SetActive(true);
@@ -743,6 +745,7 @@ public class misions : MonoBehaviour
                 gameObject.GetComponent<Respawns>().Mision_Objects[4].transform.position = Player.transform.position;
                 if (loadRespawn.BoxTriggers[3].activeSelf == false)
                 {
+                    HUD_Script.showM3Helps(2, 60);
                     HUD_Script.showM3Objective(4, 40);
                     misionIndex++;
                     loadRespawn.BoxTriggers[4].SetActive(true);
@@ -760,8 +763,9 @@ public class misions : MonoBehaviour
             case 8:
                 if (SceneManager.GetActiveScene().name == "city")
                 {
+                    GameObject.Find("Jugador").GetComponent<liquidState>().hidratation = 100;
                     HUD_Script.showM3Objective(5, 40);
-                    HUD_Script.showM3Helps(1, 60);
+                    HUD_Script.showM3Helps(3, 60);
                     misionIndex++;
                     loadRespawn.BoxTriggers[5].SetActive(true);
                 }
