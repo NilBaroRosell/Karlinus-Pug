@@ -38,6 +38,7 @@ public class misions : MonoBehaviour {
     public MisionPoint ScaryDog;
     public static bool pauseMenu;
     public static bool fight;
+    private bool dead;
 
     private void Awake()
     {
@@ -213,6 +214,38 @@ public class misions : MonoBehaviour {
                             break;
                     }
                     break;
+                case Misions.M3:
+                    Player.transform.position = loadRespawn.M3(respawnIndex);
+                    mainCamera = GameObject.Find("Main Camera");
+                    secundaryCamera = GameObject.Find("Secundary Camera");
+                    secundaryCameraDestination = GameObject.Find("Camera Destination");
+                    switch (respawnIndex)
+                    {
+                        case 0:
+                            misionIndex = 0;
+                            StartCoroutine(ExecuteAfterTime(7.5f));
+                            secundaryCamera.transform.position = new Vector3(157.3f, -25.19f, 157.5f);
+                            secundaryCamera.transform.eulerAngles = new Vector3(15, 450, 0);
+                            Player.transform.position = new Vector3(100.59f, -27.52f, 158.03f);
+                            Player.transform.eulerAngles = new Vector3(0.0f, 90f, 0.0f);
+                            loadRespawn.BoxTriggers[5].SetActive(false);
+                            gameObject.GetComponent<Respawns>().Mision_Objects[4].transform.position = gameObject.GetComponent<Respawns>().Mision_Objects[5].transform.position;
+                            break;
+                        case 1:
+                            Player.transform.position = new Vector3(9.87f, 6.558f, -14.56f);
+                            misionIndex = 3;
+                            gameObject.GetComponent<Respawns>().Mision_Objects[4].transform.position = Player.transform.position;
+                            break;
+                        case 2:
+                            Player.transform.position = new Vector3(168.51f, -27.52f, 158.2f);
+                            Player.transform.eulerAngles = new Vector3(0.0f, -90f, 0.0f);
+                            secundaryCamera.SetActive(false);
+                            secundaryCameraDestination.SetActive(false);
+                            misionIndex = 10;
+                            gameObject.GetComponent<Respawns>().Mision_Objects[4].transform.position = gameObject.GetComponent<Respawns>().Mision_Objects[5].transform.position;
+                            break;
+                    }
+                    break;
                 case Misions.M4:
                     Player.transform.position = loadRespawn.M4(respawnIndex);
                     mainCamera = GameObject.Find("Main Camera");
@@ -311,6 +344,9 @@ public class misions : MonoBehaviour {
                     break;
                 case Misions.M2:
                     M2();
+                    break;
+                case Misions.M3:
+                    M3();
                     break;
                 case Misions.M4:
                     M4();
@@ -656,6 +692,155 @@ public class misions : MonoBehaviour {
                     ActualMision = Misions.NONE;
                     PrincipalMision.MisionsCompleted[1] = true;
                     loadRespawn.initialRespawn = Respawns.InitialRespawns.PUB_OUTSIDE;
+                    loadScreen.Instancia.CargarEscena("city");
+                }
+                break;
+        }
+    }
+
+    void M3()
+    {
+        switch (misionIndex)
+        {
+            case 0:
+                playerMovement.state = Controller.playerState.HITTING;
+                GameObject.Find("Jugador").GetComponent<liquidState>().hidratation = 100;
+                if (nextEvent)
+                {
+                    misionIndex++;
+                    secundaryCameraDestination.transform.position = new Vector3(92.59f, -24.02f, 157.88f);
+                    secundaryCameraDestination.transform.eulerAngles = new Vector3(15.0f, 90.0f, 0.0f);
+                    nextEvent = false;
+                    StartCoroutine(ExecuteAfterTime(3.25f));
+                }
+                break;
+            case 1:
+                secundaryCamera.transform.position = Vector3.Lerp(secundaryCamera.transform.position, secundaryCameraDestination.transform.position, 0.75f * Time.deltaTime);
+                secundaryCamera.transform.rotation = Quaternion.Lerp(secundaryCamera.transform.rotation, secundaryCameraDestination.transform.rotation, 0.75f * Time.deltaTime);
+                if (nextEvent)
+                {
+                    misionIndex++;
+                    secundaryCamera.SetActive(false);
+                    playerMovement.state = Controller.playerState.IDLE;
+                    gameObject.GetComponent<Respawns>().Mision_Objects[0].SetActive(false);
+                    gameObject.GetComponent<Respawns>().Mision_Objects[0].SetActive(false);
+                    HUD_Script.showM3Objective(0);
+                    HUD_Script.showM3Helps(0, 60);
+                    loadRespawn.BoxTriggers[1].SetActive(false);
+                    loadRespawn.BoxTriggers[2].SetActive(false);
+                    loadRespawn.BoxTriggers[3].SetActive(false);
+                    loadRespawn.BoxTriggers[4].SetActive(false);
+                }
+                break;
+            case 2:
+                if (EnemyManager.Enemies.Length == 0) dead = true;
+                if (loadRespawn.BoxTriggers[0].activeSelf == false && dead)
+                {
+                    misionIndex++;
+                    respawnIndex++;
+                    loadScreen.Instancia.CargarEscena("CaptainHouse");
+                }
+                break;
+            case 3:
+                if (SceneManager.GetActiveScene().name == "CaptainHouse")
+                {
+                    GameObject.Find("Jugador").GetComponent<liquidState>().hidratation = 100;
+                    HUD_Script.showM3Objective(1, 38);
+                    misionIndex++;
+                    loadRespawn.BoxTriggers[1].SetActive(true);
+                    loadRespawn.BoxTriggers[2].SetActive(false);
+                    loadRespawn.BoxTriggers[3].SetActive(false);
+                    loadRespawn.BoxTriggers[4].SetActive(false);
+                }
+                break;
+            case 4:
+                gameObject.GetComponent<Respawns>().Mision_Objects[4].transform.position = Player.transform.position;
+                if (loadRespawn.BoxTriggers[1].activeSelf == false)
+                {
+                    HUD_Script.showM3Objective(2, 40);
+                    misionIndex++;
+                    loadRespawn.BoxTriggers[2].SetActive(true);
+                }
+                break;
+            case 5:
+                gameObject.GetComponent<Respawns>().Mision_Objects[4].transform.position = Player.transform.position;
+                if (loadRespawn.BoxTriggers[2].activeSelf == false)
+                {
+                    HUD_Script.showM3Helps(1, 60);
+                    misionIndex++;
+                    loadRespawn.BoxTriggers[3].SetActive(true);
+                    GetComponent<Respawns>().Mision_Objects[10].transform.GetChild(0).gameObject.transform.eulerAngles = new Vector3(0.0f, 0.0f, -81.638f);
+                }
+                break;
+            case 6:
+                gameObject.GetComponent<Respawns>().Mision_Objects[4].transform.position = Player.transform.position;
+                if (loadRespawn.BoxTriggers[3].activeSelf == false && Input.GetKey(KeyCode.E))
+                {
+                    HUD_Script.showM3Objective(3, 40);
+                    misionIndex++;
+                    loadRespawn.BoxTriggers[4].SetActive(true);
+                    if (GameObject.Find("Key_Chest") != null) GameObject.Find("Key_Chest").SetActive(false);
+                }
+                break;
+            case 7:
+                gameObject.GetComponent<Respawns>().Mision_Objects[4].transform.position = Player.transform.position;
+                if (loadRespawn.BoxTriggers[4].activeSelf == false)
+                {
+                    HUD_Script.showM3Helps(2, 60);
+                    misionIndex++;
+                    loadRespawn.BoxTriggers[5].SetActive(true);
+                    GetComponent<Respawns>().Mision_Objects[9].transform.GetChild(0).gameObject.transform.eulerAngles = new Vector3(0.0f, 0.0f, -81.638f);
+                }
+                break;
+            case 8:
+                gameObject.GetComponent<Respawns>().Mision_Objects[4].transform.position = Player.transform.position;
+                if (loadRespawn.BoxTriggers[5].activeSelf == false && Input.GetKey(KeyCode.E))
+                {
+                    HUD_Script.showM3Objective(4, 40);
+                    misionIndex++;
+                    loadRespawn.BoxTriggers[6].SetActive(true);
+                    if (GameObject.Find("Key_Sewer") != null) GameObject.Find("Key_Sewer").SetActive(false);
+                }
+                break;
+            case 9:
+                gameObject.GetComponent<Respawns>().Mision_Objects[4].transform.position = Player.transform.position;
+                if (loadRespawn.BoxTriggers[6].activeSelf == false)
+                {
+                    misionIndex++;
+                    respawnIndex++;
+                    loadScreen.Instancia.CargarEscena("city");
+                }
+                break;
+            case 10:
+                if (SceneManager.GetActiveScene().name == "city")
+                {
+                    GameObject.Find("Jugador").GetComponent<liquidState>().hidratation = 100;
+                    HUD_Script.showM3Objective(5, 35);
+                    HUD_Script.showM3Helps(3, 60);
+                    misionIndex++;
+                    loadRespawn.BoxTriggers[7].SetActive(true);
+                }
+                break;
+            case 11:
+                if (EnemyManager.Enemies.Length < 35) dead = true;
+                if(dead || fight)
+                {
+                    loadScreen.Instancia.CargarEscena("DEAD");
+                }
+                else if (loadRespawn.BoxTriggers[7].activeSelf == false && !fight && !dead)
+                {
+                    HUD_Script.showM3Objective(6, 35);
+                    misionIndex++;
+                }
+                break;
+            case 12:
+                if (new Vector2(Player.transform.position.x - gameObject.GetComponent<Respawns>().Mision_Objects[3].transform.position.x, Player.transform.position.z - gameObject.GetComponent<Respawns>().Mision_Objects[3].transform.position.z).magnitude > 100 && !fight)
+                {
+                    misionIndex++;
+                    respawnIndex++;
+                    ActualMision = Misions.NONE;
+                    PrincipalMision.MisionsCompleted[2] = true;
+                    loadRespawn.initialRespawn = Respawns.InitialRespawns.CAPTAIN_OUTSIDE;
                     loadScreen.Instancia.CargarEscena("city");
                 }
                 break;
