@@ -5,8 +5,8 @@ using UnityEngine;
 public class Respawns : MonoBehaviour
 {
 
-    public enum InitialRespawns { SEWER_1, SEWER_2, SEWER_3, CITY_1, CITY_2, PUB_INSIDE, PUB_OUTSIDE, NONE };
-    private Vector3[] RespawnPoints;
+    public enum InitialRespawns { SEWER_1, SEWER_2, SEWER_3, CITY_1, CITY_2, PUB_INSIDE, PUB_OUTSIDE, CAPTAIN_OUTSIDE, NONE };
+    public Vector3[] RespawnPoints;
     private GameObject All_Mision_Objects;
     public GameObject[] BoxTriggers;
     public GameObject[] Enemies;
@@ -24,7 +24,7 @@ public class Respawns : MonoBehaviour
     private void LoadNONE()
     {
         //NONE Mision RESPAWNS
-        RespawnPoints = new Vector3[7];
+        RespawnPoints = new Vector3[8];
         RespawnPoints[0] = new Vector3(-63.28f, -9.1f, 89.17f);
         RespawnPoints[1] = new Vector3(85.8f, -9.1f, 321.1f);
         RespawnPoints[2] = new Vector3(-73.16f, -9.1f, 400.28f);
@@ -32,6 +32,7 @@ public class Respawns : MonoBehaviour
         RespawnPoints[4] = new Vector3(100.59f, -27.56327f, 257.55f);
         RespawnPoints[5] = new Vector3(21.93f, 13.06f, -23.75f);
         RespawnPoints[6] = new Vector3(83.48f, -27.52f, -34.6f);
+        RespawnPoints[7] = new Vector3(-11.3f, -27.52f, 140.17f);
 
         //Enemies
         Enemies = GameObject.FindGameObjectsWithTag("enemy");
@@ -117,11 +118,11 @@ public class Respawns : MonoBehaviour
 
         for (int i = 0; i < Enemies.Length; i++)
         {
-            if (Enemies[i].transform.parent.gameObject.name != "Enemigos M3 Scape" && Enemies[i].transform.parent.gameObject.name != "Enemigos M3 Kill" && Enemies[i].transform.parent.gameObject.name != "Enemigos Casa Capitan") Enemies[i].GetComponent<csAreaVision>().DestroyEnemy();
+            if (Enemies[i].transform.parent.gameObject.name != "Enemigos M3 Scape" && Enemies[i].transform.parent.gameObject.name != "Enemigos M3 Kill" && Enemies[i].transform.parent.gameObject.name != "Enemigos Casa Capitan" && Enemies[i].transform.parent.gameObject.name != "Enemigos Notoriedad Normal" && Enemies[i].transform.parent.gameObject.name != "Enemigos Notoriedad Alta") Enemies[i].GetComponent<csAreaVision>().DestroyEnemy();
         }
 
         //MISION 3 OTHER OBJECTS
-        Mision_Objects = new GameObject[7];
+        Mision_Objects = new GameObject[11];
         if (GameObject.Find("ServantM3") != null) Mision_Objects[0] = GameObject.Find("ServantM3");
         if (GameObject.Find("Enemigos M3 Scape") != null) Mision_Objects[1] = GameObject.Find("Enemigos M3 Scape");
         if (GameObject.Find("Enemigos M3 Kill") != null) Mision_Objects[2] = GameObject.Find("Enemigos M3 Kill");
@@ -129,6 +130,10 @@ public class Respawns : MonoBehaviour
         Mision_Objects[4] = gameObject.transform.GetChild(1).transform.GetChild(2).transform.GetChild(1).transform.GetChild(0).transform.GetChild(0).gameObject;
         Mision_Objects[5] = gameObject.transform.GetChild(1).transform.GetChild(2).transform.GetChild(1).transform.GetChild(2).gameObject;
         if (GameObject.Find("Enemigos Casa Capitan") != null) Mision_Objects[6] = GameObject.Find("Enemigos Casa Capitan");
+        if (GameObject.Find("Enemigos Notoriedad Normal") != null) Mision_Objects[7] = GameObject.Find("Enemigos Notoriedad Normal");
+        if (GameObject.Find("Enemigos Notoriedad Alta") != null) Mision_Objects[8] = GameObject.Find("Enemigos Notoriedad Alta");
+        if (GameObject.Find("Captain_chest") != null) Mision_Objects[9] = GameObject.Find("Captain_chest");
+        if (GameObject.Find("Servant_chest") != null) Mision_Objects[10] = GameObject.Find("Servant_chest");
     }
 
     private void LoadM4()
@@ -314,6 +319,14 @@ public class Respawns : MonoBehaviour
                 for (int i = 3; i >= 0; i--)
                 {
                     Mision_Objects[1].transform.GetChild(i).gameObject.GetComponent<csAreaVision>().DestroyEnemy();
+                }
+                for (int i = 12; i >= 0; i--)
+                {
+                    Mision_Objects[7].transform.GetChild(i).gameObject.GetComponent<csAreaVision>().DestroyEnemy();
+                }
+                for (int i = 17; i >= 0; i--)
+                {
+                    Mision_Objects[8].transform.GetChild(i).gameObject.GetComponent<csAreaVision>().DestroyEnemy();
                 }
                 break;
             case 1:
