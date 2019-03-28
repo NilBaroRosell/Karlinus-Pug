@@ -54,7 +54,7 @@ public class bossIA : MonoBehaviour
     private bool atackRefTaken;
     private bool atacking;
     Renderer alertRend;
-    private bool hittingEnemy = false;
+    public bool hittingEnemy = false;
     private bool sneaky = false;
     public bool dead = false;
     private float canAtackRef;
@@ -212,7 +212,7 @@ public class bossIA : MonoBehaviour
         playerDist = new Vector3(GameObject.Find("Jugador").transform.position.x - rb.transform.position.x, 0.8f, GameObject.Find("Jugador").transform.position.z - rb.transform.position.z);
         vecCenter = new Vector3(GameObject.Find("Box001").transform.position.x - rb.transform.position.x, 0.8f, GameObject.Find("Box001").transform.position.z - rb.transform.position.z);
 
-            if (!dead)
+            if (!hittingEnemy)
             {
             if (actualState != enemyState.PATROLLING && actualState != enemyState.FIGHTING && vecCenter.magnitude > 3.75f) speed = 0;
                 IA_Controller();
@@ -223,12 +223,12 @@ public class bossIA : MonoBehaviour
 
         if (enemyAgent.velocity.magnitude > 0.75f)
             transform.rotation = Quaternion.LookRotation(enemyAgent.velocity.normalized);
-        else
+        else if(!hittingEnemy)
             rb.transform.LookAt(destinationPoint);
 
         discovered = false;
         vecEnemy1.Normalize();
-        if (dead)
+        if (hittingEnemy)
         {
             speed = 0;
         }

@@ -234,7 +234,7 @@ public class Controller : MonoBehaviour
         Vector3 enemyDist;
         if (message == 1) dist = 10;
         else dist = 30;
-        if (GameObject.Find("Enemy Manager") != null)
+        if (GameObject.Find("EnemyManager") != null)
         {
             for (int i = 0; i < EnemyManager.Enemies.Length; i++)
             {
@@ -277,8 +277,6 @@ public class Controller : MonoBehaviour
 
     public void liquidTransformation()
     {
-        usingGravity = false;
-        GetComponent<Collider>().enabled = false;
         LiquidState = true;
         state = playerState.LIQUID;
     }
