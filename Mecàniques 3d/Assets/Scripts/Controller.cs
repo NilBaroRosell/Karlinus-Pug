@@ -27,6 +27,9 @@ public class Controller : MonoBehaviour
     private Vector3 camRight;
     private Vector3 moveDirection = Vector3.zero;
     public bool usingGravity = true;
+    private bool dashing = false;
+    public float dashMultiplier = 3f;
+    public float dashTime = 3.0f;
 
     //Nil Variables
     public bool hitting;
@@ -67,32 +70,6 @@ public class Controller : MonoBehaviour
                     hidratationStates.SetActive(true);
                     hitting = false;
                     Move();
-                    finishDash = Time.frameCount;
-
-                    RaycastHit hit;
-
-                    if (Physics.Raycast(transform.position, transform.forward, out hit))
-                    {
-                        dashDistance = new Vector3(transform.position.x - hit.transform.position.x, 0.0f, transform.position.z - hit.transform.position.z);
-                        distanceDash = dashDistance.magnitude;
-                        if (distanceDash < 4)
-                        {
-                            activateDash = false;
-                        }
-                        else
-                        {
-                            if ((finishDash - startDash) > 80) activateDash = true;
-                        }
-                        //Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.forward) * hit.distance, Color.yellow);
-                    }
-
-                    if (Input.GetKeyDown(KeyCode.F) && activateDash && direction == "F")
-                    {
-                        vectorDirection = (moveVertical * transform.forward).normalized * 10000;
-                        characterController.SimpleMove(vectorDirection);
-                        startDash = Time.frameCount;
-                        activateDash = false;
-                    }
 
                     checkCooldown = GetComponent<liquidState>();
                     cooldown = checkCooldown.cooldown;
@@ -164,6 +141,12 @@ public class Controller : MonoBehaviour
 
     void Move()
     {
+        if (dashing)
+        {
+            speed = Mathf.Lerp(speed, 6.0f, dashTime * Time.deltaTime);
+            if (speed <= 6.1f) dashing = false;
+            Debug.Log(speed);
+        }
         if (characterController.isGrounded)
         {
             // We are grounded, so recalculate
@@ -175,15 +158,10 @@ public class Controller : MonoBehaviour
             moveDirection = moveDirection.x * camRight + moveDirection.z * camForward;
 
             if(state == playerState.LIQUID) moveDirection *= speed * runMultiplier;
-            else if (Input.GetButton("Run"))
-            {
-                Run();
-            }
-            else if (Input.GetButton("Crouch"))
-            {
-                Crouch();
-            }           
+            else if (Input.GetButton("Crouch")) Crouch();
+            else if (Input.GetButton("Run")) Run();
             else if (!(Input.GetAxis("Horizontal") == 0 && Input.GetAxis("Vertical") == 0)) Walk();
+            if (Input.GetButton("Dash") && !dashing) Dash();
         }
 
        if(usingGravity) moveDirection.y -= gravity * Time.deltaTime;
@@ -208,8 +186,14 @@ public class Controller : MonoBehaviour
     void Run()
     {
         moveDirection *= speed * runMultiplier;
-        anim.SetBool("Is_Running", true);
+        if (moveDirection != Vector3.zero) anim.SetBool("Is_Running", true);
         anim.SetBool("Is_Idle", false);
+    }
+
+    void Dash()
+    {
+        dashing = true;
+        speed *= dashMultiplier;
     }
 
     void Walk()
