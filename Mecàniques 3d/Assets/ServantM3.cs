@@ -19,7 +19,6 @@ public class ServantM3 : MonoBehaviour
         point = gameObject.transform.GetChild(2).gameObject;
         servantAgent = this.GetComponent<NavMeshAgent>();
         anim = GetComponent<Animator>();
-        anim.SetBool("Walk", false);
         destinationPoint = new Vector3 (point.transform.position.x, gameObject.transform.position.y, point.transform.position.z);
     }
 
@@ -31,6 +30,10 @@ public class ServantM3 : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
+        anim.SetBool("Backward", false);
+        anim.SetBool("Idle", false);
+        anim.SetBool("Run", false);
+        anim.SetBool("Walk", true);
         servantAgent.speed = 1;
         servantAgent.SetDestination(destinationPoint);
         gameObject.transform.LookAt(destinationPoint);

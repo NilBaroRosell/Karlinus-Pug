@@ -27,6 +27,7 @@ public class CameraFollow : MonoBehaviour {
         rotation.y = rot.y;
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+        transform.position = followObject.transform.position;
     }
 
     private void Update()
