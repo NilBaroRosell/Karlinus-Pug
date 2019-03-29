@@ -108,6 +108,7 @@ public class misions : MonoBehaviour {
             switch (ActualMision)
             {
                 case Misions.NONE:
+                    mainCamera = GameObject.Find("Main Camera");
                     if (GameObject.Find("RatHood") != null) GameObject.Find("RatHood").SetActive(false);
                     if (GameObject.Find("Secundary Camera") != null)
                     {
@@ -322,6 +323,7 @@ public class misions : MonoBehaviour {
             Cursor.visible = true;
             Cursor.lockState = CursorLockMode.None;
         }
+        mainCamera.transform.parent.transform.position = mainCamera.transform.parent.GetComponent<CameraFollow>().followObject.transform.position;
     }
 
     // Update is called once per frame
