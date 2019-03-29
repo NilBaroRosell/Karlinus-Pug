@@ -57,6 +57,10 @@ public class Respawns : MonoBehaviour {
 
         //MISION 1 ENEMIES
         Enemies = GameObject.FindGameObjectsWithTag("enemy");
+        for (int i = 0; i < Enemies.Length; i++)
+        {
+            if (Enemies[i].transform.parent.gameObject.name != "Enemies_Zone_2" && Enemies[i].transform.parent.gameObject.name != "Zone_1") Enemies[i].GetComponent<csAreaVision>().DestroyEnemy();
+        }
 
         //MISION 1 OTHER OBJECTS
         Mision_Objects = new GameObject[3];
@@ -100,18 +104,18 @@ public class Respawns : MonoBehaviour {
     }
     private void LoadM3(int checkPoint)
     {
-        //MISION 2 RESPAWN POINTS
+        //MISION 3 RESPAWN POINTS
         RespawnPoints = new Vector3[3];
         RespawnPoints[0] = new Vector3(5.85f, -27.52068f, -41.88f);
         RespawnPoints[1] = new Vector3(9.87f, 6.558f, -14.56f);
         RespawnPoints[2] = new Vector3(168.51f, -27.52f, 158.2f);
 
-        //MISION 2 BOX TRIGGERS
+        //MISION 3 BOX TRIGGERS
         All_Mision_Objects.transform.GetChild(2).gameObject.SetActive(true);
         BoxTriggers = new GameObject[All_Mision_Objects.transform.GetChild(2).GetChild(0).transform.childCount];
         for (int i = 0; i < BoxTriggers.Length; i++) BoxTriggers[i] = All_Mision_Objects.transform.GetChild(2).GetChild(0).GetChild(i).gameObject;
 
-        //MISION 2 ENEMIES
+        //MISION 3 ENEMIES
         Enemies = GameObject.FindGameObjectsWithTag("enemy");
 
         for (int i = 0; i < Enemies.Length; i++)
@@ -223,13 +227,13 @@ public class Respawns : MonoBehaviour {
                 break;
             case 1:
                 LoadScene.respawnToLoad = InitialRespawns.SEWER_1;
-                if (GameObject.Find("Enemigo (3)") != null) GameObject.Find("Enemigo (3)").SetActive(false);
+                if (GameObject.Find("Enemigo (3)") != null) GameObject.Find("Enemigo (3)").GetComponent<csAreaVision>().DestroyEnemy();
                 for (int i = 3; i < BoxTriggers.Length; i++) BoxTriggers[i].SetActive(true);
                 Mision_Objects[2].GetComponent<EnemyManager>().maxDist = 125;
                 break;
             case 2:
                 LoadScene.respawnToLoad = InitialRespawns.SEWER_1;
-                if (GameObject.Find("Zone_1") != null) GameObject.Find("Zone_1").SetActive(false);
+                if(GameObject.Find("Zone_1") != null) GameObject.Find("Zone_1").SetActive(false);
                 for (int i = 6; i < BoxTriggers.Length; i++) BoxTriggers[i].SetActive(true);
                 Mision_Objects[0].SetActive(true);
                 break;
@@ -307,7 +311,7 @@ public class Respawns : MonoBehaviour {
 
     public Vector3 M3(int checkPoint)
     {
-        //LOAD M4
+        //LOAD M3
         LoadM3(checkPoint);
         //OBJECTS RESPAWN
         switch (checkPoint)
@@ -372,6 +376,7 @@ public class Respawns : MonoBehaviour {
                 break;
             case 3:
                 LoadScene.respawnToLoad = InitialRespawns.CHAMBER;
+                if (GameObject.Find("Interior Palau") != null) Destroy(GameObject.Find("Interior Palau"));
                 break;
             default:
                 break;

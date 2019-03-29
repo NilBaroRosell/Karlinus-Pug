@@ -145,7 +145,6 @@ public class Controller : MonoBehaviour
         {
             speed = Mathf.Lerp(speed, 6.0f, dashTime * Time.deltaTime);
             if (speed <= 6.1f) dashing = false;
-            Debug.Log(speed);
         }
         if (characterController.isGrounded)
         {
