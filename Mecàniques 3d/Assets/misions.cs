@@ -4,15 +4,15 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEngine;
 
-public class misions : MonoBehaviour
-{
+public class misions : MonoBehaviour {
 
     private GameObject normalLight;
     private GameObject sewerLight;
     public enum Misions { M1, M2, M3, M4, SM_1, SM_2, SM_3, SM_4, SM_5, SM_6, NONE };
-    public Misions ActualMision;
+    public  Misions ActualMision;
     public bool editorRespawn;
     public int editorRespawnNum;
+    public bool doorsUnlucked;
     public static int respawnIndex;
     public static int misionIndex;
     private Respawns loadRespawn;
@@ -39,7 +39,6 @@ public class misions : MonoBehaviour
     public static bool pauseMenu;
     public static bool fight;
     private bool dead;
-    public int indexMision, indexRespawn;
 
     private void Awake()
     {
@@ -50,22 +49,23 @@ public class misions : MonoBehaviour
             if (Instance != null)
             {
                 GetComponent<Respawns>().initialRespawn = Instance.loadRespawn.initialRespawn;
+                doorsUnlucked = Instance.doorsUnlucked;
                 Destroy(Instance.gameObject);
                 ActualMision = Misions.NONE;
                 editorRespawn = false;
             }
             Instance = this;
             MisionPoint PrincipalMision = new MisionPoint();
-            PrincipalMision.MisionsCompleted = new bool[4];
-            MisionPoint RatHood = new MisionPoint();
-            RatHood.MisionsCompleted = new bool[2];
-            MisionPoint RebelCat = new MisionPoint();
-            RebelCat.MisionsCompleted = new bool[2];
-            MisionPoint ScaryDog = new MisionPoint();
-            ScaryDog.MisionsCompleted = new bool[2];
-            loadRespawn = GetComponent<Respawns>();
-            misionIndex = 0;
-            nextEvent = false;
+        PrincipalMision.MisionsCompleted = new bool[4];
+        MisionPoint RatHood = new MisionPoint();
+        RatHood.MisionsCompleted = new bool[2];
+        MisionPoint RebelCat = new MisionPoint();
+        RebelCat.MisionsCompleted = new bool[2];
+        MisionPoint ScaryDog = new MisionPoint();
+        ScaryDog.MisionsCompleted = new bool[2];
+        loadRespawn = GetComponent<Respawns>();
+        misionIndex = 0;
+        nextEvent = false;
             if (editorRespawn)
                 respawnIndex = editorRespawnNum;
             else respawnIndex = 0;
@@ -91,14 +91,24 @@ public class misions : MonoBehaviour
             hideMisionPoints();
             nextEvent = false;
             fight = false;
+            dead = false;
             if (SceneManager.GetActiveScene().name == "sewer")
             {
                 sewerLight = GameObject.Find("Torchs Sewer");
                 normalLight = GameObject.Find("Directional Light");
+                if (doorsUnlucked || ActualMision == Misions.M4)
+                {
+                    GameObject.Find("Door1").transform.GetChild(0).gameObject.SetActive(false);
+                    GameObject.Find("Door2").transform.GetChild(0).gameObject.SetActive(false);
+                    GameObject.Find("Door3").transform.GetChild(0).gameObject.SetActive(false);
+                    GameObject.Find("Door4").transform.GetChild(0).gameObject.SetActive(false);
+                }
             }
+            else if(SceneManager.GetActiveScene().name == "city" && ActualMision != Misions.M4) Destroy(GameObject.Find("Pati Palau"));
             switch (ActualMision)
             {
                 case Misions.NONE:
+                    mainCamera = GameObject.Find("Main Camera");
                     if (GameObject.Find("RatHood") != null) GameObject.Find("RatHood").SetActive(false);
                     if (GameObject.Find("Secundary Camera") != null)
                     {
@@ -122,7 +132,7 @@ public class misions : MonoBehaviour
                     {
                         GameObject.Find("Enemigos M2").SetActive(false);
                     }
-                    Player.transform.position = loadRespawn.NONE();
+                        Player.transform.position = loadRespawn.NONE();
                     showMisionPoints();
                     break;
                 case Misions.M1:
@@ -130,7 +140,6 @@ public class misions : MonoBehaviour
                     mainCamera = GameObject.Find("Main Camera");
                     secundaryCamera = GameObject.Find("Secundary Camera");
                     secundaryCameraDestination = GameObject.Find("Camera Destination");
-                    if (GameObject.Find("Enemigos_SM1") != null) GameObject.Find("Enemigos_SM1").transform.GetChild(1).gameObject.GetComponent<csAreaVision>().DestroyEnemy();
                     switch (respawnIndex)
                     {
                         case 0:
@@ -164,8 +173,7 @@ public class misions : MonoBehaviour
                     Player.transform.position = loadRespawn.M2(respawnIndex);
                     mainCamera = GameObject.Find("Main Camera");
                     secundaryCamera = GameObject.Find("Secundary Camera");
-                    secundaryCameraDestination = GameObject.Find("Camera Destination");
-                    if (GameObject.Find("Enemigos_SM1") != null) GameObject.Find("Enemigos_SM1").transform.GetChild(0).gameObject.GetComponent<csAreaVision>().DestroyEnemy();
+                    secundaryCameraDestination = GameObject.Find("Camera Destination");                  
                     switch (respawnIndex)
                     {
                         case 0:
@@ -223,20 +231,54 @@ public class misions : MonoBehaviour
                             Player.transform.position = new Vector3(100.59f, -27.52f, 158.03f);
                             Player.transform.eulerAngles = new Vector3(0.0f, 90f, 0.0f);
                             loadRespawn.BoxTriggers[5].SetActive(false);
-                            gameObject.GetComponent<Respawns>().Mision_Objects[4].transform.position = gameObject.GetComponent<Respawns>().Mision_Objects[5].transform.position;
+                            loadRespawn.Mision_Objects[4].transform.position = loadRespawn.Mision_Objects[5].transform.position;
                             break;
                         case 1:
                             Player.transform.position = new Vector3(9.87f, 6.558f, -14.56f);
                             misionIndex = 3;
-                            gameObject.GetComponent<Respawns>().Mision_Objects[4].transform.position = Player.transform.position;
+                            loadRespawn.Mision_Objects[4].transform.position = Player.transform.position;
                             break;
                         case 2:
                             Player.transform.position = new Vector3(168.51f, -27.52f, 158.2f);
                             Player.transform.eulerAngles = new Vector3(0.0f, -90f, 0.0f);
                             secundaryCamera.SetActive(false);
                             secundaryCameraDestination.SetActive(false);
-                            misionIndex = 8;
-                            gameObject.GetComponent<Respawns>().Mision_Objects[4].transform.position = gameObject.GetComponent<Respawns>().Mision_Objects[5].transform.position;
+                            misionIndex = 10;
+                            loadRespawn.Mision_Objects[4].transform.position = loadRespawn.Mision_Objects[5].transform.position;
+                            break;
+                    }
+                    break;
+                case Misions.M4:
+                    Player.transform.position = loadRespawn.M4(respawnIndex);
+                    mainCamera = GameObject.Find("Main Camera");
+                    secundaryCamera = GameObject.Find("Secundary Camera");
+                    secundaryCameraDestination = GameObject.Find("Camera Destination");
+                    switch (respawnIndex)
+                    {
+                        case 0:
+                            sewerLight.SetActive(true);
+                            normalLight.SetActive(false);
+                            secundaryCamera.SetActive(false);
+                            HUD_Script.showM4Objective(0, 35);
+                            misionIndex = 0;
+                            break;
+                        case 1:
+                            HUD_Script.showM4Objective(1, 38);
+                            HUD_Script.showM4Helps(0);
+                            secundaryCamera.SetActive(false);
+                            misionIndex = 1;
+                            break;
+                        case 2:
+                            HUD_Script.showM4Objective(1, 38);
+                            HUD_Script.showM4Helps(0);
+                            secundaryCamera.SetActive(false);
+                            misionIndex = 2;
+                            break;
+                        case 3:
+                            HUD_Script.showM4Objective(2);
+                            HUD_Script.showM4Helps(1);
+                            secundaryCamera.SetActive(false);
+                            misionIndex = 4;
                             break;
                     }
                     break;
@@ -246,7 +288,7 @@ public class misions : MonoBehaviour
                     mainCamera = GameObject.Find("Main Camera");
                     if (GameObject.Find("Secundary Camera") != null) secundaryCamera = GameObject.Find("Secundary Camera");
                     if (GameObject.Find("Camera Destination") != null) secundaryCameraDestination = GameObject.Find("Camera Destination");
-                    if (GameObject.Find("Enemigos M2") != null) GameObject.Find("Enemigos M2").transform.GetChild(0).gameObject.GetComponent<csAreaVision>().DestroyEnemy();
+                    if(GameObject.Find("Enemigos M2") != null)  GameObject.Find("Enemigos M2").transform.GetChild(0).gameObject.GetComponent<csAreaVision>().DestroyEnemy();
                     switch (respawnIndex)
                     {
                         case 0:
@@ -281,11 +323,11 @@ public class misions : MonoBehaviour
             Cursor.visible = true;
             Cursor.lockState = CursorLockMode.None;
         }
+        mainCamera.transform.parent.transform.position = mainCamera.transform.parent.GetComponent<CameraFollow>().followObject.transform.position;
     }
 
     // Update is called once per frame
-    void FixedUpdate()
-    {
+    void FixedUpdate() {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             if (pauseMenu)
@@ -301,8 +343,7 @@ public class misions : MonoBehaviour
                 Cursor.lockState = CursorLockMode.None;
             }
         }
-        if (Player.activeSelf)
-        {
+        if (Player != null) {
             switch (ActualMision)
             {
                 case Misions.NONE:
@@ -317,15 +358,15 @@ public class misions : MonoBehaviour
                 case Misions.M3:
                     M3();
                     break;
+                case Misions.M4:
+                    M4();
+                    break;
                 case Misions.SM_1:
                     SM1();
                     break;
             }
         }
         fight = false;
-        dead = false;
-        indexMision = misionIndex;
-        indexRespawn = respawnIndex;
     }
 
     void M1()
@@ -400,7 +441,7 @@ public class misions : MonoBehaviour
                     loadRespawn.Mision_Objects[1].SetActive(true);
                     loadRespawn.Mision_Objects[1].GetComponent<csAreaVision>().speed = 10;
                     loadRespawn.Mision_Objects[1].GetComponent<csAreaVision>().actualState = csAreaVision.enemyState.PATROLLING;
-                    misionIndex++;
+                    misionIndex ++;
                     HUD_Script.showM1Helps(1, 45);
                     Player.GetComponent<Animator>().SetTrigger("Is_Withdrawing");
                     Player.GetComponent<Animator>().SetBool("Is_Detected", true);
@@ -427,7 +468,7 @@ public class misions : MonoBehaviour
                 GameObject.Find("Jugador").GetComponent<liquidState>().hidratation = 100;
                 secundaryCamera.transform.position = Vector3.Lerp(secundaryCamera.transform.position, secundaryCameraDestination.transform.position, 1.25f * Time.deltaTime);
                 secundaryCamera.transform.rotation = Quaternion.Lerp(secundaryCamera.transform.rotation, secundaryCameraDestination.transform.rotation, 1.25f * Time.deltaTime);
-                if (nextEvent)
+                if(nextEvent)
                 {
                     secundaryCamera.SetActive(false);
                     nextEvent = false;
@@ -441,6 +482,7 @@ public class misions : MonoBehaviour
                 {
                     HUD_Script.showM1Helps(4, 32);
                     GameObject.Find("Enemigo (3)").GetComponent<csAreaVision>().speed = 0;
+                    GameObject.Find("Enemigo (3)").GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
                 }
                 if (GameObject.Find("Enemigo (3)") == null)
                 {
@@ -490,23 +532,25 @@ public class misions : MonoBehaviour
                 {
                     misionIndex++;
                     respawnIndex++;
-                    GameObject.Find("Jugador").GetComponent<liquidState>().hidratation = 10;
-                    loadRespawn.Mision_Objects[0].SetActive(true);
-                    for (int i = 0; i < loadRespawn.Mision_Objects[0].transform.childCount; i++) loadRespawn.Mision_Objects[0].transform.GetChild(i).gameObject.SetActive(true);
-                    GameObject.Find("Zone_1").SetActive(false);
-                    sewerLight.SetActive(true);
                     loadScreen.Instancia.CargarEscena("sewer");
+                    loadRespawn.initialRespawn = Respawns.InitialRespawns.SEWER_1;
                 }
                 break;
             case 12:
                 if (loadRespawn.BoxTriggers[6].activeSelf == false)
+                {                   
+                    misionIndex++;
+                }
+                break;
+            case 13:
+                if (loadRespawn.BoxTriggers[7].activeSelf == false)
                 {
                     misionIndex++;
                     HUD_Script.showM1Helps(11, 38);
                 }
                 break;
-            case 13:
-                if (loadRespawn.BoxTriggers[7].activeSelf == false)
+            case 14:
+                if (loadRespawn.BoxTriggers[8].activeSelf == false)
                 {
                     ActualMision = Misions.NONE;
                     PrincipalMision.MisionsCompleted[0] = true;
@@ -537,10 +581,10 @@ public class misions : MonoBehaviour
                 }
                 break;
             case 1:
-                if (nextEvent)
+                if(nextEvent)
                 {
                     misionIndex++;
-                    secundaryCameraDestination.transform.position = mainCamera.transform.position + new Vector3(0.0f, 7.0f, 0.0f);
+                    secundaryCameraDestination.transform.position = mainCamera.transform.position + new Vector3( 0.0f, 7.0f, 0.0f);
                     secundaryCameraDestination.transform.rotation = mainCamera.transform.rotation;
                     StartCoroutine(ExecuteAfterTime(3.25f));
                     nextEvent = false;
@@ -585,7 +629,7 @@ public class misions : MonoBehaviour
                 break;
             case 5:
                 servantUnlock_NPC.canTalk = true;
-                if (nextEvent)
+                if(nextEvent)
                 {
                     loadRespawn.Mision_Objects[1].SetActive(true);
                     nextEvent = false;
@@ -621,7 +665,7 @@ public class misions : MonoBehaviour
                 }
                 break;
             case 8:
-                if (loadRespawn.BoxTriggers[2].activeSelf == false)
+                if(loadRespawn.BoxTriggers[2].activeSelf == false)
                 {
                     misionIndex++;
                     respawnIndex++;
@@ -636,7 +680,7 @@ public class misions : MonoBehaviour
                     respawnIndex++;
                 }
                 break;
-            case 10:
+             case 10:
                 if (loadRespawn.BoxTriggers[4].activeSelf == false)
                 {
                     misionIndex++;
@@ -644,7 +688,7 @@ public class misions : MonoBehaviour
                 }
                 break;
             case 11:
-                if (nextEvent)
+                if(nextEvent)
                 {
                     misionIndex++;
                     HUD_Script.showM2Objective(5);
@@ -678,7 +722,7 @@ public class misions : MonoBehaviour
                 {
                     misionIndex++;
                     secundaryCameraDestination.transform.position = new Vector3(92.59f, -24.02f, 157.88f);
-                    secundaryCameraDestination.transform.eulerAngles = new Vector3(15.0f, 90.0f,0.0f);
+                    secundaryCameraDestination.transform.eulerAngles = new Vector3(15.0f, 90.0f, 0.0f);
                     nextEvent = false;
                     StartCoroutine(ExecuteAfterTime(3.25f));
                 }
@@ -686,13 +730,13 @@ public class misions : MonoBehaviour
             case 1:
                 secundaryCamera.transform.position = Vector3.Lerp(secundaryCamera.transform.position, secundaryCameraDestination.transform.position, 0.75f * Time.deltaTime);
                 secundaryCamera.transform.rotation = Quaternion.Lerp(secundaryCamera.transform.rotation, secundaryCameraDestination.transform.rotation, 0.75f * Time.deltaTime);
-                if(nextEvent)
+                if (nextEvent)
                 {
                     misionIndex++;
                     secundaryCamera.SetActive(false);
                     playerMovement.state = Controller.playerState.IDLE;
-                    gameObject.GetComponent<Respawns>().Mision_Objects[0].SetActive(false);
-                    gameObject.GetComponent<Respawns>().Mision_Objects[0].SetActive(false);
+                    loadRespawn.Mision_Objects[0].SetActive(false);
+                    loadRespawn.Mision_Objects[0].SetActive(false);
                     HUD_Script.showM3Objective(0);
                     HUD_Script.showM3Helps(0, 60);
                     loadRespawn.BoxTriggers[1].SetActive(false);
@@ -702,7 +746,7 @@ public class misions : MonoBehaviour
                 }
                 break;
             case 2:
-                for (int i = 5; i >= 0; i--) if (!gameObject.GetComponent<Respawns>().Mision_Objects[i].activeSelf) dead = true;
+                if (EnemyManager.Enemies.Length == 0) dead = true;
                 if (loadRespawn.BoxTriggers[0].activeSelf == false && dead)
                 {
                     misionIndex++;
@@ -723,16 +767,16 @@ public class misions : MonoBehaviour
                 }
                 break;
             case 4:
-                gameObject.GetComponent<Respawns>().Mision_Objects[4].transform.position = Player.transform.position;
+                loadRespawn.Mision_Objects[4].transform.position = Player.transform.position;
                 if (loadRespawn.BoxTriggers[1].activeSelf == false)
                 {
                     HUD_Script.showM3Objective(2, 40);
-                    misionIndex ++;
+                    misionIndex++;
                     loadRespawn.BoxTriggers[2].SetActive(true);
                 }
                 break;
             case 5:
-                gameObject.GetComponent<Respawns>().Mision_Objects[4].transform.position = Player.transform.position;
+                loadRespawn.Mision_Objects[4].transform.position = Player.transform.position;
                 if (loadRespawn.BoxTriggers[2].activeSelf == false)
                 {
                     HUD_Script.showM3Helps(1, 60);
@@ -742,7 +786,7 @@ public class misions : MonoBehaviour
                 }
                 break;
             case 6:
-                gameObject.GetComponent<Respawns>().Mision_Objects[4].transform.position = Player.transform.position;
+                loadRespawn.Mision_Objects[4].transform.position = Player.transform.position;
                 if (loadRespawn.BoxTriggers[3].activeSelf == false && Input.GetKey(KeyCode.E))
                 {
                     HUD_Script.showM3Objective(3, 40);
@@ -752,7 +796,7 @@ public class misions : MonoBehaviour
                 }
                 break;
             case 7:
-                gameObject.GetComponent<Respawns>().Mision_Objects[4].transform.position = Player.transform.position;
+                loadRespawn.Mision_Objects[4].transform.position = Player.transform.position;
                 if (loadRespawn.BoxTriggers[4].activeSelf == false)
                 {
                     HUD_Script.showM3Helps(2, 60);
@@ -762,7 +806,7 @@ public class misions : MonoBehaviour
                 }
                 break;
             case 8:
-                gameObject.GetComponent<Respawns>().Mision_Objects[4].transform.position = Player.transform.position;
+                loadRespawn.Mision_Objects[4].transform.position = Player.transform.position;
                 if (loadRespawn.BoxTriggers[5].activeSelf == false && Input.GetKey(KeyCode.E))
                 {
                     HUD_Script.showM3Objective(4, 40);
@@ -772,7 +816,7 @@ public class misions : MonoBehaviour
                 }
                 break;
             case 9:
-                gameObject.GetComponent<Respawns>().Mision_Objects[4].transform.position = Player.transform.position;
+                loadRespawn.Mision_Objects[4].transform.position = Player.transform.position;
                 if (loadRespawn.BoxTriggers[6].activeSelf == false)
                 {
                     misionIndex++;
@@ -784,30 +828,80 @@ public class misions : MonoBehaviour
                 if (SceneManager.GetActiveScene().name == "city")
                 {
                     GameObject.Find("Jugador").GetComponent<liquidState>().hidratation = 100;
-                    HUD_Script.showM3Objective(5, 40);
+                    HUD_Script.showM3Objective(5, 35);
                     HUD_Script.showM3Helps(3, 60);
                     misionIndex++;
                     loadRespawn.BoxTriggers[7].SetActive(true);
                 }
                 break;
             case 11:
-                for (int i = 3; i >= 0; i--) if (!gameObject.GetComponent<Respawns>().Mision_Objects[i].activeSelf) dead = true;
-                if (loadRespawn.BoxTriggers[7].activeSelf == false && !fight && !dead)
+                if (EnemyManager.Enemies.Length < 35) dead = true;
+                if(dead || fight)
                 {
-                    HUD_Script.showM3Objective(6, 40);
+                    loadScreen.Instancia.CargarEscena("DEAD");
+                }
+                else if (loadRespawn.BoxTriggers[7].activeSelf == false && !fight && !dead)
+                {
+                    HUD_Script.showM3Objective(6, 35);
                     misionIndex++;
+                    loadRespawn.Mision_Objects[4].SetActive(false);
                 }
                 break;
             case 12:
-                if (new Vector2(Player.transform.position.x - gameObject.GetComponent<Respawns>().Mision_Objects[3].transform.position.x, Player.transform.position.z - gameObject.GetComponent<Respawns>().Mision_Objects[3].transform.position.z).magnitude > 100 && !fight)
+                if (new Vector2(Player.transform.position.x - loadRespawn.Mision_Objects[3].transform.position.x, Player.transform.position.z - loadRespawn.Mision_Objects[3].transform.position.z).magnitude > 100 && !fight && Player.transform.position.y > 0)
                 {
                     misionIndex++;
                     respawnIndex++;
                     ActualMision = Misions.NONE;
                     PrincipalMision.MisionsCompleted[2] = true;
                     loadRespawn.initialRespawn = Respawns.InitialRespawns.CAPTAIN_OUTSIDE;
+                    doorsUnlucked = true;
                     loadScreen.Instancia.CargarEscena("city");
                 }
+                break;
+        }
+    }
+
+    void M4()
+    {
+        //MISION EVENTS
+        switch (misionIndex)
+        {
+            case 0:
+                if (loadRespawn.BoxTriggers[0].activeSelf == false && !fight)
+                {
+                    misionIndex++;
+                    respawnIndex++;
+                    loadRespawn.initialRespawn = Respawns.InitialRespawns.CITY_2;
+                    loadScreen.Instancia.CargarEscena("city");
+                }
+                break;
+            case 1:
+                if(EnemyManager.Enemies.Length < 8)
+                {
+                    misionIndex++;
+                    respawnIndex++;
+                    Debug.Log("check");
+                }
+                break;
+            case 2:
+                if(EnemyManager.Enemies.Length == 0)
+                {
+                    misionIndex++;                   
+                }
+                break;
+            case 3:
+                if(loadRespawn.BoxTriggers[1].activeSelf == false)
+                {
+                    misionIndex++;
+                    respawnIndex++;
+                    loadRespawn.initialRespawn = Respawns.InitialRespawns.CHAMBER;
+                    loadScreen.Instancia.CargarEscena("StoneChamber");
+                }
+                break;
+            case 4:
+                break;
+            default:
                 break;
         }
     }
@@ -820,7 +914,6 @@ public class misions : MonoBehaviour
                 playerMovement.state = Controller.playerState.HITTING;
                 Player.transform.position = new Vector3(30.765f, -27.523f, -38.321f);
                 Player.transform.eulerAngles = new Vector3(0.0f, 90f, 0.0f);
-                GameObject.Find("Jugador").GetComponent<liquidState>().hidratation = 100;
                 if (nextEvent)
                 {
                     misionIndex++;
@@ -991,12 +1084,16 @@ public class misions : MonoBehaviour
             {
                 PrincipalMision.pointObject.SetActive(true);
                 PrincipalMision.pointObject.transform.position = new Vector3(80.73f, -31.81266f, 189.97f) + transform.position;
+                PrincipalMision.pointObject.GetComponent<NPCActualizeScene>().misionGO = Misions.M3;
+                PrincipalMision.pointObject.GetComponent<NPCActualizeScene>().sceneToLoad = "city";
             }
             else
             {
                 {
                     PrincipalMision.pointObject.SetActive(true);
                     PrincipalMision.pointObject.transform.position = new Vector3(-14.1f, -31.81266f, -12.6f) + transform.position;
+                    PrincipalMision.pointObject.GetComponent<NPCActualizeScene>().misionGO = Misions.M2;
+                    PrincipalMision.pointObject.GetComponent<NPCActualizeScene>().sceneToLoad = "city";
                 }
             }
             if (RatHood.MisionsCompleted[(int)Misions.SM_1 - 4] == false)
@@ -1019,6 +1116,8 @@ public class misions : MonoBehaviour
         {
             PrincipalMision.pointObject.SetActive(true);
             PrincipalMision.pointObject.transform.position = new Vector3(78.94f, -31.81266f, 275.4f) + transform.position;
+            PrincipalMision.pointObject.GetComponent<NPCActualizeScene>().misionGO = Misions.M4;
+            PrincipalMision.pointObject.GetComponent<NPCActualizeScene>().sceneToLoad = "sewer";
             if (RatHood.MisionsCompleted[(int)Misions.SM_1 - 4] == false)
             {
                 RatHood.pointObject.SetActive(true);

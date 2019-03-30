@@ -22,17 +22,16 @@ public class EnemyManager : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        for (int i = 0; i < Enemies.Length; i++)
-        {
-            if(!Enemies[i].activeSelf)
+            for (int i = 0; i < Enemies.Length; i++)
             {
-                Vector3 playerDist = new Vector3(Player.transform.position.x - EnemiesPos[i].x, 0.0f, Player.transform.position.z - EnemiesPos[i].z);
-                if (playerDist.magnitude <= maxDist)
+                if (!Enemies[i].activeSelf)
                 {
-                    Enemies[i].SetActive(true);
+                    Vector3 playerDist = new Vector3(Player.transform.position.x - EnemiesPos[i].x, 0.0f, Player.transform.position.z - EnemiesPos[i].z);
+                    if (playerDist.magnitude <= maxDist)
+                    {
+                        Enemies[i].SetActive(true);
+                    }
                 }
             }
         }
-
-    }
 }

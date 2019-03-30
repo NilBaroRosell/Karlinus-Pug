@@ -22,7 +22,14 @@ public class button_pressed : MonoBehaviour {
             case Respawns.InitialRespawns.CITY_1:
             case Respawns.InitialRespawns.CITY_2:
             case Respawns.InitialRespawns.PUB_OUTSIDE:
+            case Respawns.InitialRespawns.CAPTAIN_OUTSIDE:
                 loadScreen.Instancia.CargarEscena("city");
+                break;
+            case Respawns.InitialRespawns.CAPTAIN_INSIDE:
+                loadScreen.Instancia.CargarEscena("CaptainHouse");
+                break;
+            case Respawns.InitialRespawns.CHAMBER:
+                loadScreen.Instancia.CargarEscena("StoneChamber");
                 break;
             default:
                 break;
