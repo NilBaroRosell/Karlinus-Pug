@@ -62,7 +62,7 @@ public class liquidState : MonoBehaviour
 
                 finishCooldown = Time.frameCount;
 
-                if (finishCooldown - startCooldown > 300)
+                if (finishCooldown - startCooldown > 1)
                 {
                     cooldown = false;
                     firstFrameLiquid = true;

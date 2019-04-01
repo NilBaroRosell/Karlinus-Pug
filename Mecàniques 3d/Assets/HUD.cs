@@ -183,7 +183,7 @@ public class HUD : MonoBehaviour {
             startTime = Time.frameCount;
             timeUntilDisapear = 300;
         }
-        M2.SetActive(false);
+        M4.SetActive(false);
     }
     public void showM4Helps(int text_to_show, int font_to_set = 50)
     {
@@ -250,5 +250,70 @@ public class HUD : MonoBehaviour {
         //new Vector3(Dialog.GetComponent<RectTransform>().position.x, -403.0f / 10, Dialog.GetComponent<RectTransform>().position.z); // canviar valors (-426.0f)
         startTime = Time.frameCount;
         timeUntilDisapear = time;
+    }
+
+    public void rememberObjective (int text_to_show, int font_to_set = 50)
+    {
+        if (!Objective.activeSelf)
+        {
+            switch (GameObject.Find("Misiones").GetComponent<misions>().ActualMision)
+            {
+                case misions.Misions.M1:
+                    M1.SetActive(true);
+                    Objective.SetActive(true);
+                    Objective_text.GetComponent<Text>().text = M1.transform.GetChild(0).GetChild(text_to_show).gameObject.GetComponent<Text>().text;
+                    Objective_text.GetComponent<Text>().fontSize = font_to_set;
+                    Objective.GetComponent<RectTransform>().position =
+                        new Vector3(Objective.GetComponent<RectTransform>().position.x, -381.4f / 10, Objective.GetComponent<RectTransform>().position.z);
+                    startTime = Time.frameCount;
+                    timeUntilDisapear = 300;
+                    M1.SetActive(false);
+                    break;
+                case misions.Misions.M2:
+                    M2.SetActive(true);
+                    Objective.SetActive(true);
+                    Objective_text.GetComponent<Text>().text = M2.transform.GetChild(0).GetChild(text_to_show).gameObject.GetComponent<Text>().text;
+                    Objective_text.GetComponent<Text>().fontSize = font_to_set;
+                    Objective.GetComponent<RectTransform>().position =
+                        new Vector3(Objective.GetComponent<RectTransform>().position.x, -381.4f / 10, Objective.GetComponent<RectTransform>().position.z);
+                    startTime = Time.frameCount;
+                    timeUntilDisapear = 300;
+                    M2.SetActive(false);
+                    break;
+                case misions.Misions.M3:
+                    M3.SetActive(true);
+                    Objective.SetActive(true);
+                    Objective_text.GetComponent<Text>().text = M3.transform.GetChild(0).GetChild(text_to_show).gameObject.GetComponent<Text>().text;
+                    Objective_text.GetComponent<Text>().fontSize = font_to_set;
+                    Objective.GetComponent<RectTransform>().position =
+                        new Vector3(Objective.GetComponent<RectTransform>().position.x, -381.4f / 10, Objective.GetComponent<RectTransform>().position.z);
+                    startTime = Time.frameCount;
+                    timeUntilDisapear = 300;
+                    M3.SetActive(false);
+                    break;
+                case misions.Misions.M4:
+                    M4.SetActive(true);
+                    Objective.SetActive(true);
+                    Objective_text.GetComponent<Text>().text = M4.transform.GetChild(0).GetChild(text_to_show).gameObject.GetComponent<Text>().text;
+                    Objective_text.GetComponent<Text>().fontSize = font_to_set;
+                    Objective.GetComponent<RectTransform>().position =
+                        new Vector3(Objective.GetComponent<RectTransform>().position.x, -381.4f / 10, Objective.GetComponent<RectTransform>().position.z);
+                    startTime = Time.frameCount;
+                    timeUntilDisapear = 300;
+                    M4.SetActive(false);
+                    break;
+                case misions.Misions.SM_1:
+                    SM_1.SetActive(true);
+                    Objective.SetActive(true);
+                    Objective_text.GetComponent<Text>().text = SM_1.transform.GetChild(0).GetChild(text_to_show).gameObject.GetComponent<Text>().text;
+                    Objective_text.GetComponent<Text>().fontSize = font_to_set;
+                    Objective.GetComponent<RectTransform>().position =
+                        new Vector3(Objective.GetComponent<RectTransform>().position.x, -381.4f / 10, Objective.GetComponent<RectTransform>().position.z);
+                    startTime = Time.frameCount;
+                    timeUntilDisapear = 300;
+                    SM_1.SetActive(false);
+                    break;
+            }
+        }
     }
 }
