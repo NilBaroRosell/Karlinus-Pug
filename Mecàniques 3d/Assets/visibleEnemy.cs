@@ -13,7 +13,6 @@ public class visibleEnemy : MonoBehaviour {
 
     void OnBecameVisible()
     {
-        Debug.Log(gameObject.transform.parent);
         visible = true;
         //GameObject.Find("Jugador").GetComponent<HUD>().IntroduceEnemy(gameObject);
     }
