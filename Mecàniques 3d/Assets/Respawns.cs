@@ -141,11 +141,13 @@ public class Respawns : MonoBehaviour {
     private void LoadM4()
     {
         //MISION 4 RESPAWN POINTS
-        RespawnPoints = new Vector3[4];
+        RespawnPoints = new Vector3[6];
         RespawnPoints[0] = new Vector3(85.8f, -9.1f, 321.1f);
         RespawnPoints[1] = new Vector3(-122.71f, -27.52f, 267.58f);
         RespawnPoints[2] = new Vector3(-69.33f, -27.52f, 295.55f);
-        RespawnPoints[3] = new Vector3(-6.15f, 81.48f, -316.38f);
+        RespawnPoints[3] = new Vector3(173.9743f, 78.08279f, -361.5564f);
+        RespawnPoints[4] = new Vector3(13.95f, 86.04f, -314.46f);
+        RespawnPoints[5] = new Vector3(-6.15f, 81.48f, -316.38f);
 
         //MISION 4 BOX TRIGGERS
         All_Mision_Objects.transform.GetChild(3).gameObject.SetActive(true);
@@ -167,7 +169,10 @@ public class Respawns : MonoBehaviour {
         if (GameObject.Find("Cases rics") != null) Destroy(GameObject.Find("Cases rics"));
         if (GameObject.Find("Taberna") != null) Destroy(GameObject.Find("Taberna"));
         if (GameObject.Find("Zone_1") != null) GameObject.Find("Zone_1").SetActive(false);
-        Mision_Objects = new GameObject[1];
+        Mision_Objects = new GameObject[4];
+        if (GameObject.Find("moving_plat") != null) Mision_Objects[0] = GameObject.Find("moving_plat");
+        if (GameObject.Find("Palanca") != null) Mision_Objects[1] = GameObject.Find("Palanca");
+        if (GameObject.Find("Palanca 2") != null) Mision_Objects[2] = GameObject.Find("Palanca 2");
         Mision_Objects[Mision_Objects.Length - 1] =
             All_Mision_Objects.transform.GetChild(3).GetChild(1).GetChild(All_Mision_Objects.transform.GetChild(3).GetChild(1).transform.childCount - 1).gameObject;//Zone Controll
 
@@ -375,6 +380,24 @@ public class Respawns : MonoBehaviour {
                 }
                 break;
             case 3:
+                Mision_Objects[0].transform.position += new Vector3(0, 25, 0);
+                Mision_Objects[1].SetActive(false);
+                Mision_Objects[2].SetActive(false);
+                Mision_Objects[Mision_Objects.Length - 1].SetActive(false);
+                LoadScene.respawnToLoad = InitialRespawns.CHAMBER;
+                if (GameObject.Find("batalla final") != null) Destroy(GameObject.Find("batalla final"));
+                break;
+            case 4:
+                Mision_Objects[Mision_Objects.Length - 1].SetActive(false);
+                LoadScene.respawnToLoad = InitialRespawns.CHAMBER;
+                if (GameObject.Find("Interior Palau") != null) Destroy(GameObject.Find("Interior Palau"));
+                GameObject.Find("BOSS").SetActive(false);
+                GameObject.Find("BOSS (1)").SetActive(false);
+                GameObject.Find("BOSS (2)").SetActive(false);
+                break;
+            case 5:
+                Mision_Objects[Mision_Objects.Length - 1].SetActive(false);
+                GameObject.Find("BOSS_NPC").SetActive(false);
                 LoadScene.respawnToLoad = InitialRespawns.CHAMBER;
                 if (GameObject.Find("Interior Palau") != null) Destroy(GameObject.Find("Interior Palau"));
                 break;

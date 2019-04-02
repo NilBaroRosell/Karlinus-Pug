@@ -276,9 +276,18 @@ public class misions : MonoBehaviour {
                             break;
                         case 3:
                             HUD_Script.showM4Objective(2);
-                            HUD_Script.showM4Helps(1);
                             secundaryCamera.SetActive(false);
                             misionIndex = 4;
+                            break;
+                        case 4:                            
+                            secundaryCamera.SetActive(false);
+                            misionIndex = 7;
+                            break;
+                        case 5:
+                            HUD_Script.showM4Objective(4);
+                            HUD_Script.showM4Helps(2);
+                            secundaryCamera.SetActive(false);
+                            misionIndex = 8;
                             break;
                     }
                     break;
@@ -347,7 +356,6 @@ public class misions : MonoBehaviour {
             switch (ActualMision)
             {
                 case Misions.NONE:
-                    if (GameObject.Find("RatHood") != null) GameObject.Find("RatHood").SetActive(false);
                     break;
                 case Misions.M1:
                     M1();
@@ -881,7 +889,6 @@ public class misions : MonoBehaviour {
                 {
                     misionIndex++;
                     respawnIndex++;
-                    Debug.Log("check");
                 }
                 break;
             case 2:
@@ -900,6 +907,49 @@ public class misions : MonoBehaviour {
                 }
                 break;
             case 4:
+                if (EnemyManager.Enemies.Length == 0 && !loadRespawn.Mision_Objects[1].activeSelf)
+                {
+                    HUD_Script.showM4Objective(3, 35);
+                    HUD_Script.showM4Helps(1);
+                    loadRespawn.Mision_Objects[1].SetActive(true);
+                }
+                else if (nextEvent)
+                {
+                    nextEvent = false;
+                    Player.GetComponent<Controller>().state = Controller.playerState.HITTING;
+                    StartCoroutine(ExecuteAfterTime(8));
+                    misionIndex++;
+                }
+                break;
+            case 5:
+                loadRespawn.Mision_Objects[0].transform.localPosition = Vector3.Lerp(loadRespawn.Mision_Objects[0].transform.localPosition, new Vector3(31.74f, -36.15f, 0.9f), 0.5f * Time.deltaTime);
+                if(nextEvent)
+                {
+                    misionIndex++;
+                    nextEvent = false;
+                    Player.GetComponent<Controller>().state = Controller.playerState.IDLE;
+                    loadRespawn.Mision_Objects[2].SetActive(true);
+                }
+                break;
+            case 6:
+                if (nextEvent)
+                {
+                    nextEvent = false;
+                    misionIndex++;
+                    respawnIndex++;
+                    loadRespawn.initialRespawn = Respawns.InitialRespawns.CHAMBER;
+                    loadScreen.Instancia.CargarEscena("StoneChamber");
+                }
+                break;
+            case 7:
+                if (nextEvent)
+                {
+                    nextEvent = false;
+                    misionIndex++;
+                    respawnIndex++;
+                }
+                break;
+            case 8:
                 break;
             default:
                 break;

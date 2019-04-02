@@ -33,7 +33,14 @@ public class finalBattleManager : MonoBehaviour {
             Bosses[i].SetActive(false);
             Bosses[i].GetComponent<bossIA>().enabled = false;
         }
-        bossI = 0;
+        if (misions.respawnIndex == 4)
+            bossI = 0;
+        else
+        {
+            bossI = 1;
+            Bosses[bossI].SetActive(true);
+            Bosses[bossI].GetComponent<bossIA>().enabled = true;
+        }
 }
 	
 	// Update is called once per frame
@@ -65,7 +72,11 @@ public class finalBattleManager : MonoBehaviour {
                 break;
         }
 	}
-
+    public void restartBattle()
+    {
+        Start();
+        bossI = 0;
+    }
     public void expandSphere()
     {
         battleState = battleStates.EXPANDING1;

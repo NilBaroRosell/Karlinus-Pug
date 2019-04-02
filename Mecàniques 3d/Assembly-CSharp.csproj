@@ -67,6 +67,7 @@
     <Compile Include="Assets\BoxTriggerScript.cs" />
     <Compile Include="Assets\button_pressed.cs" />
     <Compile Include="Assets\camaraMovement.cs" />
+    <Compile Include="Assets\captainScript.cs" />
     <Compile Include="Assets\Cinemachine\Base\Runtime\Behaviours\CinemachineBlendListCamera.cs" />
     <Compile Include="Assets\Cinemachine\Base\Runtime\Behaviours\CinemachineBrain.cs" />
     <Compile Include="Assets\Cinemachine\Base\Runtime\Behaviours\CinemachineClearShot.cs" />
@@ -145,6 +146,7 @@
     <Compile Include="Assets\MirameWapo.cs" />
     <Compile Include="Assets\MisionFailed.cs" />
     <Compile Include="Assets\misions.cs" />
+    <Compile Include="Assets\nextEventTrigger.cs" />
     <Compile Include="Assets\NPC.cs" />
     <Compile Include="Assets\NPCActualizeScene.cs" />
     <Compile Include="Assets\PauseMenu.cs" />
