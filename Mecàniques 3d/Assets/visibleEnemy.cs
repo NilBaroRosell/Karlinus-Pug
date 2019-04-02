@@ -15,7 +15,7 @@ public class visibleEnemy : MonoBehaviour {
     {
         Debug.Log(gameObject.transform.parent);
         visible = true;
-        //GameObject.Find("Jugador").GetComponent<HUD>().IntroduceEnemy(gameObject);
+        GameObject.Find("Jugador").GetComponent<HUD>().IntroduceEnemy(gameObject.transform.parent.gameObject);
     }
 
     private void OnBecameInvisible()

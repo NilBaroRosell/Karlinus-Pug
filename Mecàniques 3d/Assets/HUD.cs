@@ -8,10 +8,10 @@ public class SeenEnemy
 {
     public GameObject enemy;
     public GameObject triangle;
-    public SeenEnemy(GameObject _enemy)
+    public SeenEnemy(GameObject _enemy,GameObject _triangle)
     {
         enemy = _enemy;
-        triangle = null;
+        triangle = _triangle;
     }
 }
 
@@ -30,6 +30,8 @@ public class HUD : MonoBehaviour {
     public GameObject M1;
     public GameObject M2;
     public GameObject SM_1;
+    private List<SeenEnemy> enemiesSeen;
+    public GameObject enemyTriangle;
 
     public static GameObject canvasHUD;
     //private const float objectiveY = 120.0f;
@@ -54,6 +56,7 @@ public class HUD : MonoBehaviour {
         startTime = Time.frameCount;
         started = false;
         canvasHUD = GameObject.Find("Canvas");
+        enemiesSeen = new List<SeenEnemy>();
     }
 
     // Update is called once per frame
@@ -84,6 +87,7 @@ public class HUD : MonoBehaviour {
             if (Dialog.activeSelf && Dialog.GetComponent<RectTransform>().position.y < DialogY) Dialog.GetComponent<RectTransform>().position = //new Vector3(DialogPos.x, //DialogPos.y + 40, DialogPos.z);
                      new Vector3(Dialog.GetComponent<RectTransform>().position.x, Dialog.GetComponent<RectTransform>().position.y + 40, Dialog.GetComponent<RectTransform>().position.z);
         }
+        ShowEnemies();
     }
 
     public void showM1Objective(int text_to_show, int font_to_set = 50)
@@ -197,6 +201,33 @@ public class HUD : MonoBehaviour {
         //new Vector3(Dialog.GetComponent<RectTransform>().position.x, -403.0f / 10, Dialog.GetComponent<RectTransform>().position.z); // canviar valors (-426.0f)
         startTime = Time.frameCount;
         timeUntilDisapear = time;
+    }
+
+    public void IntroduceEnemy(GameObject enemy)
+    {
+        bool found = false;
+        for (int i = 0; enemiesSeen.Count > i; i++)
+        {
+            if (enemiesSeen[i].enemy == enemy) found = true;
+        }
+        if (!found)
+        {
+            enemiesSeen.Add(new SeenEnemy(enemy, Instantiate(enemyTriangle, new Vector3(0, 0, 0), Quaternion.identity) as GameObject));
+            enemiesSeen[enemiesSeen.Count - 1].triangle.transform.SetParent(GameObject.FindGameObjectWithTag("canvas").transform, false);
+            enemiesSeen[enemiesSeen.Count - 1].triangle.transform.position = Camera.main.WorldToScreenPoint(enemy.transform.position);
+        }
+
+    }
+
+    private void ShowEnemies()
+    {
+        if (enemiesSeen != null)
+        {
+            for (int i = 0; enemiesSeen.Count > i; i++)
+            {
+                enemiesSeen[i].triangle.transform.position = Camera.main.WorldToScreenPoint(enemiesSeen[i].enemy.transform.position);
+            }
+        }
     }
 
 
