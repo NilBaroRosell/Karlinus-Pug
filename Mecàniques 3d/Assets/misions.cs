@@ -411,8 +411,8 @@ public class misions : MonoBehaviour {
                 secundaryCamera.transform.rotation = Quaternion.Lerp(secundaryCamera.transform.rotation, secundaryCameraDestination.transform.rotation, 0.75f * Time.deltaTime);
                 if (nextEvent)
                 {
-                    secundaryCameraDestination.transform.position = mainCamera.transform.position;
-                    secundaryCameraDestination.transform.rotation = mainCamera.transform.rotation;
+                    secundaryCameraDestination.transform.position = playerMovement.transform.position + Player.transform.forward + new Vector3(0, 1.5f, 0.0f);
+                    secundaryCameraDestination.transform.LookAt(Player.transform.GetChild(Player.transform.childCount - 1).transform.position);
                     GameObject.Find("Logo_M1").SetActive(false);
                     StartCoroutine(ExecuteAfterTime(5.0f));
                     misionIndex++;
@@ -464,8 +464,8 @@ public class misions : MonoBehaviour {
                 {
                     nextEvent = false;
                     misionIndex++;
-                    secundaryCameraDestination.transform.position = mainCamera.transform.position;
-                    secundaryCameraDestination.transform.rotation = mainCamera.transform.rotation;
+                    secundaryCameraDestination.transform.position = Player.transform.position - Vector3.Normalize(GameObject.Find("Enemigo (3)").transform.position - Player.transform.position) * 2 + new Vector3(0, 2.5f, 0.0f);
+                    secundaryCameraDestination.transform.LookAt(Player.transform.GetChild(Player.transform.childCount - 1).transform.position);
                     HUD_Script.showM1Helps(2, 45);
                     StartCoroutine(ExecuteAfterTime(5.0f));
                 }
@@ -592,8 +592,8 @@ public class misions : MonoBehaviour {
                 if(nextEvent)
                 {
                     misionIndex++;
-                    secundaryCameraDestination.transform.position = mainCamera.transform.position + new Vector3( 0.0f, 7.0f, 0.0f);
-                    secundaryCameraDestination.transform.rotation = mainCamera.transform.rotation;
+                    secundaryCameraDestination.transform.position = Player.transform.position - Vector3.Normalize(GameObject.Find("Taberna").transform.position - Player.transform.position) * 2 + new Vector3(0, 2.5f, 0.0f) + new Vector3(0.0f, 7.0f, 0.0f); ;
+                    secundaryCameraDestination.transform.LookAt(GameObject.Find("Taberna").transform.position);
                     StartCoroutine(ExecuteAfterTime(3.25f));
                     nextEvent = false;
                 }
@@ -604,8 +604,8 @@ public class misions : MonoBehaviour {
                 if (nextEvent)
                 {
                     misionIndex++;
-                    secundaryCameraDestination.transform.position = mainCamera.transform.position;
-                    secundaryCameraDestination.transform.rotation = mainCamera.transform.rotation;
+                    secundaryCameraDestination.transform.position = Player.transform.position - Vector3.Normalize(GameObject.Find("Taberna").transform.position - Player.transform.position) * 2 + new Vector3(0, 2.5f, 0.0f);
+                    secundaryCameraDestination.transform.LookAt(Player.transform.GetChild(Player.transform.childCount - 1).transform.position);
                     StartCoroutine(ExecuteAfterTime(3.0f));
                     nextEvent = false;
                 }
