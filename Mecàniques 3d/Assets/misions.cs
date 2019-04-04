@@ -13,6 +13,8 @@ public class misions : MonoBehaviour {
     public bool editorRespawn;
     public int editorRespawnNum;
     public bool doorsUnlucked;
+    public bool useSaveFile;
+    public bool resetGameFile;
     public static int respawnIndex;
     public static int misionIndex;
     private Respawns loadRespawn;
@@ -45,27 +47,40 @@ public class misions : MonoBehaviour {
         DontDestroyOnLoad(this);
 
         if (Instance == null || Instance.ActualMision == Misions.NONE)
-        {
+        {          
             if (Instance != null)
             {
-                GetComponent<Respawns>().initialRespawn = Instance.loadRespawn.initialRespawn;
-                doorsUnlucked = Instance.doorsUnlucked;
-                Destroy(Instance.gameObject);
-                ActualMision = Misions.NONE;
-                editorRespawn = false;
+                useSaveFile = Instance.useSaveFile;
             }
-            Instance = this;
-            MisionPoint PrincipalMision = new MisionPoint();
-        PrincipalMision.MisionsCompleted = new bool[4];
-        MisionPoint RatHood = new MisionPoint();
-        RatHood.MisionsCompleted = new bool[2];
-        MisionPoint RebelCat = new MisionPoint();
-        RebelCat.MisionsCompleted = new bool[2];
-        MisionPoint ScaryDog = new MisionPoint();
-        ScaryDog.MisionsCompleted = new bool[2];
-        loadRespawn = GetComponent<Respawns>();
-        misionIndex = 0;
-        nextEvent = false;
+            if (useSaveFile)
+                {
+                    editorRespawn = false;
+                    if (resetGameFile) resetGame();
+                    else if (Instance != null) saveGame();
+                    loadGame();
+                }
+            else
+                {
+                    GetComponent<Respawns>().initialRespawn = Instance.loadRespawn.initialRespawn;
+                    doorsUnlucked = Instance.doorsUnlucked;
+                    Destroy(Instance.gameObject);
+                    ActualMision = Misions.NONE;
+                    editorRespawn = false;
+
+                    Instance = this;
+                    MisionPoint PrincipalMision = new MisionPoint();
+                    PrincipalMision.MisionsCompleted = new bool[4];
+                    MisionPoint RatHood = new MisionPoint();
+                    RatHood.MisionsCompleted = new bool[2];
+                    MisionPoint RebelCat = new MisionPoint();
+                    RebelCat.MisionsCompleted = new bool[2];
+                    MisionPoint ScaryDog = new MisionPoint();
+                    ScaryDog.MisionsCompleted = new bool[2];
+                    loadRespawn = GetComponent<Respawns>();
+                    misionIndex = 0;
+                    nextEvent = false;
+                }
+            
             if (editorRespawn)
                 respawnIndex = editorRespawnNum;
             else respawnIndex = 0;
@@ -332,7 +347,7 @@ public class misions : MonoBehaviour {
             Cursor.visible = true;
             Cursor.lockState = CursorLockMode.None;
         }
-        mainCamera.transform.parent.transform.position = mainCamera.transform.parent.GetComponent<CameraFollow>().followObject.transform.position;
+        if(mainCamera != null)mainCamera.transform.parent.transform.position = mainCamera.transform.parent.GetComponent<CameraFollow>().followObject.transform.position;
     }
 
     // Update is called once per frame
@@ -1214,6 +1229,79 @@ public class misions : MonoBehaviour {
         yield return new WaitForSeconds(time);
 
         nextEvent = true;
+    }
+
+    void resetGame()
+    {
+        ActualMision = Misions.M1;
+        for (Misions i = 0; i < Misions.NONE; i++)//Mission Arrays
+        {
+            Debug.Log(i.ToString());
+            PlayerPrefs.SetInt(i.ToString(), 0);
+        }
+        PlayerPrefs.SetInt("Respawn", 0);//Initial Respawn
+        PlayerPrefs.SetInt("Doors Unlocked", 0);//Doors unlocked
+    }
+
+    void saveGame()
+    {
+        ActualMision = Misions.NONE;
+
+        Misions i = 0;//Mission Arrays
+
+        PlayerPrefs.SetInt(i.ToString(), Instance.PrincipalMision.MisionsCompleted[0] ? 1 : 0); i++;
+        PlayerPrefs.SetInt(i.ToString(), Instance.PrincipalMision.MisionsCompleted[1] ? 1 : 0); i++;
+        PlayerPrefs.SetInt(i.ToString(), Instance.PrincipalMision.MisionsCompleted[2] ? 1 : 0); i++;
+        PlayerPrefs.SetInt(i.ToString(), Instance.PrincipalMision.MisionsCompleted[3] ? 1 : 0); i++;
+
+        PlayerPrefs.SetInt(i.ToString(), Instance.RatHood.MisionsCompleted[0] ? 1 : 0); i++;
+        PlayerPrefs.SetInt(i.ToString(), Instance.RatHood.MisionsCompleted[1] ? 1 : 0); i++;
+
+        PlayerPrefs.SetInt(i.ToString(), Instance.RebelCat.MisionsCompleted[0] ? 1 : 0); i++;
+        PlayerPrefs.SetInt(i.ToString(), Instance.RebelCat.MisionsCompleted[1] ? 1 : 0); i++;
+
+        PlayerPrefs.SetInt(i.ToString(), Instance.ScaryDog.MisionsCompleted[0] ? 1 : 0); i++;
+        PlayerPrefs.SetInt(i.ToString(), Instance.ScaryDog.MisionsCompleted[1] ? 1 : 0);
+
+        PlayerPrefs.SetInt("Respawn", (int)Instance.loadRespawn.initialRespawn);//Initial Respawn
+        PlayerPrefs.SetInt("Doors Unlocked", Instance.doorsUnlucked ? 1 : 0);//Doors unlocked
+
+        Destroy(Instance.gameObject);
+    }
+
+    void loadGame()
+    {
+        Instance = this;
+        MisionPoint PrincipalMision = new MisionPoint();
+        PrincipalMision.MisionsCompleted = new bool[4];
+        MisionPoint RatHood = new MisionPoint();
+        RatHood.MisionsCompleted = new bool[2];
+        MisionPoint RebelCat = new MisionPoint();
+        RebelCat.MisionsCompleted = new bool[2];
+        MisionPoint ScaryDog = new MisionPoint();
+        ScaryDog.MisionsCompleted = new bool[2];
+        loadRespawn = GetComponent<Respawns>();
+        misionIndex = 0;
+        nextEvent = false;
+
+        Misions i = 0;//Mission Arrays
+
+        PrincipalMision.MisionsCompleted[0] = PlayerPrefs.GetInt(i.ToString()) != 0; i++;
+        PrincipalMision.MisionsCompleted[1] = PlayerPrefs.GetInt(i.ToString()) != 0; i++;
+        PrincipalMision.MisionsCompleted[2] = PlayerPrefs.GetInt(i.ToString()) != 0; i++;
+        PrincipalMision.MisionsCompleted[3] = PlayerPrefs.GetInt(i.ToString()) != 0; i++;
+
+        RatHood.MisionsCompleted[0] = PlayerPrefs.GetInt(i.ToString()) != 0; i++;
+        RatHood.MisionsCompleted[1] = PlayerPrefs.GetInt(i.ToString()) != 0; i++;
+
+        RebelCat.MisionsCompleted[0] = PlayerPrefs.GetInt(i.ToString()) != 0; i++;
+        RebelCat.MisionsCompleted[1] = PlayerPrefs.GetInt(i.ToString()) != 0; i++;
+
+        ScaryDog.MisionsCompleted[0] = PlayerPrefs.GetInt(i.ToString()) != 0; i++;
+        ScaryDog.MisionsCompleted[1] = PlayerPrefs.GetInt(i.ToString()) != 0;
+
+        loadRespawn.initialRespawn = (Respawns.InitialRespawns)PlayerPrefs.GetInt("Respawn");//Initial Respawn
+        doorsUnlucked = PlayerPrefs.GetInt("Doors Unlocked") != 0;//Doors unlocked
     }
 
     void OnLevelWasLoaded()

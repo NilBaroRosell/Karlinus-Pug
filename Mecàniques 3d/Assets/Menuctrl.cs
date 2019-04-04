@@ -14,7 +14,8 @@ public class Menuctrl : MonoBehaviour {
     public void LoadScene(string sceneName)
     {
         //GameObject.Find("Misiones").GetComponent<misions>().ActualMision = misions.Misions.NONE;
-        loadScreen.Instancia.CargarEscena(sceneName);
+        if(!misions.Instance.resetGameFile)loadScreen.Instancia.CargarEscena(sceneName);
+        else loadScreen.Instancia.CargarEscena("sewer");
     }
 
     public void ExitGameBtn()
