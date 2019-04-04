@@ -20,4 +20,13 @@ public class RandomDestination : MonoBehaviour {
             }
         return finalPosition;
     }
+
+    public Vector3 RandomNavmeshLocationNPC(GameObject enemy, float radius)
+    {
+        Vector2 randomDirection = Random.insideUnitCircle * radius;
+        Vector3 sourcePos;
+        sourcePos = new Vector3(randomDirection.x, enemy.transform.position.y, randomDirection.y);
+        sourcePos += new Vector3(enemy.transform.position.x, 0.0f, enemy.transform.position.z);
+        return sourcePos;
+    }
 }

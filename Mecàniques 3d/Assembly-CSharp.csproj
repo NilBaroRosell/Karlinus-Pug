@@ -162,6 +162,7 @@
     <Compile Include="Assets\SoundCucumber.cs" />
     <Compile Include="Assets\SoundEnemy.cs" />
     <Compile Include="Assets\SoundPlayer.cs" />
+    <Compile Include="Assets\Talk_To_NPC.cs" />
     <Compile Include="Assets\torchManager.cs" />
     <Compile Include="Assets\visible.cs" />
     <Compile Include="Assets\visibleEnemy.cs" />

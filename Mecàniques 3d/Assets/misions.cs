@@ -19,12 +19,12 @@ public class misions : MonoBehaviour {
     public static int misionIndex;
     private Respawns loadRespawn;
     private HUD HUD_Script;
-    private GameObject Player;
-    private Controller playerMovement;
+    public GameObject Player;
+    public Controller playerMovement;
     public static bool nextEvent;
-    private GameObject mainCamera;
-    private GameObject secundaryCamera;
-    private GameObject secundaryCameraDestination;
+    public GameObject mainCamera;
+    public GameObject secundaryCamera;
+    public GameObject secundaryCameraDestination;
     public static misions Instance;
     [System.Serializable]
     public struct MisionPoint
@@ -370,6 +370,7 @@ public class misions : MonoBehaviour {
                     Cursor.lockState = CursorLockMode.None;
                 }
             }
+            if (Input.GetKeyUp(KeyCode.Tab)) HUD_Script.rememberObjective();
             switch (ActualMision)
             {
                 case Misions.NONE:
