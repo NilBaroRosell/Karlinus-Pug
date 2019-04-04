@@ -20,6 +20,7 @@ public class HUD : MonoBehaviour {
     public GameObject M3;
     public GameObject M4;
     public GameObject SM_1;
+    public GameObject NPC_Dialog;
 
     public static GameObject canvasHUD;
     //private const float objectiveY = 120.0f;
@@ -28,6 +29,7 @@ public class HUD : MonoBehaviour {
     private float HelpsY = Screen.height / 4;
     private float DialogY = Screen.height / 4; //canviar valor(/4)
     public Vector3 DialogPos;
+    public bool finalDialog = false;
 
     // Use this for initialization
     void Awake()
@@ -39,6 +41,7 @@ public class HUD : MonoBehaviour {
         M2.SetActive(false);
         M3.SetActive(false);
         SM_1.SetActive(false);
+        NPC_Dialog.SetActive(false);
         Objective.SetActive(false);
         Helps.SetActive(false);
         Dialog.SetActive(false);
@@ -50,6 +53,7 @@ public class HUD : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
+        finalDialog = false;
         finalTime = Time.frameCount;
         if (finalTime - startTime > timeUntilDisapear)
         {
@@ -59,9 +63,9 @@ public class HUD : MonoBehaviour {
             if (Helps.activeSelf && Helps.GetComponent<RectTransform>().position.y > -426.0f / 10) Helps.GetComponent<RectTransform>().position =
                     new Vector3(Helps.GetComponent<RectTransform>().position.x, Helps.GetComponent<RectTransform>().position.y - 40, Helps.GetComponent<RectTransform>().position.z);
             else Helps.SetActive(false);
-            if (Dialog.activeSelf && Dialog.GetComponent<RectTransform>().position.y > -900 / 10) Dialog.GetComponent<RectTransform>().position = //DialogPos;// canviar valors (-426.0f)
-                      new Vector3(Dialog.GetComponent<RectTransform>().position.x, -900 / 10, Dialog.GetComponent<RectTransform>().position.z); // canviar valors (40)
-            else Dialog.SetActive(false);
+            if (Dialog.activeSelf && Dialog.GetComponent<RectTransform>().position.y > -900 / 10) Dialog.GetComponent<RectTransform>().position =
+                      new Vector3(Dialog.GetComponent<RectTransform>().position.x, -900 / 10, Dialog.GetComponent<RectTransform>().position.z);
+            else Dialog.SetActive(false); finalDialog = true;
         }
         else
         {
@@ -72,7 +76,7 @@ public class HUD : MonoBehaviour {
                     new Vector3(Objective.GetComponent<RectTransform>().position.x, Objective.GetComponent<RectTransform>().position.y + 40, Objective.GetComponent<RectTransform>().position.z);
             if (Helps.activeSelf && Helps.GetComponent<RectTransform>().position.y < HelpsY) Helps.GetComponent<RectTransform>().position =
                     new Vector3(Helps.GetComponent<RectTransform>().position.x, Helps.GetComponent<RectTransform>().position.y + 40, Helps.GetComponent<RectTransform>().position.z);
-            if (Dialog.activeSelf && Dialog.GetComponent<RectTransform>().position.y < DialogY) Dialog.GetComponent<RectTransform>().position = //new Vector3(DialogPos.x, //DialogPos.y + 40, DialogPos.z);
+            if (Dialog.activeSelf && Dialog.GetComponent<RectTransform>().position.y < DialogY) Dialog.GetComponent<RectTransform>().position =
                      new Vector3(Dialog.GetComponent<RectTransform>().position.x, Dialog.GetComponent<RectTransform>().position.y + 40, Dialog.GetComponent<RectTransform>().position.z);
         }
     }
@@ -247,7 +251,6 @@ public class HUD : MonoBehaviour {
         SM_1.SetActive(false);
         DialogPos = new Vector3(posX, posY, Dialog.GetComponent<RectTransform>().position.z);
         Dialog.GetComponent<RectTransform>().position = DialogPos;
-        //new Vector3(Dialog.GetComponent<RectTransform>().position.x, -403.0f / 10, Dialog.GetComponent<RectTransform>().position.z); // canviar valors (-426.0f)
         startTime = Time.frameCount;
         timeUntilDisapear = time;
     }
@@ -315,5 +318,18 @@ public class HUD : MonoBehaviour {
                     break;
             }
         }
+    }
+
+    public void showNpcDialog (int scene, int text_to_show, int font_to_set = 50)
+    {
+        NPC_Dialog.SetActive(true);
+        Dialog.SetActive(true);
+        Dialog_text.GetComponent<Text>().text = NPC_Dialog.transform.GetChild(scene).GetChild(text_to_show).gameObject.GetComponent<Text>().text;
+        Dialog_text.GetComponent<Text>().fontSize = font_to_set;
+        NPC_Dialog.SetActive(false);
+        DialogPos = new Vector3((Screen.width * 12) / 20, (Screen.height * 17) / 20, Dialog.GetComponent<RectTransform>().position.z);
+        Dialog.GetComponent<RectTransform>().position = DialogPos;
+        startTime = Time.frameCount;
+        timeUntilDisapear = 300;
     }
 }

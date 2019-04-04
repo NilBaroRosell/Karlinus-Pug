@@ -11,14 +11,15 @@ public class cucumber : MonoBehaviour
     public GameObject cucumber_show;
     public GameObject cucumber_thrown;
     public Rigidbody cucumberRig;
+    public Image cucumberCooldown;
     public enum cucumberState { HIDE, SHOW, FLYING, FLOOR, COOLDOWN, LIQUID };
     public cucumberState state;
     public static bool onFloor = false;
     public bool touchingCucumber = false;
-    public float startCooldown;
-    public float finishCooldown;
     private bool firstTime = false;
     private bool flying = false;
+    public bool cucumberLost = false;
+    private int startCooldown, finishCooldown;
     public Vector3 voxelUp;
     public Vector3 voxelDown;
 
@@ -29,6 +30,7 @@ public class cucumber : MonoBehaviour
         cucumber_hide.SetActive(true);
         cucumber_show.SetActive(false);
         cucumber_thrown.SetActive(false);
+        cucumberCooldown.fillAmount = 0;
     }
 
     private void Update()
@@ -78,6 +80,7 @@ public class cucumber : MonoBehaviour
                     if (onFloor)
                     {
                         state = cucumberState.FLOOR;
+                        StartCoroutine(ExecuteAfterTime(30));
                     }
                     break;
                 }
@@ -88,22 +91,29 @@ public class cucumber : MonoBehaviour
                     cucumber_thrown.SetActive(true);
                     flying = false;
                     CheckPlayer();
-                    if (touchingCucumber)
+                    if (touchingCucumber || cucumberLost)
                     {
                         onFloor = false;
                         touchingCucumber = false;
+                        cucumberLost = false;
                         state = cucumberState.COOLDOWN;
                         startCooldown = Time.frameCount;
+                        cucumberCooldown.fillAmount = 1;
                     }
                     break;
                 }
             case cucumberState.COOLDOWN:
                 {
+                    finishCooldown = Time.frameCount;
+                    cucumberCooldown.fillAmount -= 0.0035f;
                     cucumber_hide.SetActive(true);
                     cucumber_show.SetActive(false);
                     cucumber_thrown.SetActive(false);
-                    finishCooldown = Time.frameCount;
-                    if (finishCooldown - startCooldown > 300) state = cucumberState.HIDE;
+                    if (finishCooldown - startCooldown > 300)
+                    {
+                        state = cucumberState.HIDE;
+                        cucumberCooldown.fillAmount = 0;
+                    }
                     break;
                 }
             default:
@@ -113,13 +123,12 @@ public class cucumber : MonoBehaviour
         }
     }
 
-    /*private void OnCollisionEnter(Collision collision)
+    IEnumerator ExecuteAfterTime(float time)
     {
-        if (collision.gameObject.tag == "cucumber")
-        {
-            touchingCucumber = true;
-        }
-    }*/
+        yield return new WaitForSeconds(time);
+
+        cucumberLost = true;
+    }
 
     public void CheckPlayer()
     {

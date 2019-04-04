@@ -104,7 +104,7 @@ public class liquidState : MonoBehaviour
                     }
                 }
 
-                if (hidratation > 66)
+                if (hidratation > 70)
                 {
                     hidratation = 100;
                     perfectlyHidratated.SetActive(true);
@@ -112,17 +112,17 @@ public class liquidState : MonoBehaviour
                     badlyHidratated.SetActive(false);
                     dead.SetActive(false);
                 }
-                else if (hidratation > 33)
+                else if (hidratation > 40)
                 {
-                    hidratation = 50;
+                    hidratation = 70;
                     perfectlyHidratated.SetActive(false);
                     wellHidratated.SetActive(true);
                     badlyHidratated.SetActive(false);
                     dead.SetActive(false);
                 }
-                else if (hidratation > 0)
+                else if (hidratation > 10)
                 {
-                    hidratation = 10;
+                    hidratation = 40;
                     perfectlyHidratated.SetActive(false);
                     wellHidratated.SetActive(false);
                     badlyHidratated.SetActive(true);
@@ -130,12 +130,11 @@ public class liquidState : MonoBehaviour
                 }
                 else
                 {
-                    hidratation = 0;
+                    hidratation = 10;
                     perfectlyHidratated.SetActive(false);
                     wellHidratated.SetActive(false);
                     badlyHidratated.SetActive(false);
                     dead.SetActive(true);
-                    hidratation = 0;
                 }
             }
         }

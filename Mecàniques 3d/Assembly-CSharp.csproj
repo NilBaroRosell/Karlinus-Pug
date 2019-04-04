@@ -62,6 +62,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\addObstacleMeshToAll.cs" />
+    <Compile Include="Assets\AreaVisionBoss.cs" />
+    <Compile Include="Assets\bossIA.cs" />
     <Compile Include="Assets\BoxTriggerScript.cs" />
     <Compile Include="Assets\button_pressed.cs" />
     <Compile Include="Assets\camaraMovement.cs" />
@@ -128,6 +130,7 @@
     <Compile Include="Assets\EnemyManager.cs" />
     <Compile Include="Assets\Fantasy Skybox FREE\Demo\Scripts\GE_FantasySkyboxFREE_Demo.cs" />
     <Compile Include="Assets\Fantasy Skybox FREE\Demo\Scripts\GE_FantasySkyboxFREE_UIs.cs" />
+    <Compile Include="Assets\finalBattleManager.cs" />
     <Compile Include="Assets\FollowKarlinus.cs" />
     <Compile Include="Assets\fountain.cs" />
     <Compile Include="Assets\GE Common Assets\GE Toggle Full Screen\Scripts\GE_ToggleFullScreenUI.cs" />
@@ -158,6 +161,7 @@
     <Compile Include="Assets\SoundCucumber.cs" />
     <Compile Include="Assets\SoundEnemy.cs" />
     <Compile Include="Assets\SoundPlayer.cs" />
+    <Compile Include="Assets\Talk_To_NPC.cs" />
     <Compile Include="Assets\torchManager.cs" />
     <Compile Include="Assets\visible.cs" />
     <Compile Include="Assets\visibleEnemy.cs" />
@@ -168,6 +172,7 @@
     <None Include="Assets\read me.txt" />
     <None Include="Assets\Fantasy Skybox FREE\Fog and Ambient references.txt" />
     <None Include="Assets\Cinemachine\ReleaseNotes.txt" />
+    <None Include="Assets\Medieval props - còpia\Read me.txt" />
     <None Include="Assets\GE Common Assets\Readme.txt" />
     <None Include="Assets\UrbanNightSky\Readme.txt" />
     <Reference Include="UnityEditor.StandardEvents">

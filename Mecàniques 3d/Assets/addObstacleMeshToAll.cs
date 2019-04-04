@@ -13,6 +13,5 @@ public class addObstacleMeshToAll : MonoBehaviour {
             this.gameObject.transform.GetChild(i).gameObject.AddComponent<NavMeshObstacle>();
             this.gameObject.transform.GetChild(i).gameObject.GetComponent<NavMeshObstacle>().carving = true;
         }
-
     }
 }

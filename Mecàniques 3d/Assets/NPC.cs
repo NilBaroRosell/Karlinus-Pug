@@ -7,10 +7,8 @@ using System;
 
 public class NPC : MonoBehaviour
 {
-    private Transform npcTransform;
     public Vector3 destinationPoint;
     private Vector3 vecToDestination;
-    public Rigidbody rb;
     NavMeshAgent npcAgent;
     private Animator anim;
     public Vector3 stuckPos;
@@ -19,11 +17,8 @@ public class NPC : MonoBehaviour
     void Awake()
     {
         npcAgent = this.GetComponent<NavMeshAgent>();
-        npcTransform = this.GetComponent<Transform>();
-        rb = this.GetComponent<Rigidbody>();
         anim = GetComponent<Animator>();
-        anim.SetBool("Is_Walking", true);
-        destinationPoint = new Vector3(gameObject.transform.position.x + 3, gameObject.transform.position.y, gameObject.transform.position.z + 3);
+        destinationPoint = new Vector3(gameObject.transform.position.x + 1, gameObject.transform.position.y, gameObject.transform.position.z + 1);
     }
 
     void Start()
@@ -34,35 +29,31 @@ public class NPC : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        vecToDestination = new Vector3(destinationPoint.x - npcTransform.position.x, 0.0f, destinationPoint.z - npcTransform.transform.position.z);
-        if (vecToDestination.magnitude < 1)
+        vecToDestination = new Vector3(destinationPoint.x - transform.position.x, 0.0f, destinationPoint.z - transform.transform.position.z);
+        if (vecToDestination.magnitude < 1 || destinationPoint.x > 100 || destinationPoint.x < -90 || destinationPoint.z > 250 || destinationPoint.z < -50)
         {
-            anim.SetBool("Is_Walking", false);
-            anim.SetBool("Is_Idle", true);
             getDestination();
         }
         else
         {
             npcAgent.SetDestination(destinationPoint);
-            gameObject.transform.LookAt(gameObject.transform.forward);
+            //gameObject.transform.LookAt(gameObject.transform.forward);
             npcAgent.speed = 1;
-            anim.SetBool("Is_Walking", true);
-            anim.SetBool("Is_Idle", false);
         }
     }
 
     private void getDestination()
     {
-        destinationPoint = this.gameObject.GetComponent<RandomDestination>().RandomNavmeshLocation(this.gameObject, 20);
+        destinationPoint = this.gameObject.transform.GetComponent<RandomDestination>().RandomNavmeshLocationNPC(this.gameObject, 50);
     }
 
     IEnumerator CheckStuck(float time)
     {
         yield return new WaitForSeconds(time);
 
+        stuckPos = new Vector3(stuckPos.x - transform.position.x, 0.0f, stuckPos.z - transform.position.z);
+        if (stuckPos.magnitude < 0.5f) getDestination();
         stuckPos = transform.position;
-        stuckPos = new Vector3(stuckPos.x - rb.transform.position.x, 0.0f, stuckPos.z - rb.transform.position.z);
-        if (stuckPos.magnitude < 2) getDestination();
         StartCoroutine(CheckStuck(1));
     }
 }
