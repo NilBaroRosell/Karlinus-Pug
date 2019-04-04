@@ -15,6 +15,17 @@ public class SeenEnemy
     }
 }
 
+public class Mission
+{
+    public GameObject mission;
+    public GameObject triangle;
+    public Mission(GameObject _mission, GameObject _triangle)
+    {
+        mission = _mission;
+        triangle = _triangle;
+    }
+}
+
 public class HUD : MonoBehaviour {
 
     public static float startTime;
@@ -31,7 +42,16 @@ public class HUD : MonoBehaviour {
     public GameObject M2;
     public GameObject SM_1;
     private List<SeenEnemy> enemiesSeen;
-    public GameObject enemyTriangle;
+    public GameObject triangle;
+    public Sprite RedT;
+    public Sprite YellT;
+    public Sprite BlueT;
+    public Sprite GreenT;
+    public float DetectionDistance;
+    private List<Mission> Missions;
+    public GameObject missionSprite;
+    public GameObject InteractSprite;
+
 
     public static GameObject canvasHUD;
     //private const float objectiveY = 120.0f;
@@ -57,6 +77,8 @@ public class HUD : MonoBehaviour {
         started = false;
         canvasHUD = GameObject.Find("Canvas");
         enemiesSeen = new List<SeenEnemy>();
+        Missions = new List<Mission>();
+        MissionHUD();
     }
 
     // Update is called once per frame
@@ -88,6 +110,7 @@ public class HUD : MonoBehaviour {
                      new Vector3(Dialog.GetComponent<RectTransform>().position.x, Dialog.GetComponent<RectTransform>().position.y + 40, Dialog.GetComponent<RectTransform>().position.z);
         }
         ShowEnemies();
+        ShowMission();
     }
 
     public void showM1Objective(int text_to_show, int font_to_set = 50)
@@ -212,7 +235,7 @@ public class HUD : MonoBehaviour {
         }
         if (!found)
         {
-            enemiesSeen.Add(new SeenEnemy(enemy, Instantiate(enemyTriangle, new Vector3(0, 0, 0), Quaternion.identity) as GameObject));
+            enemiesSeen.Add(new SeenEnemy(enemy, Instantiate(triangle, new Vector3(0, 0, 0), Quaternion.identity) as GameObject));
             enemiesSeen[enemiesSeen.Count - 1].triangle.transform.SetParent(GameObject.FindGameObjectWithTag("canvas").transform, false);
             enemiesSeen[enemiesSeen.Count - 1].triangle.transform.position = Camera.main.WorldToScreenPoint(enemy.transform.position);
         }
@@ -225,10 +248,73 @@ public class HUD : MonoBehaviour {
         {
             for (int i = 0; enemiesSeen.Count > i; i++)
             {
-                enemiesSeen[i].triangle.transform.position = Camera.main.WorldToScreenPoint(enemiesSeen[i].enemy.transform.position);
+                if (Vector3.Angle(Camera.main.transform.forward, enemiesSeen[i].enemy.transform.position - gameObject.transform.position) < 90)
+                    enemiesSeen[i].triangle.transform.position = Camera.main.WorldToScreenPoint(enemiesSeen[i].enemy.transform.position);
+                UpdateState(enemiesSeen[i]);
+                UpdateAlfa(enemiesSeen[i]);
             }
         }
     }
+    private void UpdateState(SeenEnemy enemy)
+    {
+        switch (enemy.enemy.GetComponent<csAreaVision>().actualState)
+        {
+            case csAreaVision.enemyState.PATROLLING:
+                enemy.triangle.GetComponent<Image>().sprite = GreenT;
+                break;
+            case csAreaVision.enemyState.DETECTING:
+                enemy.triangle.GetComponent<Image>().sprite = YellT;
+                break;
+            case csAreaVision.enemyState.FIGHTING:
+                enemy.triangle.GetComponent<Image>().sprite = RedT;
+                break;
+            case csAreaVision.enemyState.SEARCHING:
+                enemy.triangle.GetComponent<Image>().sprite = YellT;
+                break;
+            case csAreaVision.enemyState.LEAVING:
+                enemy.triangle.GetComponent<Image>().sprite = BlueT;
+                break;
+            default:
+                enemy.triangle.GetComponent<Image>().sprite = null;
+                break;
+        }
+        
+    }
+    private void UpdateAlfa(SeenEnemy enemy)
+    {
+        Color tempColor = enemy.triangle.GetComponent<Image>().color;
+        tempColor.a = Mathf.Lerp(1, 0, Mathf.InverseLerp(0, DetectionDistance, Vector3.Distance(transform.position, enemy.enemy.transform.position)));
+        enemy.triangle.GetComponent<Image>().color = tempColor;
+    }
 
+    private void MissionHUD()
+    {
+            Missions.Add(new Mission(GameObject.Find("Mision Principal"), Instantiate(missionSprite, new Vector3(0, 0, 0), Quaternion.identity) as GameObject));
+            Missions[Missions.Count - 1].triangle.transform.SetParent(GameObject.FindGameObjectWithTag("canvas").transform, false);
+            Missions[Missions.Count - 1].triangle.transform.position = Camera.main.WorldToScreenPoint(GameObject.Find("Mision Principal").transform.position);
+    }
+
+    private void ShowMission()
+    {
+            for (int i = 0; Missions.Count > i; i++)
+            {
+            if (Vector3.Angle(Camera.main.transform.forward, GameObject.Find("Mision Principal").transform.position - gameObject.transform.position) < 90)
+                Missions[i].triangle.transform.position = Camera.main.WorldToScreenPoint(Missions[i].mission.transform.position);
+            }
+    }
+    private void OnTriggerEnter(Collider collision)
+    {
+        if (collision.gameObject.CompareTag("Interactuable"))
+        {
+            InteractSprite.SetActive(true);
+        }
+    }
+    private void OnTriggerExit(Collider collision)
+    {
+        if (collision.gameObject.CompareTag("Interactuable"))
+        {
+            InteractSprite.SetActive(false);
+        }
+    }
 
 }
