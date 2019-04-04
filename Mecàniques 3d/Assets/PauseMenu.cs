@@ -25,7 +25,7 @@ public class PauseMenu : MonoBehaviour {
                 canvas2.SetActive(false);
                 Time.timeScale = 0;
             }
-            else
+            else if(MainMenu.Instance == null)
             {
                 canvas1.SetActive(false);
                 canvas2.SetActive(false);

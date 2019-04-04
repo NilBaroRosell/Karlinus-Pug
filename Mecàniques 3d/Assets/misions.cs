@@ -54,32 +54,34 @@ public class misions : MonoBehaviour {
             }
             if (useSaveFile)
                 {
-                    editorRespawn = false;
-                    if (resetGameFile) resetGame();
-                    else if (Instance != null) saveGame();
-                    loadGame();
-                }
+                editorRespawn = false;
+                if (resetGameFile) resetGame();
+                else if (Instance != null) saveGame();
+                loadGame();
+            }
             else
+                {
+                if (Instance != null)
                 {
                     GetComponent<Respawns>().initialRespawn = Instance.loadRespawn.initialRespawn;
                     doorsUnlucked = Instance.doorsUnlucked;
                     Destroy(Instance.gameObject);
                     ActualMision = Misions.NONE;
                     editorRespawn = false;
-
-                    Instance = this;
-                    MisionPoint PrincipalMision = new MisionPoint();
-                    PrincipalMision.MisionsCompleted = new bool[4];
-                    MisionPoint RatHood = new MisionPoint();
-                    RatHood.MisionsCompleted = new bool[2];
-                    MisionPoint RebelCat = new MisionPoint();
-                    RebelCat.MisionsCompleted = new bool[2];
-                    MisionPoint ScaryDog = new MisionPoint();
-                    ScaryDog.MisionsCompleted = new bool[2];
-                    loadRespawn = GetComponent<Respawns>();
-                    misionIndex = 0;
-                    nextEvent = false;
                 }
+                Instance = this;
+                MisionPoint PrincipalMision = new MisionPoint();
+                PrincipalMision.MisionsCompleted = new bool[4];
+                MisionPoint RatHood = new MisionPoint();
+                RatHood.MisionsCompleted = new bool[2];
+                MisionPoint RebelCat = new MisionPoint();
+                RebelCat.MisionsCompleted = new bool[2];
+                MisionPoint ScaryDog = new MisionPoint();
+                ScaryDog.MisionsCompleted = new bool[2];
+                loadRespawn = GetComponent<Respawns>();
+                misionIndex = 0;
+                nextEvent = false;
+            }
             
             if (editorRespawn)
                 respawnIndex = editorRespawnNum;
@@ -352,22 +354,22 @@ public class misions : MonoBehaviour {
 
     // Update is called once per frame
     void FixedUpdate() {
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            if (pauseMenu)
+        if (MainMenu.Instance == null || MainMenu.Instance.state == MainMenu.states.PLAYING) {
+            if (Input.GetKeyDown(KeyCode.Escape))
             {
-                pauseMenu = false;
-                Cursor.visible = false;
-                Cursor.lockState = CursorLockMode.Locked;
+                if (pauseMenu)
+                {
+                    pauseMenu = false;
+                    Cursor.visible = false;
+                    Cursor.lockState = CursorLockMode.Locked;
+                }
+                else
+                {
+                    pauseMenu = true;
+                    Cursor.visible = true;
+                    Cursor.lockState = CursorLockMode.None;
+                }
             }
-            else
-            {
-                pauseMenu = true;
-                Cursor.visible = true;
-                Cursor.lockState = CursorLockMode.None;
-            }
-        }
-        if (Player != null) {
             switch (ActualMision)
             {
                 case Misions.NONE:
