@@ -27,9 +27,21 @@ public class Talk_To_NPC : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        if(misions.Instance.PrincipalMision.MisionsCompleted[2] == true && numDialog < 3)
+        if(misions.Instance.PrincipalMision.MisionsCompleted[2] == true && numDialog < 3 && scene == 0)
         {
             numDialog = 8;
+        }
+        if (misions.Instance.ActualMision == misions.Misions.M2 && scene == 1)
+        {
+            switch(numDialog)
+            {
+                case 0:
+                    numDialog = 4;
+                    break;
+                case 1:
+                    numDialog = 5;
+                    break;
+            }
         }
 		if(misions.Instance.Player.GetComponent<HUD>().finalDialog && start)
         {

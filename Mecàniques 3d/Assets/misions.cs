@@ -209,6 +209,7 @@ public class misions : MonoBehaviour {
                             secundaryCamera.SetActive(false);
                             HUD_Script.showM2Objective(2);
                             HUD_Script.showM2Helps(1, 70);
+                            Destroy(GameObject.Find("NPC (8)").transform.GetChild(0).gameObject.GetComponent<Talk_To_NPC>());
                             misionIndex = 5;
                             break;
                         default:
@@ -666,6 +667,7 @@ public class misions : MonoBehaviour {
                     secundaryCamera.transform.rotation = mainCamera.transform.rotation;
                     secundaryCameraDestination.transform.position = new Vector3(9.91f, 14.42f, -18.64f);
                     secundaryCameraDestination.transform.eulerAngles = new Vector3(14.901f, 665.441f, -0.9480001f);
+                    Destroy(GameObject.Find("NPC (8)").transform.GetChild(0).gameObject.GetComponent<servantUnlock_NPC>());
                 }
                 break;
             case 6:
@@ -675,6 +677,7 @@ public class misions : MonoBehaviour {
                 {
                     misionIndex++;
                     nextEvent = false;
+                    HUD_Script.Dialog.SetActive(false);
                 }
                 break;
             case 7:
@@ -1227,7 +1230,7 @@ public class misions : MonoBehaviour {
         PrincipalMision.pointObject.SetActive(false);
     }
 
-    IEnumerator ExecuteAfterTime(float time)
+    public IEnumerator ExecuteAfterTime(float time)
     {
         yield return new WaitForSeconds(time);
 
