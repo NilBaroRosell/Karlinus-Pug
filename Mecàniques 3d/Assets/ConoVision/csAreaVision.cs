@@ -362,6 +362,15 @@ public class csAreaVision : MonoBehaviour {
         }
         Debug.Log(EnemyManager.Enemies.Length);
         Destroy(KarlinusEspectre);
+        for (int i = 0; i < GameObject.Find("Jugador").GetComponent<HUD>().enemiesSeen.Count; i++) {
+           if( GameObject.Find("Jugador").GetComponent<HUD>().enemiesSeen[i].enemy == gameObject)
+            {
+                Destroy(GameObject.Find("Jugador").GetComponent<HUD>().enemiesSeen[i].triangle);
+                Debug.Log("a cagar");
+                GameObject.Find("Jugador").GetComponent<HUD>().enemiesSeen.RemoveAt(i);
+                break;
+            }
+                }
         this.gameObject.SetActive(false);
     }
 

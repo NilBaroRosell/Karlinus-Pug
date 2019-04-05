@@ -44,7 +44,7 @@ public class HUD : MonoBehaviour
     public GameObject M3;
     public GameObject M4;
     public GameObject SM_1;
-    private List<SeenEnemy> enemiesSeen;
+    public List<SeenEnemy> enemiesSeen;
     public GameObject triangle;
     public Sprite RedT;
     public Sprite YellT;
