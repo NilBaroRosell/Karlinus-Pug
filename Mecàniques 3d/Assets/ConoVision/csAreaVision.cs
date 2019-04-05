@@ -42,14 +42,12 @@ public class csAreaVision : MonoBehaviour {
     public Vector3 playerDist;
     private Vector3 stuckPos;
     private bool discovered;
-    private bool searchingState;
     private double scaredRef;
     private double discoveredRef;
     private double searchingRef;
     private double atackRef;
     private bool atackRefTaken;
     private bool atacking;
-    Renderer alertRend;
     public bool hittingEnemy = false;
     private bool sneaky = false;
     public bool dead = false;
@@ -81,7 +79,6 @@ public class csAreaVision : MonoBehaviour {
         anim.SetBool("Is_Walking", true);
         atackRefTaken = false;
         atacking = false;
-        searchingState = true;
         Points = new Vector3[objectPoint.Length];
         patrollingIndex = 0;
         for (int i = 0; i < objectPoint.Length; i++)
@@ -103,9 +100,6 @@ public class csAreaVision : MonoBehaviour {
         searchingRef = Time.realtimeSinceStartup;
         atackRef = Time.realtimeSinceStartup;
         lastSeenPosition = new Vector3(0.0f, 0.0f, 0.0f);
-        alertRend = transform.GetChild(3).GetComponent<MeshRenderer>();
-        // alertRend.material.shader = Shader.Find("_Color");
-        alertRend.material.SetColor("_Color", Color.green);
         enemyAgent = this.GetComponent<NavMeshAgent>();
         if (enemyAgent == null)
         {
@@ -302,7 +296,6 @@ public class csAreaVision : MonoBehaviour {
         speed = 50;
         actualState = enemyState.LEAVING;
         lastState = enemyState.PATROLLING;
-        alertRend.material.SetColor("_Color", Color.blue);
     }
     IEnumerator CheckStuck(float time)
     {
@@ -320,7 +313,6 @@ public class csAreaVision : MonoBehaviour {
             actualState = enemyState.PATROLLING;
             lastState = enemyState.SEARCHING;
             speed = 10;
-            alertRend.material.SetColor("_Color", Color.green);
         }
     }
 
@@ -337,6 +329,7 @@ public class csAreaVision : MonoBehaviour {
     {
         yield return new WaitForSeconds(time);
 
+        if (GameObject.Find("CameraBase") != null) Destroy(GameObject.Find("CameraBase").GetComponent<CameraFollow>());
         GameObject.Find("Jugador").transform.position = new Vector3(0, -500, 0);
         loadScreen.Instancia.CargarEscena("DEAD");
     }
@@ -362,15 +355,19 @@ public class csAreaVision : MonoBehaviour {
         }
         Debug.Log(EnemyManager.Enemies.Length);
         Destroy(KarlinusEspectre);
-        for (int i = 0; i < GameObject.Find("Jugador").GetComponent<HUD>().enemiesSeen.Count; i++) {
-           if( GameObject.Find("Jugador").GetComponent<HUD>().enemiesSeen[i].enemy == gameObject)
+        if (GameObject.Find("Jugador").GetComponent<HUD>().enemiesSeen != null)
+        {
+            for (int i = 0; i < GameObject.Find("Jugador").GetComponent<HUD>().enemiesSeen.Count; i++)
             {
-                Destroy(GameObject.Find("Jugador").GetComponent<HUD>().enemiesSeen[i].triangle);
-                Debug.Log("a cagar");
-                GameObject.Find("Jugador").GetComponent<HUD>().enemiesSeen.RemoveAt(i);
-                break;
-            }
+                if (GameObject.Find("Jugador").GetComponent<HUD>().enemiesSeen[i].enemy == gameObject)
+                {
+                    Destroy(GameObject.Find("Jugador").GetComponent<HUD>().enemiesSeen[i].triangle);
+                    Debug.Log("a cagar");
+                    GameObject.Find("Jugador").GetComponent<HUD>().enemiesSeen.RemoveAt(i);
+                    break;
                 }
+            }
+        }
         this.gameObject.SetActive(false);
     }
 
@@ -437,7 +434,6 @@ public class csAreaVision : MonoBehaviour {
                     actualState = enemyState.DETECTING;
                     searchingRef = Time.realtimeSinceStartup;
                     lastState = enemyState.PATROLLING;
-                    alertRend.material.SetColor("_Color", Color.yellow);
                     destinationPoint = GameObject.Find("Jugador").transform.position;
                     KarlinusEspectre.SetActive(false);
                 }
@@ -445,25 +441,12 @@ public class csAreaVision : MonoBehaviour {
                 break;
             case enemyState.SEARCHING:
                 if (playerAnim.GetBool("Is_Damaging") && GetComponent<Collider>().enabled == false) speed = 0;
-                if (discoveredRef + 0.25f < Time.realtimeSinceStartup && searchingState)
-                {
-                    alertRend.material.SetColor("_Color", Color.yellow);
-                    discoveredRef = Time.realtimeSinceStartup;
-                    searchingState = false;
-                }
-                else if (discoveredRef + 1.0f < Time.realtimeSinceStartup && searchingState == false)
-                {
-                    alertRend.material.SetColor("_Color", Color.white);
-                    discoveredRef = Time.realtimeSinceStartup;
-                    searchingState = true;
-                }
                 destinationPoint = lastSeenPosition;
                 if (vecEnemy1.magnitude< 1 && discovered == false)//Change to PATROLLING
                 {
                     actualState = enemyState.PATROLLING;
                     lastState = enemyState.SEARCHING;
                     speed = 10;
-                    alertRend.material.SetColor("_Color", Color.green);
                     KarlinusEspectre.transform.position = new Vector3(0.15f, 0.023f, -0.7f) * -1 + transform.position;
                     KarlinusEspectre.SetActive(false);
                 }
@@ -472,7 +455,6 @@ public class csAreaVision : MonoBehaviour {
                     actualState = enemyState.DETECTING;
                     searchingRef = Time.realtimeSinceStartup;
                     lastState = enemyState.PATROLLING;
-                    alertRend.material.SetColor("_Color", Color.yellow);
                     destinationPoint = GameObject.Find("Jugador").transform.position;
                     KarlinusEspectre.SetActive(false);
                 }
@@ -487,7 +469,6 @@ public class csAreaVision : MonoBehaviour {
                     actualState = enemyState.FIGHTING;
                     lastState = enemyState.DETECTING;
                     speed = 50;
-                    alertRend.material.SetColor("_Color", Color.red);
                     Vector3 enemyDist;
                     for (int i = 0; i< EnemyManager.Enemies.Length; i++)
                     {
@@ -552,13 +533,11 @@ public class csAreaVision : MonoBehaviour {
                 actualString = "F";
                 break;
             case enemyState.LEAVING:
-                alertRend.material.SetColor("_Color", Color.blue);
                 if ((vecEnemy1.magnitude< 1 || scaredRef + 15.0f < Time.realtimeSinceStartup) && scaredRef + 10.0f < Time.realtimeSinceStartup)
                 {
                     StopCoroutine(CheckStuck(1));
                     actualState = enemyState.PATROLLING;
                     lastState = enemyState.LEAVING;
-                    alertRend.material.SetColor("_Color", Color.green);
                     destinationPoint = patrollingPosition;
                     speed = 10;
                 }

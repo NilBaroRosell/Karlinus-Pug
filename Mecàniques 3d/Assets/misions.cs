@@ -1304,6 +1304,12 @@ public class misions : MonoBehaviour {
         ScaryDog.MisionsCompleted[1] = PlayerPrefs.GetInt(i.ToString()) != 0;
 
         loadRespawn.initialRespawn = (Respawns.InitialRespawns)PlayerPrefs.GetInt("Respawn");//Initial Respawn
+        if(MainMenu.Instance.state != MainMenu.states.PLAYING)
+        {
+            if (loadRespawn.initialRespawn == Respawns.InitialRespawns.CITY_2 || loadRespawn.initialRespawn == Respawns.InitialRespawns.SEWER_2)
+                loadRespawn.initialRespawn = Respawns.InitialRespawns.CITY_2;
+            else loadRespawn.initialRespawn = Respawns.InitialRespawns.CITY_1;
+        }
         doorsUnlucked = PlayerPrefs.GetInt("Doors Unlocked") != 0;//Doors unlocked
     }
 

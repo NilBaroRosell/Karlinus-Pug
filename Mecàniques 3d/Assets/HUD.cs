@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 
 public class SeenEnemy
@@ -67,7 +68,7 @@ public class HUD : MonoBehaviour
     public Vector3 DialogPos;
 
     // Use this for initialization
-    void Awake()
+    void Start()
     {
         Objective_text = Objective.transform.GetChild(0).gameObject;
         Helps_text = Helps.transform.GetChild(0).gameObject;
@@ -384,16 +385,25 @@ public class HUD : MonoBehaviour
 
     private void MissionHUD()
     {
-        Missions.Add(new Mission(GameObject.Find("Mision Principal"), Instantiate(missionSprite, new Vector3(0, 0, 0), Quaternion.identity) as GameObject));
+        Missions.Add(new Mission((misions.Instance.PrincipalMision.pointObject), Instantiate(missionSprite, new Vector3(0, 0, 0), Quaternion.identity) as GameObject));
         Missions[Missions.Count - 1].triangle.transform.SetParent(GameObject.FindGameObjectWithTag("canvas").transform, false);
-        Missions[Missions.Count - 1].triangle.transform.position = Camera.main.WorldToScreenPoint(GameObject.Find("Mision Principal").transform.position);
+        Missions[Missions.Count - 1].triangle.transform.position = Camera.main.WorldToScreenPoint(misions.Instance.PrincipalMision.pointObject.transform.position);
+        if (misions.Instance.ActualMision != misions.Misions.NONE || SceneManager.GetActiveScene().name != "city") {
+
+            for (int i = 0; Missions.Count > i; i++)
+            {
+                Color tempColor = Missions[i].triangle.GetComponent<Image>().color;
+                tempColor.a = 0.0f;
+                Missions[i].triangle.GetComponent<Image>().color = tempColor;
+            }
+        }
     }
 
     private void ShowMission()
     {
         for (int i = 0; Missions.Count > i; i++)
         {
-            if (Vector3.Angle(Camera.main.transform.forward, GameObject.Find("Mision Principal").transform.position - gameObject.transform.position) < 90)
+            if (Vector3.Angle(Camera.main.transform.forward, misions.Instance.PrincipalMision.pointObject.transform.position - gameObject.transform.position) < 90)
                 Missions[i].triangle.transform.position = Camera.main.WorldToScreenPoint(Missions[i].mission.transform.position);
         }
     }

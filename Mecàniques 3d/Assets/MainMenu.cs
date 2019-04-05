@@ -20,6 +20,7 @@ public class MainMenu : MonoBehaviour {
     public GameObject exitButton;
     public GameObject backButton;
     public GameObject applyButton;
+    private GameObject rendererManager;
     public bool showMenu;
     private float logoReference;
     private float menuReference;
@@ -101,10 +102,12 @@ public class MainMenu : MonoBehaviour {
                     secundaryCamera.transform.position = camOriginalPos;
                     secundaryCamera.transform.rotation = camOriginalRotation;
                 }
+                setAllVisibleScript.maxDist = 20000.0f;
                 break;
             case states.PLAYING:
                 break;
             case states.TRAVELLING_TO_PLAYER:
+                setAllVisibleScript.maxDist = 20000.0f;
                 secundaryCamera.transform.position = Vector3.Lerp(secundaryCamera.transform.position, GameObject.Find("Jugador").transform.position + new Vector3(0, 3.5f, 0.0f),Time.deltaTime);
                 secundaryCamera.transform.LookAt(GameObject.Find("Jugador").transform.GetChild(GameObject.Find("Jugador").transform.childCount - 1).transform.position);
                 break;
@@ -172,6 +175,8 @@ public class MainMenu : MonoBehaviour {
         {
             StartCoroutine(ExecuteAfterTime(2.25f));
             state = states.MAIN_MENU;
+            rendererManager = GameObject.Find("RenderManager");
+            rendererManager.SetActive(false);
             showMenu = false;
         }
         else
@@ -195,6 +200,7 @@ public class MainMenu : MonoBehaviour {
         yield return new WaitForSeconds(time);
 
         secundaryCamera.SetActive(false);
+        rendererManager.SetActive(true);
         state = states.PLAYING;
         GameObject.Find("Jugador").GetComponent<Controller>().state = Controller.playerState.IDLE;
     }
