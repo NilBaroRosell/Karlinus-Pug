@@ -102,9 +102,13 @@ public class HUD : MonoBehaviour
             if (Helps.activeSelf && Helps.GetComponent<RectTransform>().position.y > -426.0f / 10) Helps.GetComponent<RectTransform>().position =
                     new Vector3(Helps.GetComponent<RectTransform>().position.x, Helps.GetComponent<RectTransform>().position.y - 40, Helps.GetComponent<RectTransform>().position.z);
             else Helps.SetActive(false);
-            if (Dialog.activeSelf && Dialog.GetComponent<RectTransform>().position.y > -900 / 10) Dialog.GetComponent<RectTransform>().position = //DialogPos;// canviar valors (-426.0f)
-                      new Vector3(Dialog.GetComponent<RectTransform>().position.x, -900 / 10, Dialog.GetComponent<RectTransform>().position.z); // canviar valors (40)
-            else Dialog.SetActive(false); finalDialog = true;
+            if (Dialog.activeSelf && Dialog.GetComponent<RectTransform>().position.y > -20000 / 10) Dialog.GetComponent<RectTransform>().position = //DialogPos;// canviar valors (-426.0f)
+                      new Vector3(Dialog.GetComponent<RectTransform>().position.x, -20000/ 10, Dialog.GetComponent<RectTransform>().position.z); // canviar valors (40)
+            else 
+            {
+                Dialog.SetActive(false);
+                finalDialog = true;
+            }
         }
         else
         {

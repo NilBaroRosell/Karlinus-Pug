@@ -205,6 +205,7 @@ public class Respawns : MonoBehaviour {
         if (GameObject.Find("Zone_1") != null) GameObject.Find("Zone_1").SetActive(false);
         if (GameObject.Find("Enemies_Zone_2") != null) GameObject.Find("Enemies_Zone_2").SetActive(true);
         if (GameObject.Find("Enemigos_SM1") != null) GameObject.Find("Enemigos_SM1").SetActive(false);
+        if (GameObject.Find("ServantM3") != null) GameObject.Find("ServantM3").SetActive(false);
         if (initialRespawn == InitialRespawns.NONE) return RespawnPoints[(int)LoadScene.respawnToLoad];
         else
         {
@@ -220,6 +221,7 @@ public class Respawns : MonoBehaviour {
         //LOAD M1
         LoadM1();
         if (GameObject.Find("Enemies_SM1(1)") != null) GameObject.Find("Enemies_SM1").SetActive(false);
+        if (GameObject.Find("ServantM3") != null) GameObject.Find("ServantM3").SetActive(false);
         //OBJECTS RESPAWN
         switch (checkPoint)
         {
@@ -254,6 +256,7 @@ public class Respawns : MonoBehaviour {
         //LOAD M2
         LoadM2();
         if (GameObject.Find("Enemies_SM1") != null) GameObject.Find("Enemies_SM1").SetActive(false);
+        if (GameObject.Find("ServantM3") != null) GameObject.Find("ServantM3").SetActive(false);
         //OBJECTS RESPAWN
         switch (checkPoint)
         {
@@ -360,6 +363,7 @@ public class Respawns : MonoBehaviour {
         //LOAD M4
         LoadM4();
         if (GameObject.Find("Enemies_SM1") != null) GameObject.Find("Enemies_SM1").SetActive(false);
+        if (GameObject.Find("ServantM3") != null) GameObject.Find("ServantM3").SetActive(false);
         //OBJECTS RESPAWN
         switch (checkPoint)
         {
@@ -415,6 +419,7 @@ public class Respawns : MonoBehaviour {
         if (GameObject.Find("Zone_1") != null) GameObject.Find("Zone_1").SetActive(false);
         if (GameObject.Find("Enemies_Zone_2") != null) GameObject.Find("Enemies_Zone_2").SetActive(false);
         if (GameObject.Find("") != null) GameObject.Find("Zone_1").SetActive(false);
+        if (GameObject.Find("ServantM3") != null) GameObject.Find("ServantM3").SetActive(false);
 
         //OBJECTS RESPAWN
         switch (checkPoint)

@@ -31,6 +31,12 @@ public class liquidState : MonoBehaviour
     public bool stopLiquid = false;
     public static string fountain;
     public string aux;
+    private Image hidratationBase;
+    private Image hidratationBar;
+    public Image drinkingBase;
+    public Image drinkingBar;
+    private bool full;
+    public bool drrrrrrrinking;
 
     // Use this for initialization
     void Start()
@@ -44,6 +50,15 @@ public class liquidState : MonoBehaviour
         badlyHidratated.SetActive(false);
         dead.SetActive(false);
         controller = GetComponent<Controller>();
+        full = false;
+        hidratationBar = GameObject.Find("Canvas ").transform.GetChild(11).GetComponent<Image>();
+        hidratationBase = GameObject.Find("Canvas ").transform.GetChild(12).GetComponent<Image>();
+        drinkingBar = GameObject.Find("Canvas ").transform.GetChild(13).GetComponent<Image>();
+        drinkingBase = GameObject.Find("Canvas ").transform.GetChild(14).GetComponent<Image>();
+        hidratationBase.fillAmount = 0;
+        hidratationBar.fillAmount = 0;
+        drinkingBase.fillAmount = 0;
+        drinkingBar.fillAmount = 0;
     }
 
     // Update is called once per frame
@@ -79,13 +94,41 @@ public class liquidState : MonoBehaviour
                         showLiquid();
                         startLiquid = Time.frameCount;
                         firstFrameLiquid = false;
+                        hidratationBase.fillAmount = 0;
+                        hidratationBar.fillAmount = 0;
                     }
 
+                    if (hidratationBar.fillAmount < 1 && !full && hidratation > 0)
+                    {
+                        hidratationBase.fillAmount = 1;
+                        hidratationBar.fillAmount += 0.08f;
+                    }
+                    if (hidratationBar.fillAmount == 1) full = true;
+
+                    if (full)
+                    {
+                        if (hidratation > 70)
+                        {
+                            hidratationBar.fillAmount -= 0.0042f;
+                        }
+                        else if (hidratation > 40)
+                        {
+                            hidratationBar.fillAmount -= 0.0062f;
+                        }
+                        else if (hidratation > 10)
+                        {
+                            hidratationBar.fillAmount -= 0.012f;
+                        }
+                    }
+                        
                     finishLiquid = Time.frameCount;
 
                     if ((finishLiquid - startLiquid > hidratation * 3) || (Input.GetKey(KeyCode.Q) && startLiquid + 30 < Time.frameCount))
                     {
                         liquidStateOn = false;
+                        hidratationBar.fillAmount = 0;
+                        hidratationBase.fillAmount = 0;
+                        full = false;
                         controller.LiquidState = liquidStateOn;
                         cooldown = true;
                         startCooldown = Time.frameCount;
@@ -96,10 +139,15 @@ public class liquidState : MonoBehaviour
 
                 else
                 {
-                    if (inFountain && Input.GetKey(KeyCode.E)) drinking = true;
-
-                    else if (drinking)
+                    if (drinking)
                     {
+                        drinkingBase.fillAmount = 1;
+                        drinkingBar.fillAmount += 0.05f;
+                    }
+                    if (drinkingBar.fillAmount >= 1)
+                    {
+                        drinkingBar.fillAmount = 0;
+                        drinkingBase.fillAmount = 0;
                         drinking = false;
                     }
                 }
@@ -130,7 +178,7 @@ public class liquidState : MonoBehaviour
                 }
                 else
                 {
-                    hidratation = 10;
+                    hidratation = 0;
                     perfectlyHidratated.SetActive(false);
                     wellHidratated.SetActive(false);
                     badlyHidratated.SetActive(false);
@@ -140,6 +188,7 @@ public class liquidState : MonoBehaviour
         }
 
         aux = fountain;
+        drrrrrrrinking = drinking;
     }
 
     private void OnTriggerEnter(Collider collision)
@@ -172,16 +221,19 @@ public class liquidState : MonoBehaviour
     }
     public void showLiquid()
     {
-        _highpug.SetActive(false);
-        transform.GetComponent<cucumber>().enabled = false;
-        for (int i = 0; i < mixamorigHips.transform.childCount; i++)
+        if(hidratation > 0)
         {
-            var child = mixamorigHips.transform.GetChild(i).gameObject;
-            if (child != null && child.GetComponent<Renderer>() != null)
-                child.GetComponent<Renderer>().enabled = false;
+            _highpug.SetActive(false);
+            transform.GetComponent<cucumber>().enabled = false;
+            for (int i = 0; i < mixamorigHips.transform.childCount; i++)
+            {
+                var child = mixamorigHips.transform.GetChild(i).gameObject;
+                if (child != null && child.GetComponent<Renderer>() != null)
+                    child.GetComponent<Renderer>().enabled = false;
+            }
+            for (int i = 0; i < weapons.Length; i++) weapons[i].SetActive(false);
+            liquid.SetActive(true);
         }
-        for (int i = 0; i < weapons.Length; i++) weapons[i].SetActive(false);
-        liquid.SetActive(true);
     }
 
     public void hideLiquid()
@@ -201,5 +253,6 @@ public class liquidState : MonoBehaviour
     public void DrinkWater()
     {
         hidratation = 100;
+        drinking = true;
     }
 }
