@@ -48,6 +48,7 @@ public class HUD : MonoBehaviour
     public GameObject triangle;
     public Sprite RedT;
     public Sprite YellT;
+    public Sprite OrangeT;
     public Sprite BlueT;
     public Sprite GreenT;
     public float DetectionDistance;
@@ -357,7 +358,7 @@ public class HUD : MonoBehaviour
                 enemy.triangle.GetComponent<Image>().sprite = GreenT;
                 break;
             case csAreaVision.enemyState.DETECTING:
-                enemy.triangle.GetComponent<Image>().sprite = YellT;
+                enemy.triangle.GetComponent<Image>().sprite = OrangeT;
                 break;
             case csAreaVision.enemyState.FIGHTING:
                 enemy.triangle.GetComponent<Image>().sprite = RedT;
