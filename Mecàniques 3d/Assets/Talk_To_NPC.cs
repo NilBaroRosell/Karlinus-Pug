@@ -56,7 +56,7 @@ public class Talk_To_NPC : MonoBehaviour {
     {
         //missatge hud
         if(other.tag == "Player" && Input.GetKey(KeyCode.E) && !start)
-        {
+        {            
             originalDiraction = gameObject.transform.eulerAngles;
 
             misions.Instance.secundaryCamera.SetActive(true);

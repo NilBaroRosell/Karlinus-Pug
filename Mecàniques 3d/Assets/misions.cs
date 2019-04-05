@@ -402,6 +402,7 @@ public class misions : MonoBehaviour {
         switch (misionIndex)
         {
             case 0:
+                mainCamera.transform.parent.GetComponent<CameraFollow>().enabled = false;
                 Color c = GameObject.Find("Logo_M1").transform.GetChild(0).GetComponent<Image>().color;
                 if (c.a < 1)
                 {
@@ -452,6 +453,8 @@ public class misions : MonoBehaviour {
                     nextEvent = false;
                     HUD_Script.showM1Objective(0);
                     HUD_Script.showM1Helps(0, 60);
+                    mainCamera.GetComponent<RenderFade>().CameraFade();
+                    mainCamera.transform.parent.GetComponent<CameraFollow>().enabled = true;
                     playerMovement.state = Controller.playerState.IDLE;
                 }
                 break;
@@ -608,8 +611,9 @@ public class misions : MonoBehaviour {
                 }
                 break;
             case 1:
-                if(nextEvent)
+                if (nextEvent)
                 {
+                    mainCamera.transform.parent.GetComponent<CameraFollow>().enabled = false;
                     misionIndex++;
                     secundaryCameraDestination.transform.position = Player.transform.position - Vector3.Normalize(GameObject.Find("Taberna").transform.position - Player.transform.position) * 2 + new Vector3(0, 2.5f, 0.0f) + new Vector3(0.0f, 7.0f, 0.0f); ;
                     secundaryCameraDestination.transform.LookAt(GameObject.Find("Taberna").transform.position);
@@ -630,10 +634,12 @@ public class misions : MonoBehaviour {
                 }
                 break;
             case 3:
-                secundaryCamera.transform.position = Vector3.Lerp(secundaryCamera.transform.position, secundaryCameraDestination.transform.position, 1.25f * Time.deltaTime);
-                secundaryCamera.transform.rotation = Quaternion.Lerp(secundaryCamera.transform.rotation, secundaryCameraDestination.transform.rotation, 1.25f * Time.deltaTime);
+                secundaryCamera.transform.position = Vector3.Lerp(secundaryCamera.transform.position, mainCamera.transform.position, Time.deltaTime);
+                secundaryCamera.transform.rotation = Quaternion.Lerp(secundaryCamera.transform.rotation, mainCamera.transform.rotation, Time.deltaTime);
                 if (nextEvent)
                 {
+                    mainCamera.GetComponent<RenderFade>().CameraFade();
+                    mainCamera.transform.parent.GetComponent<CameraFollow>().enabled = true;
                     playerMovement.state = Controller.playerState.IDLE;
                     HUD_Script.showM2Objective(1);
                     HUD_Script.showM2Helps(0, 70);
@@ -691,6 +697,7 @@ public class misions : MonoBehaviour {
                     misionIndex++;
                     loadRespawn.Mision_Objects[1].SetActive(false);
                     loadRespawn.BoxTriggers[2].SetActive(true);
+                    mainCamera.GetComponent<RenderFade>().CameraFade();
                 }
                 break;
             case 8:
@@ -745,6 +752,7 @@ public class misions : MonoBehaviour {
         switch (misionIndex)
         {
             case 0:
+                mainCamera.transform.parent.GetComponent<CameraFollow>().enabled = false;
                 playerMovement.state = Controller.playerState.HITTING;
                 GameObject.Find("Jugador").GetComponent<liquidState>().hidratation = 100;
                 if (nextEvent)
@@ -757,11 +765,13 @@ public class misions : MonoBehaviour {
                 }
                 break;
             case 1:
-                secundaryCamera.transform.position = Vector3.Lerp(secundaryCamera.transform.position, secundaryCameraDestination.transform.position, 0.75f * Time.deltaTime);
-                secundaryCamera.transform.rotation = Quaternion.Lerp(secundaryCamera.transform.rotation, secundaryCameraDestination.transform.rotation, 0.75f * Time.deltaTime);
+                secundaryCamera.transform.position = Vector3.Lerp(secundaryCamera.transform.position, mainCamera.transform.position - new Vector3(2.1369f, 0.04021f, 1.2f), Time.deltaTime);
+                secundaryCamera.transform.rotation = Quaternion.Lerp(secundaryCamera.transform.rotation, mainCamera.transform.rotation, Time.deltaTime);
                 if (nextEvent)
                 {
                     misionIndex++;
+                    mainCamera.GetComponent<RenderFade>().CameraFade();
+                    mainCamera.transform.parent.GetComponent<CameraFollow>().enabled = true;
                     secundaryCamera.SetActive(false);
                     playerMovement.state = Controller.playerState.IDLE;
                     loadRespawn.Mision_Objects[0].SetActive(false);
