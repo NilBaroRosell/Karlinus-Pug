@@ -299,6 +299,7 @@ public class bossIA : MonoBehaviour
         yield return new WaitForSeconds(time);
 
         GameObject.Find("Jugador").transform.position = new Vector3(0, -500, 0);
+        if (GameObject.Find("CameraBase") != null) Destroy(GameObject.Find("CameraBase").GetComponent<CameraFollow>());
         loadScreen.Instancia.CargarEscena("DEAD");
     }
 

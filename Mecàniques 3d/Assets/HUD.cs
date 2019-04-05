@@ -68,7 +68,7 @@ public class HUD : MonoBehaviour
     public Vector3 DialogPos;
 
     // Use this for initialization
-    void Start()
+    void Awake()
     {
         Objective_text = Objective.transform.GetChild(0).gameObject;
         Helps_text = Helps.transform.GetChild(0).gameObject;
@@ -345,9 +345,17 @@ public class HUD : MonoBehaviour
             for (int i = 0; enemiesSeen.Count > i; i++)
             {
                 if (Vector3.Angle(Camera.main.transform.forward, enemiesSeen[i].enemy.transform.position - gameObject.transform.position) < 90)
+                {
                     enemiesSeen[i].triangle.transform.position = Camera.main.WorldToScreenPoint(enemiesSeen[i].enemy.transform.GetChild(3).transform.position);
-                UpdateState(enemiesSeen[i]);
-                UpdateAlfa(enemiesSeen[i]);
+                    UpdateState(enemiesSeen[i]);
+                    UpdateAlfa(enemiesSeen[i]);
+                }
+                else
+                {
+                    Color tempColor = enemiesSeen[i].triangle.GetComponent<Image>().color;
+                    tempColor.a = 0.0f;
+                    enemiesSeen[i].triangle.GetComponent<Image>().color = tempColor;
+                }
             }
         }
     }
@@ -383,6 +391,14 @@ public class HUD : MonoBehaviour
         enemy.triangle.GetComponent<Image>().color = tempColor;
     }
 
+    private void UpdateAlfa(Mission missionPoint)
+    {
+        float lerpValue = Mathf.Lerp(1, 0, Mathf.InverseLerp(0, DetectionDistance, Vector3.Distance(transform.position, missionPoint.mission.transform.position)));
+        Color tempColor = missionPoint.triangle.GetComponent<Image>().color;
+        tempColor.a = lerpValue;
+        missionPoint.triangle.GetComponent<Image>().color = tempColor;
+    }
+
     private void MissionHUD()
     {
         Missions.Add(new Mission((misions.Instance.PrincipalMision.pointObject), Instantiate(missionSprite, new Vector3(0, 0, 0), Quaternion.identity) as GameObject));
@@ -404,7 +420,16 @@ public class HUD : MonoBehaviour
         for (int i = 0; Missions.Count > i; i++)
         {
             if (Vector3.Angle(Camera.main.transform.forward, misions.Instance.PrincipalMision.pointObject.transform.position - gameObject.transform.position) < 90)
+            {
+                UpdateAlfa(Missions[i]);
                 Missions[i].triangle.transform.position = Camera.main.WorldToScreenPoint(Missions[i].mission.transform.position);
+            }
+            else
+            {
+                Color tempColor = Missions[i].triangle.GetComponent<Image>().color;
+                tempColor.a = 0.0f;
+                Missions[i].triangle.GetComponent<Image>().color = tempColor;
+            }
         }
     }
     private void OnTriggerEnter(Collider collision)
