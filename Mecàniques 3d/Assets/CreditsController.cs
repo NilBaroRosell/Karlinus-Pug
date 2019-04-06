@@ -6,7 +6,7 @@ public class CreditsController : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        StartCoroutine(ExecuteAfterTime(16));
+        StartCoroutine(ExecuteAfterTime(15));
     }
 	
 	// Update is called once per frame
