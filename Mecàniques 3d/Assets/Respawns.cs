@@ -209,7 +209,14 @@ public class Respawns : MonoBehaviour {
         if (initialRespawn == InitialRespawns.NONE) return RespawnPoints[(int)LoadScene.respawnToLoad];
         else
         {
-            LoadScene.respawnToLoad = (InitialRespawns)initialRespawn;
+            if (MainMenu.Instance != null && MainMenu.Instance.state != MainMenu.states.PLAYING)
+            {
+
+                if (initialRespawn == Respawns.InitialRespawns.CITY_2 || initialRespawn == Respawns.InitialRespawns.SEWER_2)
+                    initialRespawn = Respawns.InitialRespawns.CITY_2;
+                else initialRespawn = Respawns.InitialRespawns.CITY_1;
+            }
+                Debug.Log("None Respawn set");Debug.Log(LoadScene.respawnToLoad = (InitialRespawns)initialRespawn);
             initialRespawnIndex = (int)initialRespawn;
             initialRespawn = InitialRespawns.NONE;
             return RespawnPoints[initialRespawnIndex];

@@ -1,8 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.SceneManagement;
-using UnityEngine.UI;
+﻿using UnityEngine;
+
 
 public class Menuctrl : MonoBehaviour {
 
@@ -30,6 +27,7 @@ public class Menuctrl : MonoBehaviour {
             {
                 misions.pauseMenu = false;
                 MainMenu.Instance.showMenu = true;
+                misions.Instance.ActualMision = misions.Misions.NONE;
             }
             loadScreen.Instancia.CargarEscena(sceneName);
         }

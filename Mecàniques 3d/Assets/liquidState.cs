@@ -51,10 +51,10 @@ public class liquidState : MonoBehaviour
         dead.SetActive(false);
         controller = GetComponent<Controller>();
         full = false;
-        hidratationBar = GameObject.Find("Canvas ").transform.GetChild(11).GetComponent<Image>();
-        hidratationBase = GameObject.Find("Canvas ").transform.GetChild(12).GetComponent<Image>();
-        drinkingBar = GameObject.Find("Canvas ").transform.GetChild(13).GetComponent<Image>();
-        drinkingBase = GameObject.Find("Canvas ").transform.GetChild(14).GetComponent<Image>();
+        hidratationBar = GameObject.Find("Canvas").transform.GetChild(11).GetComponent<Image>();
+        hidratationBase = GameObject.Find("Canvas").transform.GetChild(12).GetComponent<Image>();
+        drinkingBar = GameObject.Find("Canvas").transform.GetChild(13).GetComponent<Image>();
+        drinkingBase = GameObject.Find("Canvas").transform.GetChild(14).GetComponent<Image>();
         hidratationBase.fillAmount = 0;
         hidratationBar.fillAmount = 0;
         drinkingBase.fillAmount = 0;

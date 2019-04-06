@@ -197,7 +197,6 @@ public class csAreaVision : MonoBehaviour {
             Ray raycast = new Ray(transform.position, v);
             if(Physics.Raycast(raycast, out hit, rango, 1 << LayerMask.NameToLayer("cobertura")) && hit.transform.gameObject.tag == "Player")
             {
-                Debug.Log(hit.transform.name);
                 discovered = true;
                     lastSeenPosition = GameObject.Find("Jugador").transform.position;
 

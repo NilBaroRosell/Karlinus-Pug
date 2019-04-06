@@ -83,6 +83,10 @@ public class HUD : MonoBehaviour
         startTime = Time.frameCount;
         started = false;
         NPC_Dialog.SetActive(false);
+    }
+
+    private void Start()
+    {
         canvasHUD = GameObject.Find("Canvas");
         enemiesSeen = new List<SeenEnemy>();
         Missions = new List<Mission>();
@@ -122,8 +126,11 @@ public class HUD : MonoBehaviour
             if (Dialog.activeSelf && Dialog.GetComponent<RectTransform>().position.y < DialogY) Dialog.GetComponent<RectTransform>().position = //new Vector3(DialogPos.x, //DialogPos.y + 40, DialogPos.z);
                      new Vector3(Dialog.GetComponent<RectTransform>().position.x, Dialog.GetComponent<RectTransform>().position.y + 40, Dialog.GetComponent<RectTransform>().position.z);
         }
-        ShowEnemies();
-        ShowMission();
+        if (MainMenu.Instance == null || MainMenu.Instance.state == MainMenu.states.PLAYING)
+        {
+            ShowEnemies();
+            ShowMission();
+        }
     }
 
     public void showM1Objective(int text_to_show, int font_to_set = 50)
@@ -247,7 +254,7 @@ public class HUD : MonoBehaviour
             startTime = Time.frameCount;
             timeUntilDisapear = 300;
         }
-        M2.SetActive(false);
+        M4.SetActive(false);
     }
 
     public void showZoneWarning()
@@ -323,7 +330,7 @@ public class HUD : MonoBehaviour
         DialogPos = new Vector3((Screen.width * 12) / 20, (Screen.height * 17) / 20, Dialog.GetComponent<RectTransform>().position.z);
         Dialog.GetComponent<RectTransform>().position = DialogPos;
         startTime = Time.frameCount;
-        timeUntilDisapear = 300;
+        timeUntilDisapear = 200;
     }
 
     public void IntroduceEnemy(GameObject enemy)

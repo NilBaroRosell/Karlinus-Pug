@@ -7,9 +7,12 @@ public class servantUnlock_NPC : MonoBehaviour {
     private bool talked;
     public static bool canTalk;
     private Vector3 originalDiraction;
+    private GameObject CameraCanvas;
+    private GameObject NPC_Camera;
 
     private void Start()
     {
+        if (GameObject.Find("CanvasSecundaryCam") != null) CameraCanvas = GameObject.Find("CanvasSecundaryCam");
         talked = false;
         canTalk = false;
     }
@@ -19,21 +22,31 @@ public class servantUnlock_NPC : MonoBehaviour {
         if (canTalk && other.gameObject.tag == "Player" && Input.GetKeyDown(KeyCode.E) && !talked)
         {
             originalDiraction = gameObject.transform.eulerAngles;
-
-            misions.Instance.secundaryCamera.SetActive(true);
-            if (misions.Instance.mainCamera.transform.position.z >= transform.position.z) misions.Instance.secundaryCamera.transform.position = new Vector3(misions.Instance.mainCamera.transform.position.x, misions.Instance.mainCamera.transform.position.y, misions.Instance.mainCamera.transform.position.z + 2.444f);
-            else misions.Instance.secundaryCamera.transform.position = new Vector3(misions.Instance.mainCamera.transform.position.x, misions.Instance.mainCamera.transform.position.y, misions.Instance.mainCamera.transform.position.z - 2.444f);
-            if (misions.Instance.mainCamera.transform.position.x - transform.position.x >= 0.5f) misions.Instance.secundaryCamera.transform.position = new Vector3(misions.Instance.mainCamera.transform.position.x + 1, misions.Instance.mainCamera.transform.position.y, misions.Instance.mainCamera.transform.position.z);
-            else if (misions.Instance.mainCamera.transform.position.x - transform.position.x < 0.5f) misions.Instance.secundaryCamera.transform.position = new Vector3(misions.Instance.mainCamera.transform.position.x - 1, misions.Instance.mainCamera.transform.position.y, misions.Instance.mainCamera.transform.position.z);
-            misions.Instance.secundaryCamera.transform.eulerAngles = new Vector3(20, 30, 0);
-            misions.Instance.secundaryCamera.transform.LookAt(new Vector3(gameObject.transform.position.x, gameObject.transform.position.y + 1, gameObject.transform.position.z));
+            if (CameraCanvas != null) CameraCanvas.SetActive(false);
+            NPC_Camera = new GameObject();
+            NPC_Camera.AddComponent<Camera>();
+            if (misions.Instance.mainCamera.transform.position.z >= transform.position.z) NPC_Camera.transform.position = new Vector3(misions.Instance.mainCamera.transform.position.x, misions.Instance.mainCamera.transform.position.y, misions.Instance.mainCamera.transform.position.z + 2.444f);
+            else NPC_Camera.transform.position = new Vector3(misions.Instance.mainCamera.transform.position.x, misions.Instance.mainCamera.transform.position.y, misions.Instance.mainCamera.transform.position.z - 2.444f);
+            if (misions.Instance.mainCamera.transform.position.x - transform.position.x >= 0.5f) NPC_Camera.transform.position = new Vector3(misions.Instance.mainCamera.transform.position.x + 1, misions.Instance.mainCamera.transform.position.y, misions.Instance.mainCamera.transform.position.z);
+            else if (misions.Instance.mainCamera.transform.position.x - transform.position.x < 0.5f) NPC_Camera.transform.position = new Vector3(misions.Instance.mainCamera.transform.position.x - 1, misions.Instance.mainCamera.transform.position.y, misions.Instance.mainCamera.transform.position.z);
+            NPC_Camera.transform.eulerAngles = new Vector3(20, 30, 0);
+            NPC_Camera.transform.LookAt(new Vector3(gameObject.transform.position.x, gameObject.transform.position.y + 1, gameObject.transform.position.z));
             misions.Instance.playerMovement.state = Controller.playerState.HITTING;
-            //if((misions.Instance.Player.transform.position - gameObject.transform.position).magnitude < 1) misions.Instance.Player.transform.position = new Vector3(misions.Instance.secundaryCamera.transform.position.x + 1.919f, misions.Instance.secundaryCamera.transform.position.y -2.402f, misions.Instance.secundaryCamera.transform.position.z + 1.412f);
+            //if((misions.Instance.Player.transform.position - gameObject.transform.position).magnitude < 1) misions.Instance.Player.transform.position = new Vector3(NPC_Camera.transform.position.x + 1.919f, NPC_Camera.transform.position.y -2.402f, NPC_Camera.transform.position.z + 1.412f);
             misions.Instance.Player.transform.LookAt(new Vector3(transform.position.x, misions.Instance.Player.transform.position.y, transform.position.z));
             transform.LookAt(new Vector3(misions.Instance.Player.transform.position.x, transform.position.y, misions.Instance.Player.transform.position.z));
             misions.Instance.Player.GetComponent<HUD>().showNpcDialog(1, 6, 40);
-            StartCoroutine(misions.Instance.ExecuteAfterTime(5));
+            StartCoroutine(ExecuteAfterTime(5));
             talked = true;
         }
+    }
+
+    public IEnumerator ExecuteAfterTime(float time)
+    {
+        yield return new WaitForSeconds(time);
+
+        if (CameraCanvas != null) CameraCanvas.SetActive(true);
+        Destroy(NPC_Camera.GetComponent<Camera>());
+        misions.nextEvent = true;
     }
 }

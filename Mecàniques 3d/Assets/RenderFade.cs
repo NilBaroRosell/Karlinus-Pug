@@ -8,7 +8,12 @@ public class RenderFade : MonoBehaviour {
 
     private void Awake()
     {
-        if (GameObject.Find("Canvas") != null) renderFadeImage = GameObject.Find("Canvas").transform.GetChild(0).gameObject;
+        if (GameObject.Find("CanvasSecundaryCam") != null) renderFadeImage = GameObject.Find("CanvasSecundaryCam").transform.GetChild(0).gameObject;
+    }
+
+    private void Start()
+    {
+        
     }
 
     public void CameraFade()
