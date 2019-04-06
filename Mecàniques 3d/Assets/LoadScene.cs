@@ -7,13 +7,20 @@ public class LoadScene : MonoBehaviour {
 
     public Respawns.InitialRespawns SceneToLoad;
     public static Respawns.InitialRespawns respawnToLoad;
+    Sprite interact;
+
+    private void Start()
+    {
+        interact = Resources.Load<Sprite>("Sprites/Default");
+    }
 
 
     private void OnTriggerStay(Collider collision)
     {
         if (collision.gameObject.tag == "Player" && Input.GetKey(KeyCode.E))
         {
-           switch (SceneToLoad)
+            collision.gameObject.GetComponentInParent<HUD>().hideInteractSprite();
+            switch (SceneToLoad)
             {
                 case Respawns.InitialRespawns.SEWER_1:
                 case Respawns.InitialRespawns.SEWER_2:
@@ -35,5 +42,11 @@ public class LoadScene : MonoBehaviour {
                     break;
             }
         }
+        else if (collision.gameObject.tag == "Player") collision.gameObject.GetComponentInParent<HUD>().showInteractSprite(this.transform.position, interact);
+    }
+
+    private void OnTriggerExit(Collider collision)
+    {
+        if (collision.gameObject.tag == "Player") collision.gameObject.GetComponentInParent<HUD>().hideInteractSprite();
     }
 }

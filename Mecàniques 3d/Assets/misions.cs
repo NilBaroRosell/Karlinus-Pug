@@ -42,6 +42,7 @@ public class misions : MonoBehaviour {
     public static bool pauseMenu;
     public static bool fight;
     private bool dead;
+    private bool missionCompleted;
 
     private void Awake()
     {
@@ -52,6 +53,7 @@ public class misions : MonoBehaviour {
             if (Instance != null)
             {
                 useSaveFile = Instance.useSaveFile;
+                missionCompleted = Instance.missionCompleted;
             }
             if (useSaveFile)
                 {
@@ -112,6 +114,7 @@ public class misions : MonoBehaviour {
             nextEvent = false;
             fight = false;
             dead = false;
+            missionCompleted = false;
             if (SceneManager.GetActiveScene().name == "sewer")
             {
                 sewerLight = GameObject.Find("Torchs Sewer");
@@ -588,6 +591,7 @@ public class misions : MonoBehaviour {
                     Instance.ActualMision = Misions.NONE;
                     Instance.PrincipalMision.MisionsCompleted[0] = true;
                     Instance.resetGameFile = false;
+                    Instance.missionCompleted = true;
                     Instance.loadRespawn.initialRespawn = Respawns.InitialRespawns.CITY_1;
                     loadScreen.Instancia.CargarEscena("city");
                 }
@@ -744,7 +748,8 @@ public class misions : MonoBehaviour {
                     nextEvent = false;
                     Instance.ActualMision = Misions.NONE;
                     Instance.PrincipalMision.MisionsCompleted[1] = true;
-                    Instance.loadRespawn.initialRespawn = Respawns.InitialRespawns.PUB_OUTSIDE;
+                    Instance.missionCompleted = true;
+                    Instance.loadRespawn.initialRespawn = Respawns.InitialRespawns.CITY_2;
                     loadScreen.Instancia.CargarEscena("city");
                 }
                 break;
@@ -832,11 +837,13 @@ public class misions : MonoBehaviour {
                 loadRespawn.Mision_Objects[4].transform.position = Player.transform.position;
                 if (loadRespawn.BoxTriggers[3].activeSelf == false && Input.GetKey(KeyCode.E))
                 {
+                    HUD_Script.hideInteractSprite();
                     HUD_Script.showM3Objective(3, 40);
                     misionIndex++;
                     loadRespawn.BoxTriggers[4].SetActive(true);
                     if (GameObject.Find("Key_Chest") != null) GameObject.Find("Key_Chest").SetActive(false);
                 }
+                else if (loadRespawn.BoxTriggers[3].activeSelf == false) HUD_Script.showInteractSprite(loadRespawn.BoxTriggers[3].transform.position, Resources.Load<Sprite>("Sprites/Default"));
                 break;
             case 7:
                 loadRespawn.Mision_Objects[4].transform.position = Player.transform.position;
@@ -852,11 +859,13 @@ public class misions : MonoBehaviour {
                 loadRespawn.Mision_Objects[4].transform.position = Player.transform.position;
                 if (loadRespawn.BoxTriggers[5].activeSelf == false && Input.GetKey(KeyCode.E))
                 {
+                    HUD_Script.hideInteractSprite();
                     HUD_Script.showM3Objective(4, 40);
                     misionIndex++;
                     loadRespawn.BoxTriggers[6].SetActive(true);
                     if (GameObject.Find("Key_Sewer") != null) GameObject.Find("Key_Sewer").SetActive(false);
                 }
+                else if (loadRespawn.BoxTriggers[5].activeSelf == false) HUD_Script.showInteractSprite(loadRespawn.BoxTriggers[5].transform.position, Resources.Load<Sprite>("Sprites/Default"));
                 break;
             case 9:
                 loadRespawn.Mision_Objects[4].transform.position = Player.transform.position;
@@ -897,8 +906,10 @@ public class misions : MonoBehaviour {
                     respawnIndex++;
                     Instance.ActualMision = Misions.NONE;
                     Instance.PrincipalMision.MisionsCompleted[2] = true;
-                    Instance.loadRespawn.initialRespawn = Respawns.InitialRespawns.CAPTAIN_OUTSIDE;
+                    Instance.loadRespawn.initialRespawn = Respawns.InitialRespawns.CITY_2;
+                    Instance.missionCompleted = true;
                     Instance.doorsUnlucked = true;
+                    Instance.missionCompleted = true;
                     loadScreen.Instancia.CargarEscena("city");
                 }
                 break;
@@ -1355,8 +1366,10 @@ public class misions : MonoBehaviour {
     {
         Debug.Log("SCENE LOADED");
         loadRespawn.setAllFalse();
+        
         if (SceneManager.GetActiveScene().name != "DEAD")
         {
+            if(missionCompleted) GameObject.Find("Jugador").GetComponent<HUD>().MissionCompleted();
             if (SceneManager.GetActiveScene().name == "Menu_1")
             {
                 respawnIndex = 0;

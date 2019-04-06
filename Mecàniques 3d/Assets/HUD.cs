@@ -56,6 +56,7 @@ public class HUD : MonoBehaviour
     private List<Mission> Missions;
     public GameObject missionSprite;
     public GameObject InteractSprite;
+    private Sprite interact;
     public bool finalDialog = false;
     public GameObject NPC_Dialog;
 
@@ -91,6 +92,7 @@ public class HUD : MonoBehaviour
         enemiesSeen = new List<SeenEnemy>();
         Missions = new List<Mission>();
         MissionHUD();
+        loadIntreractSprite();
     }
 
     // Update is called once per frame
@@ -320,6 +322,17 @@ public class HUD : MonoBehaviour
         }
     }
 
+    public void MissionCompleted()
+    {
+            Objective.SetActive(true);
+        Objective_text.GetComponent<Text>().text = "MISSION COMPLETED";
+        Objective_text.GetComponent<Text>().fontSize = 50;
+        Objective.GetComponent<RectTransform>().position =
+                new Vector3(Objective.GetComponent<RectTransform>().position.x, -381.4f / 10, Objective.GetComponent<RectTransform>().position.z);
+            startTime = Time.frameCount;
+            timeUntilDisapear = 300;
+    }
+
     public void showNpcDialog(int scene, int text_to_show, int font_to_set = 50)
     {
         NPC_Dialog.SetActive(true);
@@ -443,18 +456,40 @@ public class HUD : MonoBehaviour
             }
         }
     }
-    private void OnTriggerEnter(Collider collision)
+
+    private void loadIntreractSprite()
     {
-        if (collision.gameObject.CompareTag("Interactuable"))
-        {
-            InteractSprite.SetActive(true);
-        }
+        InteractSprite = Instantiate(InteractSprite, new Vector3(0, 0, 0), Quaternion.identity);
+       InteractSprite.transform.SetParent(GameObject.FindGameObjectWithTag("canvas").transform, false);
+        interact = Resources.Load<Sprite>("Sprites/Default");
+        InteractSprite.GetComponent<Image>().sprite = interact;
+        Color tempColor = InteractSprite.GetComponent<Image>().color;
+        tempColor.a = 0.0f;
+        InteractSprite.GetComponent<Image>().color = tempColor;
     }
-    private void OnTriggerExit(Collider collision)
+
+    public void showInteractSprite(Vector3 worldPoint, Sprite _sprite)
     {
-        if (collision.gameObject.CompareTag("Interactuable"))
+        if (Vector3.Angle(Camera.main.transform.forward, worldPoint - gameObject.transform.position) < 90)
         {
-            InteractSprite.SetActive(false);
+            InteractSprite.GetComponent<Image>().sprite = _sprite;
+            Color tempColor = InteractSprite.GetComponent<Image>().color;
+            tempColor.a = 1.0f;
+            InteractSprite.GetComponent<Image>().color = tempColor;
+            InteractSprite.transform.position = Camera.main.WorldToScreenPoint(worldPoint);
         }
+        else
+        {
+            Color tempColor = InteractSprite.GetComponent<Image>().color;
+            tempColor.a = 0.0f;
+            InteractSprite.GetComponent<Image>().color = tempColor;
+        }      
+    }
+    public void hideInteractSprite()
+    {
+        InteractSprite.GetComponent<Image>().sprite = interact;
+        Color tempColor = InteractSprite.GetComponent<Image>().color;
+        tempColor.a = 0.0f;
+        InteractSprite.GetComponent<Image>().color = tempColor;
     }
 }

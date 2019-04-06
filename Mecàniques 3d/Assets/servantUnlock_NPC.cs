@@ -9,18 +9,21 @@ public class servantUnlock_NPC : MonoBehaviour {
     private Vector3 originalDiraction;
     private GameObject CameraCanvas;
     private GameObject NPC_Camera;
+    Sprite interact;
 
     private void Start()
     {
         if (GameObject.Find("CanvasSecundaryCam") != null) CameraCanvas = GameObject.Find("CanvasSecundaryCam");
         talked = false;
         canTalk = false;
+        interact = Resources.Load<Sprite>("Sprites/TalkSprite");
     }
 
     private void OnTriggerStay(Collider other)
     {
         if (canTalk && other.gameObject.tag == "Player" && Input.GetKeyDown(KeyCode.E) && !talked)
         {
+            other.gameObject.GetComponentInParent<HUD>().hideInteractSprite();
             originalDiraction = gameObject.transform.eulerAngles;
             if (CameraCanvas != null) CameraCanvas.SetActive(false);
             NPC_Camera = new GameObject();
@@ -39,6 +42,12 @@ public class servantUnlock_NPC : MonoBehaviour {
             StartCoroutine(ExecuteAfterTime(5));
             talked = true;
         }
+        else if (other.gameObject.tag == "Player" && !talked) other.gameObject.GetComponentInParent<HUD>().showInteractSprite(this.transform.position, interact);
+    }
+
+    private void OnTriggerExit(Collider collision)
+    {
+        if (collision.gameObject.tag == "Player") collision.gameObject.GetComponentInParent<HUD>().hideInteractSprite();
     }
 
     public IEnumerator ExecuteAfterTime(float time)

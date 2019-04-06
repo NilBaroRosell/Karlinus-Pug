@@ -61,6 +61,9 @@ public class csAreaVision : MonoBehaviour {
     //Nav Mesh
     NavMeshAgent enemyAgent;
 
+    //Sprites
+    Sprite parry;
+
     // Use this for initialization
     void Awake() {
         GetComponent<NavMeshObstacle>().enabled = false;
@@ -110,6 +113,7 @@ public class csAreaVision : MonoBehaviour {
         playerAnim = GameObject.Find("Jugador").GetComponent<Animator>();
         rb.constraints = RigidbodyConstraints.FreezeRotationX;
         keepStateAcum = 0;
+        parry = Resources.Load<Sprite>("Sprites/ParrySprite");
     }
 
     void Start()
@@ -141,12 +145,14 @@ public class csAreaVision : MonoBehaviour {
                     {
                         StartCoroutine(playerDeath(3.5f));
                         anim.SetBool("Is_Fighting", true);
+                        GameObject.Find("Jugador").GetComponentInParent<HUD>().hideInteractSprite();
                         atacking = true;
                         playerAnim.SetBool("Is_Dying", true);
                     }
                     else if (Input.GetKeyDown(KeyCode.Q) && GameObject.Find("Jugador").GetComponent<liquidState>().hidratation >= 0 && !GameObject.Find("Jugador").GetComponent<liquidState>().cooldown)
                     {
                         StartCoroutine(CheckStuck(10.0f));
+                        GameObject.Find("Jugador").GetComponentInParent<HUD>().hideInteractSprite();
                         playerScaped();
                         GameObject.Find("Jugador").GetComponent<CharacterController>().enabled = true;
                         GameObject.Find("Jugador").GetComponent<Controller>().liquidTransformation();
@@ -155,6 +161,7 @@ public class csAreaVision : MonoBehaviour {
                             if (EnemyManager.Enemies[i].GetComponent<csAreaVision>().actualState == enemyState.FIGHTING) EnemyManager.Enemies[i].GetComponent<csAreaVision>().playerScaped();
                         }
                     }
+                    else if(GameObject.Find("Jugador").GetComponent<liquidState>().hidratation >= 0 && !GameObject.Find("Jugador").GetComponent<liquidState>().cooldown) GameObject.Find("Jugador").GetComponentInParent<HUD>().showInteractSprite(this.transform.position, parry);
                 }
                 break;
             case 10:
@@ -309,6 +316,7 @@ public class csAreaVision : MonoBehaviour {
         }
         else if(actualState == enemyState.SEARCHING)
         {
+            GameObject.Find("Jugador").GetComponentInParent<HUD>().hideInteractSprite();
             actualState = enemyState.PATROLLING;
             lastState = enemyState.SEARCHING;
             speed = 10;
@@ -373,6 +381,7 @@ public class csAreaVision : MonoBehaviour {
     public void playerScaped()
     {
         StartCoroutine(CheckStuck(10.0f));
+        GameObject.Find("Jugador").GetComponentInParent<HUD>().hideInteractSprite();
         destinationPoint = lastSeenPosition = this.gameObject.GetComponent<RandomDestination>().RandomNavmeshLocation(this.gameObject, 75);
         speed = 50;
         keepStateAcum = 10;

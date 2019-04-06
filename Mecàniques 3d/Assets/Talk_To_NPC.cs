@@ -13,6 +13,7 @@ public class Talk_To_NPC : MonoBehaviour {
     private Animator anim;
     private GameObject NPC_Camera;
     private GameObject CameraCanvas;
+    private Sprite interact;
 
     private void Awake()
     {
@@ -26,6 +27,7 @@ public class Talk_To_NPC : MonoBehaviour {
         {
             anim.SetBool(animationName, true);
         }
+        interact = Resources.Load<Sprite>("Sprites/TalkSprite");
     }
 	
 	// Update is called once per frame
@@ -62,7 +64,8 @@ public class Talk_To_NPC : MonoBehaviour {
     {
         //missatge hud
         if(other.tag == "Player" && Input.GetKey(KeyCode.E) && !start)
-        {            
+        {
+            other.gameObject.GetComponentInParent<HUD>().hideInteractSprite();
             originalDiraction = gameObject.transform.eulerAngles;
             NPC_Camera = new GameObject();
             NPC_Camera.AddComponent<Camera>();
@@ -82,5 +85,11 @@ public class Talk_To_NPC : MonoBehaviour {
             misions.Instance.Player.GetComponent<HUD>().showNpcDialog(scene, numDialog, size);
             start = true;
         }
+        else if (other.gameObject.tag == "Player" && !start) other.gameObject.GetComponentInParent<HUD>().showInteractSprite(this.transform.position, interact);
+    }
+
+    private void OnTriggerExit(Collider collision)
+    {
+        if (collision.gameObject.tag == "Player") collision.gameObject.GetComponentInParent<HUD>().hideInteractSprite();
     }
 }

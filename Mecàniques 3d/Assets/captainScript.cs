@@ -8,11 +8,15 @@ public class captainScript : MonoBehaviour {
     private GameObject player;
     private Vector3 playerResDest;
     private bool respawning;
-	// Use this for initialization
-	void Start () {
+    private bool talked;
+    private Sprite interact;
+    // Use this for initialization
+    void Start () {
         batallafinal = GameObject.Find("batalla final");
         player = GameObject.Find("Jugador");
         respawning = false;
+        talked = false;
+        interact = Resources.Load<Sprite>("Sprites/TalkSprite");
         playerResDest = new Vector3(9.79f, 81.264f, -308.37f);
         if(misions.respawnIndex == 4)
         {
@@ -50,14 +54,21 @@ public class captainScript : MonoBehaviour {
 
     private void OnTriggerStay(Collider collision)
     {
-        if (collision.gameObject.tag == "Player" && Input.GetKeyDown(KeyCode.E))
+        if (collision.gameObject.tag == "Player" && Input.GetKeyDown(KeyCode.E) && !talked)
         {
             for (int i = 0; i < batallafinal.transform.GetChild(0).childCount - 6; i++) batallafinal.transform.GetChild(0).GetChild(i).gameObject.SetActive(true);
             batallafinal.GetComponent<finalBattleManager>().restartBattle();
             batallafinal.GetComponent<finalBattleManager>().expandSphere();
             misions.nextEvent = true;
             respawning = true;
+            talked = true;
             StartCoroutine(StartBattle(2));
         }
+        else if (collision.gameObject.tag == "Player" && !talked) collision.gameObject.GetComponentInParent<HUD>().showInteractSprite(this.transform.position, interact);
+    }
+
+    private void OnTriggerExit(Collider collision)
+    {
+        if (collision.gameObject.tag == "Player") collision.gameObject.GetComponentInParent<HUD>().hideInteractSprite();
     }
 }

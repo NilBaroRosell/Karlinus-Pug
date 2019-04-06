@@ -4,6 +4,12 @@ using UnityEngine;
 
 public class fountain : MonoBehaviour
 {
+    Sprite interact;
+
+    private void Start()
+    {
+        interact = Resources.Load<Sprite>("Sprites/Drink");
+    }
 
     private void OnTriggerStay(Collider other)
     {
@@ -11,5 +17,10 @@ public class fountain : MonoBehaviour
         {
             other.GetComponent<liquidState>().DrinkWater();
         }
+        else if (other.gameObject.tag == "Player") other.gameObject.GetComponentInParent<HUD>().showInteractSprite(this.transform.position, interact);
+    }
+    private void OnTriggerExit(Collider collision)
+    {
+        if (collision.gameObject.tag == "Player") collision.gameObject.GetComponentInParent<HUD>().hideInteractSprite();
     }
 }
