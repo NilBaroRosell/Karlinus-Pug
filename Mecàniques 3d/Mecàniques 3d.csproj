@@ -380,6 +380,7 @@
     <Compile Include="Assets\ConoVision\csAreaVision.cs" />
     <Compile Include="Assets\ConoVision\NPC_movement.cs" />
     <Compile Include="Assets\ConoVision\RandomDestination.cs" />
+    <Compile Include="Assets\CreditsController.cs" />
     <Compile Include="Assets\cucumber.cs" />
     <Compile Include="Assets\Dead_Zone.cs" />
     <Compile Include="Assets\drunk_NPC.cs" />
