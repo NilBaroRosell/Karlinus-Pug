@@ -10,16 +10,24 @@ public class MainMenu : MonoBehaviour {
     public GameObject gameLogo;
     public GameObject gameLogo2;
     public GameObject teamLogo;
+    public GameObject yellowLogo;
+    public GameObject purpleLogo;
     public GameObject logosBackground;
     public GameObject start;
     public GameObject startButton;
     public GameObject cont;
-    public GameObject back;
     public GameObject continueButton;
     public GameObject optionsButton;
     public GameObject exitButton;
-    public GameObject backButton;
-    public GameObject applyButton;
+    public GameObject musicImage;
+    public GameObject volumeImage;
+    public GameObject fullscreenImage;
+    public GameObject resolutionImage;
+    public GameObject backImage;
+    public GameObject musicToggle;
+    public GameObject volumeSlider;
+    public GameObject fullscreenToggle;
+    public GameObject resolutionDropdown;
     private GameObject rendererManager;
     public bool showMenu;
     private int logoReference;
@@ -45,16 +53,24 @@ public class MainMenu : MonoBehaviour {
         gameLogo.SetActive(true);
         gameLogo2.SetActive(false);
         teamLogo.SetActive(false);
+        yellowLogo.SetActive(false);
+        purpleLogo.SetActive(false);
         logosBackground.SetActive(true);
         start.SetActive(false);
         startButton.SetActive(false);
         cont.SetActive(false);
-        back.SetActive(false);
         continueButton.SetActive(false);
         optionsButton.SetActive(false);
         exitButton.SetActive(false);
-        backButton.SetActive(false);
-        applyButton.SetActive(false);
+        musicImage.SetActive(false);
+        volumeImage.SetActive(false);
+        fullscreenImage.SetActive(false);
+        resolutionImage.SetActive(false);
+        backImage.SetActive(false);
+        musicToggle.SetActive(false);
+        volumeSlider.SetActive(false);
+        fullscreenToggle.SetActive(false);
+        resolutionDropdown.SetActive(false);
         showMenu = true;
         logoReference = 0;
         state = states.SHOWING_LOGOS;
@@ -101,12 +117,18 @@ public class MainMenu : MonoBehaviour {
         start.SetActive(false);
         startButton.SetActive(false);
         cont.SetActive(false);
-        back.SetActive(true);
         continueButton.SetActive(false);
         optionsButton.SetActive(false);
         exitButton.SetActive(false);
-        backButton.SetActive(true);
-        applyButton.SetActive(true);
+        musicImage.SetActive(true);
+        volumeImage.SetActive(true);
+        fullscreenImage.SetActive(true);
+        resolutionImage.SetActive(true);
+        backImage.SetActive(true);
+        musicToggle.SetActive(true);
+        volumeSlider.SetActive(true);
+        fullscreenToggle.SetActive(true);
+        resolutionDropdown.SetActive(true);
     }
 
     public void enableMainMenu()
@@ -118,12 +140,18 @@ public class MainMenu : MonoBehaviour {
         start.SetActive(false);
         startButton.SetActive(false);
         cont.SetActive(true);
-        back.SetActive(false);
         continueButton.SetActive(true);
         optionsButton.SetActive(true);
         exitButton.SetActive(true);
-        backButton.SetActive(false);
-        applyButton.SetActive(false);
+        musicImage.SetActive(false);
+        volumeImage.SetActive(false);
+        fullscreenImage.SetActive(false);
+        resolutionImage.SetActive(false);
+        backImage.SetActive(false);
+        musicToggle.SetActive(false);
+        volumeSlider.SetActive(false);
+        fullscreenToggle.SetActive(false);
+        resolutionDropdown.SetActive(false);
     }
 
     public void disableMainMenu()
@@ -135,12 +163,18 @@ public class MainMenu : MonoBehaviour {
         start.SetActive(false);
         startButton.SetActive(false);
         cont.SetActive(false);
-        back.SetActive(false);
         continueButton.SetActive(false);
         optionsButton.SetActive(false);
         exitButton.SetActive(false);
-        backButton.SetActive(false);
-        applyButton.SetActive(false);
+        musicImage.SetActive(false);
+        volumeImage.SetActive(false);
+        fullscreenImage.SetActive(false);
+        resolutionImage.SetActive(false);
+        backImage.SetActive(false);
+        musicToggle.SetActive(false);
+        volumeSlider.SetActive(false);
+        fullscreenToggle.SetActive(false);
+        resolutionDropdown.SetActive(false);
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
     }

@@ -1,40 +1,30 @@
-Base path: D:/Programas Data/Unity/Editor/Data
+Base path: C:/Program Files/Unity/Editor/Data
 Cmd: initializeCompiler
-Cmd: disassembleShader
-  api=4 insize=1638 outsize=2982 ok=1
-Cmd: disassembleShader
-  api=4 insize=1638 outsize=2982 ok=1
-Cmd: disassembleShader
-  api=4 insize=2746 outsize=4495 ok=1
-Cmd: disassembleShader
-  api=4 insize=6918 outsize=9813 ok=1
-Cmd: disassembleShader
-  api=4 insize=1918 outsize=3415 ok=1
-Cmd: disassembleShader
-  api=4 insize=2054 outsize=3594 ok=1
-Cmd: disassembleShader
-  api=4 insize=3378 outsize=4984 ok=1
-Cmd: disassembleShader
-  api=4 insize=4642 outsize=6612 ok=1
-Cmd: disassembleShader
-  api=4 insize=1298 outsize=2142 ok=1
-Cmd: disassembleShader
-  api=4 insize=1550 outsize=2835 ok=1
-Cmd: disassembleShader
-  api=4 insize=2514 outsize=4464 ok=1
-Cmd: disassembleShader
-  api=4 insize=2334 outsize=3950 ok=1
-Cmd: disassembleShader
-  api=4 insize=1746 outsize=3138 ok=1
-Cmd: disassembleShader
-  api=4 insize=2786 outsize=4642 ok=1
-Cmd: disassembleShader
-  api=4 insize=2814 outsize=4716 ok=1
-Cmd: disassembleShader
-  api=4 insize=1766 outsize=3169 ok=1
-Cmd: disassembleShader
-  api=4 insize=2242 outsize=3932 ok=1
-Cmd: disassembleShader
-  api=4 insize=4194 outsize=6167 ok=1
-Cmd: disassembleShader
-  api=4 insize=218 outsize=660 ok=1
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
+Cmd: initializeCompiler
