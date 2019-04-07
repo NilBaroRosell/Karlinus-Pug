@@ -361,7 +361,7 @@ public class misions : MonoBehaviour {
 
     // Update is called once per frame
     void FixedUpdate() {
-        if (MainMenu.Instance == null || MainMenu.Instance.state == MainMenu.states.PLAYING) {
+        if ((MainMenu.Instance == null || MainMenu.Instance.state == MainMenu.states.PLAYING) && SceneManager.GetActiveScene().name != "DEAD") {
             if (Input.GetKeyDown(KeyCode.Escape))
             {
                 if (pauseMenu)
@@ -1376,6 +1376,11 @@ public class misions : MonoBehaviour {
                 ActualMision = Misions.NONE;
             }
             else Start();
+        }
+        else
+        {
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.None;
         }
     }
 }

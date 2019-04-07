@@ -17,7 +17,7 @@ public class PauseMenu : MonoBehaviour {
 
     public void Update()
     {
-        if (!options)
+        if (!options && (MainMenu.Instance == null || MainMenu.Instance.state == MainMenu.states.PLAYING))
         { 
             if (misions.pauseMenu)
             {
@@ -25,7 +25,7 @@ public class PauseMenu : MonoBehaviour {
                 canvas2.SetActive(false);
                 Time.timeScale = 0;
             }
-            else if(MainMenu.Instance == null)
+            else
             {
                 canvas1.SetActive(false);
                 canvas2.SetActive(false);

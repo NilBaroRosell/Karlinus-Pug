@@ -425,17 +425,11 @@ public class HUD : MonoBehaviour
 
     private void MissionHUD()
     {
-        Missions.Add(new Mission((misions.Instance.PrincipalMision.pointObject), Instantiate(missionSprite, new Vector3(0, 0, 0), Quaternion.identity) as GameObject));
-        Missions[Missions.Count - 1].triangle.transform.SetParent(GameObject.FindGameObjectWithTag("canvas").transform, false);
-        Missions[Missions.Count - 1].triangle.transform.position = Camera.main.WorldToScreenPoint(misions.Instance.PrincipalMision.pointObject.transform.position);
-        if (misions.Instance.ActualMision != misions.Misions.NONE || SceneManager.GetActiveScene().name != "city") {
-
-            for (int i = 0; Missions.Count > i; i++)
-            {
-                Color tempColor = Missions[i].triangle.GetComponent<Image>().color;
-                tempColor.a = 0.0f;
-                Missions[i].triangle.GetComponent<Image>().color = tempColor;
-            }
+        if (misions.Instance.ActualMision == misions.Misions.NONE && SceneManager.GetActiveScene().name != "city")
+        {
+            Missions.Add(new Mission((misions.Instance.PrincipalMision.pointObject), Instantiate(missionSprite, new Vector3(0, 0, 0), Quaternion.identity) as GameObject));
+            Missions[Missions.Count - 1].triangle.transform.SetParent(GameObject.FindGameObjectWithTag("canvas").transform, false);
+            Missions[Missions.Count - 1].triangle.transform.position = Camera.main.WorldToScreenPoint(misions.Instance.PrincipalMision.pointObject.transform.position);
         }
     }
 

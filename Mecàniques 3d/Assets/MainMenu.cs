@@ -22,7 +22,7 @@ public class MainMenu : MonoBehaviour {
     public GameObject applyButton;
     private GameObject rendererManager;
     public bool showMenu;
-    private float logoReference;
+    private int logoReference;
     private float menuReference;
     public static MainMenu Instance;
     public states state;
@@ -56,9 +56,10 @@ public class MainMenu : MonoBehaviour {
         backButton.SetActive(false);
         applyButton.SetActive(false);
         showMenu = true;
-        logoReference = Time.realtimeSinceStartup;
+        logoReference = 0;
         state = states.SHOWING_LOGOS;
         menuReference = 0.0f;
+        StartCoroutine(showLogos(0.5f));
         camOriginalPos = secundaryCamera.transform.position;
         camOriginalRotation = secundaryCamera.transform.rotation;
         loadScreen.Instancia.CargarEscena("city");
@@ -68,32 +69,7 @@ public class MainMenu : MonoBehaviour {
     {
         switch(state)
         {
-            case states.SHOWING_LOGOS:
-                if (Time.realtimeSinceStartup - logoReference < 2.25f)
-                {
-                    gameLogo.SetActive(true);
-                    gameLogo2.SetActive(false);
-                    teamLogo.SetActive(false);
-                    logosBackground.SetActive(true);
-                    start.SetActive(false);
-                    startButton.SetActive(false);
-                }
-                else if (Time.realtimeSinceStartup - logoReference < 4.5f)
-                {
-                    gameLogo.SetActive(false);
-                    gameLogo2.SetActive(false);
-                    teamLogo.SetActive(true);
-                    logosBackground.SetActive(true);
-                    start.SetActive(false);
-                    startButton.SetActive(false);
-
-                }
-                else
-                {
-                    teamLogo.SetActive(false);
-                    logosBackground.SetActive(false);
-                    gameLogo.SetActive(false);
-                }
+            case states.SHOWING_LOGOS:                
                 break;
             case states.MAIN_MENU:
                 if (secundaryCamera != null)
@@ -169,6 +145,13 @@ public class MainMenu : MonoBehaviour {
         Cursor.lockState = CursorLockMode.Locked;
     }
 
+    private void disableLogos()
+    {
+        teamLogo.SetActive(false);
+        logosBackground.SetActive(false);
+        gameLogo.SetActive(false);
+    }
+
     private void OnLevelWasLoaded(int level)
     {
         if (level == 1 && showMenu)
@@ -187,6 +170,7 @@ public class MainMenu : MonoBehaviour {
     {
         yield return new WaitForSeconds(time);
 
+        disableLogos();
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
         Time.timeScale = 0;
@@ -203,6 +187,37 @@ public class MainMenu : MonoBehaviour {
         rendererManager.SetActive(true);
         state = states.PLAYING;
         GameObject.Find("Jugador").GetComponent<Controller>().state = Controller.playerState.IDLE;
+    }
+
+    private IEnumerator showLogos(float time)
+    {
+        yield return new WaitForSeconds(time);
+        Debug.Log(logoReference);
+        if (logoReference == 0)
+        {
+            gameLogo.SetActive(true);
+            gameLogo2.SetActive(false);
+            teamLogo.SetActive(false);
+            logosBackground.SetActive(true);
+            start.SetActive(false);
+            startButton.SetActive(false);
+        }
+        else if (logoReference == 1)
+        {
+            gameLogo.SetActive(false);
+            gameLogo2.SetActive(false);
+            teamLogo.SetActive(true);
+            logosBackground.SetActive(true);
+            start.SetActive(false);
+            startButton.SetActive(false);
+
+        }
+        if(logoReference < 2)
+        {
+            
+            logoReference++;
+            StartCoroutine(showLogos(1.5f));
+        }
     }
 
 }
