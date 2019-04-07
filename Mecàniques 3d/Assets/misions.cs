@@ -354,6 +354,9 @@ public class misions : MonoBehaviour {
             Cursor.lockState = CursorLockMode.None;
         }
         if(mainCamera != null)mainCamera.transform.parent.transform.position = mainCamera.transform.parent.GetComponent<CameraFollow>().followObject.transform.position;
+        GameObject.Find("Perro Cobarde").gameObject.SetActive(false);
+        GameObject.Find("GatoRebelde").gameObject.SetActive(false);
+        GameObject.Find("Rat Hood").gameObject.SetActive(false);
     }
 
     // Update is called once per frame
