@@ -116,7 +116,7 @@ public class Servant : MonoBehaviour {
             anim.SetBool("Idle", true);
         }
         else
-        {
+        {      
             switch (patrollingIndex)
             {
                 case 0:
@@ -174,8 +174,18 @@ public class Servant : MonoBehaviour {
         stoped = false;
     }
 
-    public void OnLevelWasLoaded()
+    IEnumerator CheckStuck(float time)
     {
+        yield return new WaitForSeconds(time);
+
+        if(enemyAgent.speed == 0 || !enemyAgent.isOnNavMesh) { Awake(); Start(); }
+        StartCoroutine(CheckStuck(2.0f));
+    }
+
+
+    public void OnLevelWasLoaded(int level)
+    {
+        if (level == 1) StartCoroutine(CheckStuck(2.0f));
         Start();
     }
 }

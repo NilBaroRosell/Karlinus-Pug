@@ -425,7 +425,7 @@ public class HUD : MonoBehaviour
 
     private void MissionHUD()
     {
-        if (misions.Instance.ActualMision == misions.Misions.NONE && SceneManager.GetActiveScene().name != "city")
+        if (misions.Instance.ActualMision == misions.Misions.NONE && SceneManager.GetActiveScene().name == "city")
         {
             Missions.Add(new Mission((misions.Instance.PrincipalMision.pointObject), Instantiate(missionSprite, new Vector3(0, 0, 0), Quaternion.identity) as GameObject));
             Missions[Missions.Count - 1].triangle.transform.SetParent(GameObject.FindGameObjectWithTag("canvas").transform, false);

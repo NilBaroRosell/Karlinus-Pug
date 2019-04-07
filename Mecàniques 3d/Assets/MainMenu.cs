@@ -156,6 +156,7 @@ public class MainMenu : MonoBehaviour {
     {
         if (level == 1 && showMenu)
         {
+            disableLogos();
             StartCoroutine(ExecuteAfterTime(2.25f));
             state = states.MAIN_MENU;
             rendererManager = GameObject.Find("RenderManager");
@@ -170,7 +171,6 @@ public class MainMenu : MonoBehaviour {
     {
         yield return new WaitForSeconds(time);
 
-        disableLogos();
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
         Time.timeScale = 0;

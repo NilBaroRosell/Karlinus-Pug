@@ -7,10 +7,11 @@ public class setAllVisibleScript : MonoBehaviour {
     Vector3[] position;
     GameObject[] childs;
     Vector3 playerDist;
-    public static float maxDist = 200;
+    public static float maxDist;
 
 	// Use this for initialization
 	void Start () {
+        maxDist = 200;
         childs = new GameObject[this.gameObject.transform.childCount];
         position = new Vector3[this.gameObject.transform.childCount];
         for (int i = 0; i < this.gameObject.transform.childCount; i++)

@@ -20,6 +20,7 @@ public class misions : MonoBehaviour {
     public static int misionIndex;
     private Respawns loadRespawn;
     private HUD HUD_Script;
+    private AudioManager audioScript;
     public GameObject Player;
     public Controller playerMovement;
     public static bool nextEvent;
@@ -103,11 +104,12 @@ public class misions : MonoBehaviour {
     // Use this for initialization
     void Start()
     {
+        if (GameObject.Find("AudioManager") != null) audioScript = GameObject.Find("AudioManager").GetComponent<AudioManager>();
         if (GameObject.Find("Jugador") != null)
         {
             Player = GameObject.Find("Jugador");
             playerMovement = Player.GetComponent<Controller>();
-            HUD_Script = Player.GetComponent<HUD>();
+            HUD_Script = Player.GetComponent<HUD>();            
             Cursor.visible = false;
             Cursor.lockState = CursorLockMode.Locked;
             hideMisionPoints();
@@ -399,6 +401,7 @@ public class misions : MonoBehaviour {
                     break;
             }
         }
+        audioScript.checkFight();
         fight = false;
     }
 

@@ -337,6 +337,8 @@ public class csAreaVision : MonoBehaviour {
         yield return new WaitForSeconds(time);
 
         if (GameObject.Find("CameraBase") != null) Destroy(GameObject.Find("CameraBase").GetComponent<CameraFollow>());
+        if (GameObject.Find("RenderManager") != null) Destroy(GameObject.Find("RenderManager"));
+        misions.Instance.mainCamera.transform.LookAt(misions.Instance.Player.transform.position);
         GameObject.Find("Jugador").transform.position = new Vector3(0, -500, 0);
         loadScreen.Instancia.CargarEscena("DEAD");
     }
