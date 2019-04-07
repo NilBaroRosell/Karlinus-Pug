@@ -367,6 +367,22 @@ public class misions : MonoBehaviour {
     // Update is called once per frame
     void FixedUpdate() {
         if ((MainMenu.Instance == null || MainMenu.Instance.state == MainMenu.states.PLAYING) && SceneManager.GetActiveScene().name != "DEAD") {
+            if (Input.GetKeyUp(KeyCode.Alpha1))
+            {
+                Instance.ActualMision = Misions.NONE;
+                Instance.PrincipalMision.MisionsCompleted[0] = true;
+                Instance.resetGameFile = false;
+                Instance.loadRespawn.initialRespawn = Respawns.InitialRespawns.CITY_1;
+                loadScreen.Instancia.CargarEscena("city");
+            }
+            else if (Input.GetKeyUp(KeyCode.Alpha2))
+            {
+                Instance.ActualMision = Misions.M4;
+                Instance.PrincipalMision.MisionsCompleted[2] = true;
+                respawnIndex = 3;
+                loadRespawn.initialRespawn = Respawns.InitialRespawns.CHAMBER;
+                loadScreen.Instancia.CargarEscena("StoneChamber");
+            }
             if (Input.GetKeyDown(KeyCode.Escape))
             {
                 if (pauseMenu)
@@ -1002,6 +1018,18 @@ public class misions : MonoBehaviour {
                 }
                 break;
             case 8:
+                if(nextEvent)
+                {
+                    nextEvent = false;
+                    misionIndex++;
+                    respawnIndex++;
+                    Instance.ActualMision = Misions.NONE;
+                    Instance.PrincipalMision.MisionsCompleted[3] = true;
+                    Instance.loadRespawn.initialRespawn = Respawns.InitialRespawns.CITY_2;
+                    Instance.missionCompleted = true;
+                    Instance.doorsUnlucked = true;
+                    loadScreen.Instancia.CargarEscena("Credits");
+                }
                 break;
             default:
                 break;

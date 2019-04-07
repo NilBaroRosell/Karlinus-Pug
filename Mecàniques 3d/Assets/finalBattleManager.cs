@@ -104,6 +104,7 @@ public class finalBattleManager : MonoBehaviour {
                 battleState = battleStates.RETURNING2;
                 forceSphere.GetComponent<SphereCollider>().enabled = false;
                 bossI++;
+                if (Bosses.Length <= bossI) misions.nextEvent = true;
                 Bosses[bossI].SetActive(true);
                 StartCoroutine(ExecuteAfterTime(3.5f));
                 break;

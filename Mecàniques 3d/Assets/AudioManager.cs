@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Audio;
 
 public class AudioManager : MonoBehaviour {
 
@@ -31,6 +32,11 @@ public class AudioManager : MonoBehaviour {
     void Start () { 
     }
 
+    private void FixedUpdate()
+    {
+        if (!mainAudioSource.isPlaying) OnLevelWasLoaded(SceneManager.GetActiveScene().buildIndex);
+    }
+
     void AudioFinished()
         {
         mainAudioSource.clip = ambiental;
@@ -42,6 +48,7 @@ public class AudioManager : MonoBehaviour {
         {
             case 1:
             case 3:
+            case 7:
                 setAmbiental();
                 break;
             case 6:

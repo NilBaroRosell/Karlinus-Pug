@@ -17,6 +17,10 @@ public class CreditsController : MonoBehaviour {
     {
         yield return new WaitForSeconds(time);
 
-        Debug.Log("Hello it's me");
+        MainMenu.Instance.state = MainMenu.states.PLAYING;
+            misions.pauseMenu = false;
+            MainMenu.Instance.showMenu = true;
+            misions.Instance.ActualMision = misions.Misions.NONE;
+        loadScreen.Instancia.CargarEscena("city");
     }
 }

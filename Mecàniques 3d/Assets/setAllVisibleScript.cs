@@ -24,19 +24,22 @@ public class setAllVisibleScript : MonoBehaviour {
 
     private void Update()
     {
-
-        for (int i = 0; i < childs.Length; i++)
+        if ((MainMenu.Instance == null || MainMenu.Instance.state == MainMenu.states.PLAYING))
         {
-            playerDist = new Vector3(GameObject.Find("Jugador").transform.position.x - position[i].x, 0.0f, GameObject.Find("Jugador").transform.position.z - position[i].z);
-            if (childs[i].GetComponent<Renderer>() != null)
+
+            for (int i = 0; i < childs.Length; i++)
             {
-                if (!checkVisible(childs[i].transform.position) && childs[i].GetComponent<Renderer>().enabled) childs[i].GetComponent<Renderer>().enabled = false;
-                else if (checkVisible(childs[i].transform.position) && !childs[i].GetComponent<Renderer>().enabled) childs[i].GetComponent<Renderer>().enabled = true;
-            }
-            else
-            {
-                if (!checkVisible(childs[i].transform.position) && childs[i].activeSelf) childs[i].SetActive(false);
-                else if (checkVisible(childs[i].transform.position) && !childs[i].activeSelf) childs[i].SetActive(true);
+                playerDist = new Vector3(GameObject.Find("Jugador").transform.position.x - position[i].x, 0.0f, GameObject.Find("Jugador").transform.position.z - position[i].z);
+                if (childs[i].GetComponent<Renderer>() != null)
+                {
+                    if (!checkVisible(childs[i].transform.position) && childs[i].GetComponent<Renderer>().enabled) childs[i].GetComponent<Renderer>().enabled = false;
+                    else if (checkVisible(childs[i].transform.position) && !childs[i].GetComponent<Renderer>().enabled) childs[i].GetComponent<Renderer>().enabled = true;
+                }
+                else
+                {
+                    if (!checkVisible(childs[i].transform.position) && childs[i].activeSelf) childs[i].SetActive(false);
+                    else if (checkVisible(childs[i].transform.position) && !childs[i].activeSelf) childs[i].SetActive(true);
+                }
             }
         }
     }

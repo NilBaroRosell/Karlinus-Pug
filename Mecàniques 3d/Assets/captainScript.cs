@@ -78,6 +78,8 @@ public class captainScript : MonoBehaviour {
     {
         if (collision.gameObject.tag == "Player" && Input.GetKeyDown(KeyCode.E) && !talked)
         {
+            collision.gameObject.GetComponentInParent<HUD>().hideInteractSprite();
+            this.gameObject.GetComponent<Collider>().enabled = false;
             originalDiraction = gameObject.transform.eulerAngles;
             if (CameraCanvas != null) CameraCanvas.SetActive(false);
             NPC_Camera = new GameObject();

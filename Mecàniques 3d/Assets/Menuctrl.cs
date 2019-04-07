@@ -29,6 +29,7 @@ public class Menuctrl : MonoBehaviour {
                 MainMenu.Instance.showMenu = true;
                 misions.Instance.ActualMision = misions.Misions.NONE;
             }
+            else Destroy(GameObject.Find("Main Camera"));
             loadScreen.Instancia.CargarEscena(sceneName);
         }
     }

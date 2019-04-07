@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine.AI;
 using UnityEngine.SceneManagement;
 using System.Collections;
+using UnityEngine.Audio;
 using System;
 using UnityEngine.Rendering;
 
@@ -78,7 +79,8 @@ public class bossIA : MonoBehaviour
         canAtackRef = 0.0f;
         stuckPos = Vector3.zero;
         Physics.IgnoreLayerCollision(9, 8);
-        if (GetComponent<AudioListener>() == null) gameObject.AddComponent<AudioSource>();
+        if (GetComponent<AudioSource>() == null) gameObject.AddComponent<AudioSource>();
+        if (GetComponent<AudioSource>() == null) gameObject.GetComponent<AudioSource>().outputAudioMixerGroup = Resources.Load<AudioMixerGroup>("Mixer/MainMixer");
         if (GetComponent<RandomDestination>() == null) gameObject.AddComponent<RandomDestination>();
         transform.GetChild(0).gameObject.AddComponent<visibleEnemy>();
         rb = GetComponent<Rigidbody>();

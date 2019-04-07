@@ -78,6 +78,8 @@ public class MainMenu : MonoBehaviour {
         StartCoroutine(showLogos(0.5f));
         camOriginalPos = secundaryCamera.transform.position;
         camOriginalRotation = secundaryCamera.transform.rotation;
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
         loadScreen.Instancia.CargarEscena("city");
     }
 
@@ -182,6 +184,8 @@ public class MainMenu : MonoBehaviour {
     private void disableLogos()
     {
         teamLogo.SetActive(false);
+        yellowLogo.SetActive(false);
+        purpleLogo.SetActive(false);
         logosBackground.SetActive(false);
         gameLogo.SetActive(false);
     }
@@ -232,6 +236,8 @@ public class MainMenu : MonoBehaviour {
             gameLogo.SetActive(true);
             gameLogo2.SetActive(false);
             teamLogo.SetActive(false);
+            yellowLogo.SetActive(false);
+            purpleLogo.SetActive(false);
             logosBackground.SetActive(true);
             start.SetActive(false);
             startButton.SetActive(false);
@@ -241,6 +247,8 @@ public class MainMenu : MonoBehaviour {
             gameLogo.SetActive(false);
             gameLogo2.SetActive(false);
             teamLogo.SetActive(true);
+            yellowLogo.SetActive(true);
+            purpleLogo.SetActive(true);
             logosBackground.SetActive(true);
             start.SetActive(false);
             startButton.SetActive(false);
