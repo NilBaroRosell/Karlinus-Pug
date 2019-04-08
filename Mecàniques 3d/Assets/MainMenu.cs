@@ -29,8 +29,9 @@ public class MainMenu : MonoBehaviour {
     public GameObject fullscreenToggle;
     public GameObject resolutionDropdown;
     private GameObject rendererManager;
+    public GameObject intro;
     public bool showMenu;
-    private int logoReference;
+    private float logoReference;
     private float menuReference;
     public static MainMenu Instance;
     public states state;
@@ -71,11 +72,12 @@ public class MainMenu : MonoBehaviour {
         volumeSlider.SetActive(false);
         fullscreenToggle.SetActive(false);
         resolutionDropdown.SetActive(false);
+        intro.SetActive(false);
+        intro.GetComponent<Animator>().speed = 0;
         showMenu = true;
-        logoReference = 0;
+        logoReference = Time.realtimeSinceStartup;
         state = states.SHOWING_LOGOS;
         menuReference = 0.0f;
-        StartCoroutine(showLogos(0.5f));
         camOriginalPos = secundaryCamera.transform.position;
         camOriginalRotation = secundaryCamera.transform.rotation;
         Cursor.visible = false;
@@ -87,9 +89,40 @@ public class MainMenu : MonoBehaviour {
     {
         switch(state)
         {
-            case states.SHOWING_LOGOS:                
+            case states.SHOWING_LOGOS:
+                if (Time.realtimeSinceStartup - logoReference < 1.75f)
+                {
+                    gameLogo.SetActive(true);
+                    gameLogo2.SetActive(false);
+                    teamLogo.SetActive(false);
+                    yellowLogo.SetActive(false);
+                    purpleLogo.SetActive(false);
+                    logosBackground.SetActive(true);
+                    start.SetActive(false);
+                    startButton.SetActive(false);
+                }
+                else if (Time.realtimeSinceStartup - logoReference < 3.5f)
+                {
+                    gameLogo.SetActive(false);
+                    gameLogo2.SetActive(false);
+                    teamLogo.SetActive(true);
+                    yellowLogo.SetActive(true);
+                    purpleLogo.SetActive(true);
+                    logosBackground.SetActive(true);
+                    start.SetActive(false);
+                    startButton.SetActive(false);
+
+                }
+                else
+                {
+                    teamLogo.SetActive(false);
+                    yellowLogo.SetActive(false);
+                    purpleLogo.SetActive(false);
+                    logosBackground.SetActive(false);
+                    gameLogo.SetActive(false);
+                }
                 break;
-            case states.MAIN_MENU:
+                case states.MAIN_MENU:
                 if (secundaryCamera != null)
                 {
                     secundaryCamera.SetActive(true);
@@ -181,20 +214,10 @@ public class MainMenu : MonoBehaviour {
         Cursor.lockState = CursorLockMode.Locked;
     }
 
-    private void disableLogos()
-    {
-        teamLogo.SetActive(false);
-        yellowLogo.SetActive(false);
-        purpleLogo.SetActive(false);
-        logosBackground.SetActive(false);
-        gameLogo.SetActive(false);
-    }
-
     private void OnLevelWasLoaded(int level)
     {
         if (level == 1 && showMenu)
         {
-            disableLogos();
             StartCoroutine(ExecuteAfterTime(2.25f));
             state = states.MAIN_MENU;
             rendererManager = GameObject.Find("RenderManager");
@@ -226,40 +249,4 @@ public class MainMenu : MonoBehaviour {
         state = states.PLAYING;
         GameObject.Find("Jugador").GetComponent<Controller>().state = Controller.playerState.IDLE;
     }
-
-    private IEnumerator showLogos(float time)
-    {
-        yield return new WaitForSeconds(time);
-        Debug.Log(logoReference);
-        if (logoReference == 0)
-        {
-            gameLogo.SetActive(true);
-            gameLogo2.SetActive(false);
-            teamLogo.SetActive(false);
-            yellowLogo.SetActive(false);
-            purpleLogo.SetActive(false);
-            logosBackground.SetActive(true);
-            start.SetActive(false);
-            startButton.SetActive(false);
-        }
-        else if (logoReference == 1)
-        {
-            gameLogo.SetActive(false);
-            gameLogo2.SetActive(false);
-            teamLogo.SetActive(true);
-            yellowLogo.SetActive(true);
-            purpleLogo.SetActive(true);
-            logosBackground.SetActive(true);
-            start.SetActive(false);
-            startButton.SetActive(false);
-
-        }
-        if(logoReference < 2)
-        {
-            
-            logoReference++;
-            StartCoroutine(showLogos(1.5f));
-        }
-    }
-
 }

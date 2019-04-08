@@ -367,22 +367,6 @@ public class misions : MonoBehaviour {
     // Update is called once per frame
     void FixedUpdate() {
         if ((MainMenu.Instance == null || MainMenu.Instance.state == MainMenu.states.PLAYING) && SceneManager.GetActiveScene().name != "DEAD") {
-            if (Input.GetKeyUp(KeyCode.Alpha1))
-            {
-                Instance.ActualMision = Misions.NONE;
-                Instance.PrincipalMision.MisionsCompleted[0] = true;
-                Instance.resetGameFile = false;
-                Instance.loadRespawn.initialRespawn = Respawns.InitialRespawns.CITY_1;
-                loadScreen.Instancia.CargarEscena("city");
-            }
-            else if (Input.GetKeyUp(KeyCode.Alpha2))
-            {
-                Instance.ActualMision = Misions.M4;
-                Instance.PrincipalMision.MisionsCompleted[2] = true;
-                respawnIndex = 3;
-                loadRespawn.initialRespawn = Respawns.InitialRespawns.CHAMBER;
-                loadScreen.Instancia.CargarEscena("StoneChamber");
-            }
             if (Input.GetKeyDown(KeyCode.Escape))
             {
                 if (pauseMenu)
@@ -545,7 +529,7 @@ public class misions : MonoBehaviour {
                 if (GameObject.Find("Enemigo (3)") == null)
                 {
                     misionIndex++;
-                    HUD_Script.showM1Helps(5, 45);
+                    HUD_Script.showM1Helps(5, 35);
                     Player.GetComponent<Animator>().SetBool("Is_Detected", true);
                     Player.GetComponent<Animator>().SetBool("Is_Draw", true);
                     playerMovement.state = Controller.playerState.IDLE;
@@ -922,17 +906,15 @@ public class misions : MonoBehaviour {
                 }
                 break;
             case 12:
-                if (new Vector2(Player.transform.position.x - loadRespawn.Mision_Objects[3].transform.position.x, Player.transform.position.z - loadRespawn.Mision_Objects[3].transform.position.z).magnitude > 100 && !fight && Player.transform.position.y > 0)
+                if (nextEvent)
                 {
+                    nextEvent = false;
                     misionIndex++;
                     respawnIndex++;
                     Instance.ActualMision = Misions.NONE;
                     Instance.PrincipalMision.MisionsCompleted[2] = true;
-                    Instance.loadRespawn.initialRespawn = Respawns.InitialRespawns.CITY_2;
-                    Instance.missionCompleted = true;
                     Instance.doorsUnlucked = true;
                     Instance.missionCompleted = true;
-                    loadScreen.Instancia.CargarEscena("city");
                 }
                 break;
         }

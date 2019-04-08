@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 
 
 public class Menuctrl : MonoBehaviour {
@@ -23,14 +24,19 @@ public class Menuctrl : MonoBehaviour {
         else
         {
             MainMenu.Instance.state = MainMenu.states.PLAYING;
-            if (misions.pauseMenu)
+            if (misions.pauseMenu || sceneName == "city")
             {
                 misions.pauseMenu = false;
                 MainMenu.Instance.showMenu = true;
                 misions.Instance.ActualMision = misions.Misions.NONE;
+                loadScreen.Instancia.CargarEscena(sceneName);
             }
-            else Destroy(GameObject.Find("Main Camera"));
-            loadScreen.Instancia.CargarEscena(sceneName);
+            else if (misions.Instance.ActualMision == misions.Misions.M1)
+            {
+                MainMenu.Instance.state = MainMenu.states.MAIN_MENU;
+                Destroy(GameObject.Find("Main Camera"));
+                loadScreen.Instancia.CargarEscena(sceneName);
+            }           
         }
     }
 

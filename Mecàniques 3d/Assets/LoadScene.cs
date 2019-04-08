@@ -17,9 +17,16 @@ public class LoadScene : MonoBehaviour {
 
     private void OnTriggerStay(Collider collision)
     {
-        if (collision.gameObject.tag == "Player" && Input.GetKey(KeyCode.E))
+        if (collision.gameObject.tag == "Player" && Input.GetKey(KeyCode.E) && !misions.fight)
         {
             collision.gameObject.GetComponentInParent<HUD>().hideInteractSprite();
+            if (misions.Instance.ActualMision == misions.Misions.M3)
+            {
+                misions.nextEvent = true;
+                misions.Instance.PrincipalMision.MisionsCompleted[2] = true;
+                misions.Instance.doorsUnlucked = true;
+                misions.Instance.gameObject.GetComponent<Respawns>().initialRespawn = SceneToLoad;
+            }
             switch (SceneToLoad)
             {
                 case Respawns.InitialRespawns.SEWER_1:
